@@ -10,6 +10,7 @@ import { VERSION } from '../src/index.js';
 import { initCommand } from './commands/init.js';
 import { statusCommand } from './commands/status.js';
 import { packageCommand } from './commands/package.js';
+import { deployCommand } from './commands/deploy.js';
 
 export function createProgram(): Command {
   const program = new Command();
@@ -23,6 +24,7 @@ export function createProgram(): Command {
   program.addCommand(initCommand());
   program.addCommand(statusCommand());
   program.addCommand(packageCommand());
+  program.addCommand(deployCommand());
 
   return program;
 }

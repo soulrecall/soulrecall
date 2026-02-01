@@ -1,0 +1,85 @@
+/**
+ * Types for ICP canister deployment
+ */
+
+/**
+ * Network target for deployment
+ */
+export type NetworkType = 'local' | 'ic';
+
+/**
+ * Deployment status codes
+ */
+export type DeploymentStatus = 'pending' | 'deploying' | 'deployed' | 'failed';
+
+/**
+ * Information about a deployed canister
+ */
+export interface CanisterInfo {
+  /** Canister ID on the network */
+  canisterId: string;
+  /** Network where the canister is deployed */
+  network: NetworkType;
+  /** Agent name associated with this canister */
+  agentName: string;
+  /** Deployment timestamp */
+  deployedAt: Date;
+  /** WASM module hash (for verification) */
+  wasmHash?: string;
+}
+
+/**
+ * Options for deployment operation
+ */
+export interface DeployOptions {
+  /** Path to the WASM file to deploy */
+  wasmPath: string;
+  /** Target network for deployment */
+  network: NetworkType;
+  /** Existing canister ID (for upgrades) */
+  canisterId?: string;
+  /** Skip confirmation prompts */
+  skipConfirmation?: boolean;
+  /** Path to dfx identity to use */
+  identityPath?: string;
+}
+
+/**
+ * Result of a successful deployment
+ */
+export interface DeployResult {
+  /** Deployed canister information */
+  canister: CanisterInfo;
+  /** Whether this was a new deployment or upgrade */
+  isUpgrade: boolean;
+  /** Cycles consumed by deployment */
+  cyclesUsed?: bigint;
+  /** Any warnings during deployment */
+  warnings: string[];
+}
+
+/**
+ * Error that occurred during deployment
+ */
+export interface DeploymentError {
+  /** Error code for programmatic handling */
+  code: string;
+  /** Human-readable error message */
+  message: string;
+  /** Network where the error occurred */
+  network?: NetworkType;
+  /** Canister ID if applicable */
+  canisterId?: string;
+}
+
+/**
+ * Configuration for the ICP client
+ */
+export interface ICPClientConfig {
+  /** Target network */
+  network: NetworkType;
+  /** Host URL (defaults based on network) */
+  host?: string;
+  /** Identity to use for signing */
+  identity?: string;
+}
