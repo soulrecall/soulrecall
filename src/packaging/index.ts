@@ -28,3 +28,22 @@ export {
 
 // Packager
 export { packageAgent, validateAgent, getPackageSummary } from './packager.js';
+
+// Serialization
+export {
+  serializeState,
+  deserializeState,
+  writeStateFile,
+  readStateFile,
+  createEmptyState,
+  mergeStates,
+  validateState,
+} from './serializer.js';
+
+export type {
+  Memory,
+  Task,
+  AgentState,
+  SerializedAgentState,
+  SerializationOptions,
+} from './serializer.js';

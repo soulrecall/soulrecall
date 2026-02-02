@@ -253,7 +253,7 @@ interface Task {
 - [ ] Set up TypeScript project structure
 - [ ] Implement basic CLI framework (Commander, Inquirer)
 - [ ] Create agent packaging logic (WASM compilation stub)
-- [x] Implement basic ICP canister deployment
+- [ ] Implement basic ICP canister deployment
 - [ ] Design state serialization format
 - [ ] Create package.json with all dependencies
 - [ ] Write integration tests for CLI commands

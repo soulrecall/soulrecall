@@ -50,6 +50,11 @@
     "vitest": "^2.1.0"
   },
   "dependencies": {
+    "@dfinity/agent": "^2.1.0",
+    "@dfinity/candid": "^2.1.0",
+    "@noble/curves": "^1.7.0",
+    "bip39": "^3.1.0",
+    "bs58": "^6.0.0",
     "chalk": "^5.4.1",
     "commander": "^12.1.0",
     "inquirer": "^9.3.0",

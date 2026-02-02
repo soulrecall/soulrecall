@@ -11,6 +11,12 @@ import { initCommand } from './commands/init.js';
 import { statusCommand } from './commands/status.js';
 import { packageCommand } from './commands/package.js';
 import { deployCommand } from './commands/deploy.js';
+import { fetchCommand } from './commands/fetch.js';
+import { decryptCommand } from './commands/decrypt.js';
+import { rebuildCommand } from './commands/rebuild.js';
+import { execCommand } from './commands/exec.js';
+import { listCommand } from './commands/list.js';
+import { showCommand } from './commands/show.js';
 
 export function createProgram(): Command {
   const program = new Command();
@@ -25,6 +31,12 @@ export function createProgram(): Command {
   program.addCommand(statusCommand());
   program.addCommand(packageCommand());
   program.addCommand(deployCommand());
+  program.addCommand(fetchCommand());
+  program.addCommand(decryptCommand());
+  program.addCommand(rebuildCommand());
+  program.addCommand(execCommand());
+  program.addCommand(listCommand());
+  program.addCommand(showCommand());
 
   return program;
 }
