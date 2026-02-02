@@ -7,7 +7,8 @@
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import type { AgentType, AgentConfig } from './types.js';
+import type { AgentType, AgentConfig, ConfigFilePath } from './types.js';
+import { readAgentConfig } from './config-persistence.js';
 
 /**
  * Configuration file patterns for each agent type
@@ -54,48 +55,29 @@ function directoryExists(dirPath: string): boolean {
 }
 
 /**
- * Try to read and parse a JSON config file
- */
-function tryReadJsonConfig(
-  filePath: string
-): { name?: string; version?: string; entryPoint?: string } | null {
-  try {
-    if (!fileExists(filePath)) {
-      return null;
-    }
-    const content = fs.readFileSync(filePath, 'utf-8');
-    return JSON.parse(content);
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Detect the agent type from a source directory
+ * Detect agent type from a source directory
  */
 export function detectAgentType(sourcePath: string): AgentType {
   const absolutePath = path.resolve(sourcePath);
 
-  // Check for specific agent types in order of precedence
   for (const agentType of ['clawdbot', 'goose', 'cline'] as AgentType[]) {
     const patterns = AGENT_PATTERNS[agentType];
 
-    // Check for config files
     for (const file of patterns.files) {
-      if (fileExists(path.join(absolutePath, file))) {
+      const filePath = path.join(absolutePath, file);
+      if (fileExists(filePath)) {
         return agentType;
       }
     }
 
-    // Check for config directories
     for (const dir of patterns.dirs) {
-      if (directoryExists(path.join(absolutePath, dir))) {
+      const dirPath = path.join(absolutePath, dir);
+      if (directoryExists(dirPath)) {
         return agentType;
       }
     }
   }
 
-  // Default to generic if no specific agent type is detected
   return 'generic';
 }
 
@@ -103,20 +85,19 @@ export function detectAgentType(sourcePath: string): AgentType {
  * Extract agent name from the source path or config
  */
 function extractAgentName(sourcePath: string, config: Record<string, unknown> | null): string {
-  // First, try to get name from config
   if (config && typeof config.name === 'string' && config.name.trim()) {
     return config.name.trim();
   }
 
-  // Fall back to directory name
   const dirName = path.basename(path.resolve(sourcePath));
 
-  // Sanitize the directory name
-  return dirName.toLowerCase().replace(/[^a-z0-9-]/g, '-');
+  const sanitizedName = dirName.toLowerCase().replace(/[^a-z0-9-]/g, '-');
+
+  return sanitizedName;
 }
 
 /**
- * Find the configuration file for a detected agent type
+ * Find configuration file for a detected agent type
  */
 function findConfigFile(sourcePath: string, agentType: AgentType): string | null {
   const absolutePath = path.resolve(sourcePath);
@@ -133,12 +114,11 @@ function findConfigFile(sourcePath: string, agentType: AgentType): string | null
 }
 
 /**
- * Detect the entry point for the agent
+ * Detect entry point for an agent
  */
 function detectEntryPoint(sourcePath: string, agentType: AgentType): string | undefined {
   const absolutePath = path.resolve(sourcePath);
 
-  // Common entry point patterns
   const entryPoints = [
     'index.ts',
     'index.js',
@@ -152,7 +132,6 @@ function detectEntryPoint(sourcePath: string, agentType: AgentType): string | un
     'src/main.js',
   ];
 
-  // Agent-specific entry points
   if (agentType === 'clawdbot') {
     entryPoints.unshift('clawdbot.ts', 'clawdbot.js');
   } else if (agentType === 'goose') {
@@ -173,21 +152,19 @@ function detectEntryPoint(sourcePath: string, agentType: AgentType): string | un
 
 /**
  * Detect agent configuration from a source directory
+ *
+ * @param sourcePath - Path to agent directory
+ * @returns Agent configuration with basic detection
  */
 export function detectAgent(sourcePath: string): AgentConfig {
   const absolutePath = path.resolve(sourcePath);
 
-  // Detect agent type
   const agentType = detectAgentType(sourcePath);
 
-  // Find and read config file
   const configFile = findConfigFile(sourcePath, agentType);
   const config = configFile ? tryReadJsonConfig(configFile) : null;
 
-  // Extract name
   const name = extractAgentName(sourcePath, config);
-
-  // Detect entry point
   const entryPoint = detectEntryPoint(sourcePath, agentType);
 
   return {
