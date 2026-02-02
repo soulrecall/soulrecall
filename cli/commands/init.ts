@@ -6,7 +6,7 @@ import { Command } from 'commander';
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 import ora from 'ora';
-import { createConfig, readAgentConfig, listAgents, deleteAgentConfig } from '../../src/packaging/index.js';
+
 
 export interface InitOptions {
   name?: string;
@@ -64,33 +64,40 @@ export async function promptForInitOptions(options: InitOptions): Promise<InitAn
   return answers;
 }
 
-export async function executeInit(answers: InitAnswers): Promise<void> {
+export async function executeInit(answers: InitAnswers, options: InitOptions, sourcePath: string): Promise<void> {
   const spinner = ora('Initializing AgentVault project...').start();
 
-  // Load existing config if it exists (for config editing)
-  const existingConfig = answers.yes ? readAgentConfig(process.cwd()) : null;
-
-  // Simulate initialization work
-  const config = createConfig(answers.name);
+  // Create a simple config object for display purposes
+  const config = {
+    name: answers.name,
+    version: '1.0.0',
+  };
 
   // In a real implementation, this would create files, directories, etc.
   spinner.succeed('AgentVault project initialized successfully!');
-  
+
   console.log();
-  
-  if (answers.verbose && existingConfig) {
-    console.log(chalk.cyan('Loaded existing configuration:'));
-    console.log(chalk.cyan('  Name:'), chalk.bold(existingConfig.name || 'N/A'));
-    console.log(chalk.cyan('  Type:'), chalk.bold(existingConfig.type || 'N/A'));
-    if (existingConfig.version) {
-      console.log(chalk.cyan('  Version:'), chalk.bold(existingConfig.version));
+
+  // Try to detect existing config in source directory
+  if (options.verbose) {
+    try {
+      const { detectAgent } = await import('../../src/packaging/detector.js');
+      const existingConfig = detectAgent(sourcePath);
+
+      if (existingConfig) {
+        console.log(chalk.cyan('Detected existing configuration:'));
+        console.log(chalk.cyan('  Name:'), chalk.bold(existingConfig.name));
+        console.log(chalk.cyan('  Type:'), chalk.bold(existingConfig.type));
+        if (existingConfig.version) {
+          console.log(chalk.cyan('  Version:'), chalk.bold(existingConfig.version));
+        }
+        console.log();
+      }
+    } catch (error) {
+      // Ignore detection errors
     }
-    if (existingConfig.entryPoint) {
-      console.log(chalk.cyan('  Entry Point:'), chalk.bold(existingConfig.entryPoint));
-    }
-    console.log();
   }
-  
+
   console.log(chalk.green('✓'), 'Created configuration for:', chalk.bold(config.name));
   console.log(chalk.green('✓'), 'Version:', chalk.bold(config.version));
   console.log(chalk.green('✓'), 'Description:', chalk.bold(answers.description));
@@ -99,21 +106,6 @@ export async function executeInit(answers: InitAnswers): Promise<void> {
   console.log('  1. Run', chalk.bold('agentvault status'), 'to check your project');
   console.log('  2. Configure your agent in the config files');
   console.log('  3. Deploy with', chalk.bold('agentvault deploy'), 'to upload to ICP');
-}
-    if (existingConfig.entryPoint) {
-      console.log(chalk.cyan('  Entry Point:'), chalk.bold(existingConfig.entryPoint));
-    }
-    console.log();
-  }
-  
-  console.log(chalk.green('✓'), 'Created configuration for:', chalk.bold(config.name));
-  console.log(chalk.green('✓'), 'Version:', chalk.bold(config.version));
-  console.log(chalk.green('✓'), 'Description:', chalk.bold(answers.description));
-  console.log();
-  console.log(chalk.cyan('Next steps:'));
-  console.log('  1. Run', chalk.bold('agentvault status'), 'to check your project');
-  console.log('  2. Configure your agent in the generated files');
-  console.log('  3. Deploy with', chalk.bold('agentvault deploy'));
 }
 
 export function initCommand(): Command {
@@ -126,7 +118,7 @@ export function initCommand(): Command {
     .option('-y, --yes', 'skip prompts and use defaults')
     .option('-v, --verbose', 'display detailed configuration information')
     .option('--vv', 'extra verbose mode for debugging')
-    .action(async (options: InitOptions) => {
+    .action(async (source: string, options: InitOptions) => {
       console.log(chalk.bold('\n🔐 AgentVault Project Initialization\n'));
 
       const answers = await promptForInitOptions(options);
@@ -136,13 +128,7 @@ export function initCommand(): Command {
         return;
       }
 
-      await executeInit(answers);
-    });
-
-  return command;
-}
-
-      await executeInit(answers);
+      await executeInit(answers, options, source);
     });
 
   return command;

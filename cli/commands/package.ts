@@ -6,15 +6,8 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
 import * as path from 'node:path';
-import type {
-  packageAgent,
-  getPackageSummary,
-  type PackageOptions,
-  type PackageResult,
-  type ValidationError,
-  type ValidationResult,
-} from '../../src/packaging/index.js';
-import { readAgentConfig, writeAgentConfig, listAgents } from '../../src/packaging/config-persistence.js';
+import { packageAgent, getPackageSummary } from '../../src/packaging/index.js';
+import type { PackageOptions, PackageResult } from '../../src/packaging/index.js';
 
 export interface PackageCommandOptions {
   output?: string;
@@ -51,7 +44,7 @@ export function displayPreview(sourcePath: string): void {
   console.log(`  Version:     ${config.version ?? chalk.yellow('not specified')}`);
   
   // Display agent settings for Clawdbot agents if available
-  if (config.type === 'clawdbot' && config.type === 'object' && 'settings' in config) {
+  if (config.type === 'clawdbot' && 'settings' in config) {
     const settings = config.settings as Record<string, unknown>;
     console.log();
     console.log(chalk.cyan('Agent Settings:'));
@@ -65,7 +58,6 @@ export function displayPreview(sourcePath: string): void {
       console.log(`  Max Tokens: ${chalk.bold(String(settings.maxTokens))}`);
     }
   }
-}
 
   console.log();
 

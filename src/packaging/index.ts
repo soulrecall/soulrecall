@@ -62,43 +62,8 @@ export {
 // Summary - used by package command
 export {
   getPackageSummary,
+  packageAgent,
 } from './packager.js';
-
-import { detectAgent, detectAgentType, validateSourcePath } from './detector.js';
-
-export type { AgentType, AgentConfig, PackageOptions, PackageResult };
-export type { ValidationError, ValidationResult, ParsedAgentConfig, ConfigFilePath };
-export {
-  compileToWasm,
-  generateWasm,
-  generateWat,
-  generateStateJson,
-  validateWasmFile,
-};
-export {
-  serializeState,
-  deserializeState,
-  writeStateFile,
-  readStateFile,
-  createEmptyState,
-  mergeStates,
-  validateState,
-};
-export { parseClawdbotConfig, findClawdbotConfigs, getConfigPath, writeAgentConfig, readAgentConfig, listAgents, deleteAgentConfig };
-export { DEFAULT_CLAWDBOT_SETTINGS, DEFAULT_GOOSE_CONFIG, DEFAULT_CLINE_CONFIG };
-
-// Parsers
-export {
-  parseClawdbotConfig,
-  findClawdbotConfigs,
-} from './parsers/index.js';
-
-// Config Schemas
-export {
-  DEFAULT_CLAWDBOT_SETTINGS,
-  DEFAULT_GOOSE_CONFIG,
-  DEFAULT_CLINE_CONFIG,
-} from './config-schemas.js';
 
 export type {
   Memory,

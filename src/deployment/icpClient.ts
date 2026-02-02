@@ -128,8 +128,8 @@ export class ICPClient {
     const buffer = fs.readFileSync(wasmPath);
     return buffer.toString('base64');
   }
+}
 
-  export function createICPClient(config: ICPClientConfig, agent: HttpAgent): ICPClient {
-    return new ICPClient(config);
-  }
+export function createICPClient(config: ICPClientConfig, _agent: HttpAgent): ICPClient {
+  return new ICPClient(config, _agent);
 }
