@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import * as fs from 'node:fs';
 import {
-  generateStubWasm,
-  generateStubWat,
+  generateWasm,
+  generateWat,
   generateStateJson,
   compileToWasm,
   validateWasmFile,
@@ -26,13 +26,27 @@ describe('compiler', () => {
     version: '1.0.0',
   };
 
+  const mockAgentCode = 'console.log("hello");';
+
   beforeEach(() => {
     vi.clearAllMocks();
+    // Mock entry point file existence
+    vi.mocked(fs.existsSync).mockImplementation((path) => {
+      return String(path).includes('/path/to/agent/index.ts');
+    });
+    // Mock entry point file content
+    vi.mocked(fs.readFileSync).mockImplementation((path) => {
+      if (String(path).includes('/path/to/agent/index.ts')) {
+        return mockAgentCode;
+      }
+      return Buffer.from([]);
+    });
   });
 
-  describe('generateStubWasm', () => {
+  describe('generateWasm', () => {
     it('should generate a valid WASM buffer with magic bytes', () => {
-      const wasm = generateStubWasm(mockConfig);
+      const jsBundle = 'console.log("test");';
+      const wasm = generateWasm(mockConfig, jsBundle);
 
       expect(Buffer.isBuffer(wasm)).toBe(true);
       // Check WASM magic bytes
@@ -43,7 +57,8 @@ describe('compiler', () => {
     });
 
     it('should generate a WASM buffer with version 1', () => {
-      const wasm = generateStubWasm(mockConfig);
+      const jsBundle = 'console.log("test");';
+      const wasm = generateWasm(mockConfig, jsBundle);
 
       // Check version bytes (bytes 4-7)
       expect(wasm[4]).toBe(0x01);
@@ -52,28 +67,39 @@ describe('compiler', () => {
       expect(wasm[7]).toBe(0x00);
     });
 
-    it('should include agent name in the WASM binary', () => {
-      const wasm = generateStubWasm(mockConfig);
+    it('should include agent name in WASM binary', () => {
+      const jsBundle = 'console.log("test");';
+      const wasm = generateWasm(mockConfig, jsBundle);
 
       // The agent name should be somewhere in the binary
       const wasmString = wasm.toString('utf-8');
       expect(wasmString).toContain('test-agent');
     });
 
+    it('should embed JavaScript bundle in WASM', () => {
+      const jsBundle = 'console.log("test");';
+      const wasm = generateWasm(mockConfig, jsBundle);
+
+      const wasmString = wasm.toString('utf-8');
+      expect(wasmString).toContain('console.log');
+    });
+
     it('should generate different sizes for different agent names', () => {
       const shortNameConfig = { ...mockConfig, name: 'a' };
       const longNameConfig = { ...mockConfig, name: 'very-long-agent-name' };
 
-      const shortWasm = generateStubWasm(shortNameConfig);
-      const longWasm = generateStubWasm(longNameConfig);
+      const jsBundle = 'console.log("test");';
+      const shortWasm = generateWasm(shortNameConfig, jsBundle);
+      const longWasm = generateWasm(longNameConfig, jsBundle);
 
       expect(longWasm.length).toBeGreaterThan(shortWasm.length);
     });
   });
 
-  describe('generateStubWat', () => {
+  describe('generateWat', () => {
     it('should generate valid WAT format', () => {
-      const wat = generateStubWat(mockConfig);
+      const jsBundle = 'console.log("test");';
+      const wat = generateWat(mockConfig, jsBundle);
 
       expect(typeof wat).toBe('string');
       expect(wat).toContain('(module');
@@ -81,19 +107,19 @@ describe('compiler', () => {
     });
 
     it('should include agent name in WAT', () => {
-      const wat = generateStubWat(mockConfig);
+      const wat = generateWat(mockConfig, 'console.log("test");');
 
       expect(wat).toContain('test-agent');
     });
 
     it('should include agent type in WAT', () => {
-      const wat = generateStubWat(mockConfig);
+      const wat = generateWat(mockConfig, 'console.log("test");');
 
       expect(wat).toContain('clawdbot');
     });
 
     it('should export required functions', () => {
-      const wat = generateStubWat(mockConfig);
+      const wat = generateWat(mockConfig, 'console.log("test");');
 
       expect(wat).toContain('(export "init")');
       expect(wat).toContain('(export "step")');
@@ -153,6 +179,7 @@ describe('compiler', () => {
 
   describe('compileToWasm', () => {
     it('should create output directory if it does not exist', async () => {
+      // @ts-expect-error
       vi.mocked(fs.existsSync).mockReturnValue(false);
 
       await compileToWasm(mockConfig, '/output/dir');
@@ -168,12 +195,24 @@ describe('compiler', () => {
       expect(fs.mkdirSync).not.toHaveBeenCalled();
     });
 
-    it('should write three output files', async () => {
+    it('should bundle agent code', async () => {
       vi.mocked(fs.existsSync).mockReturnValue(true);
 
       await compileToWasm(mockConfig, '/output/dir');
 
-      expect(fs.writeFileSync).toHaveBeenCalledTimes(3);
+      // @ts-expect-error
+      expect(fs.readFileSync).toHaveBeenCalledWith(
+        expect.stringContaining('/path/to/agent/index.ts'),
+        'utf-8'
+      );
+    });
+
+    it('should write four output files', async () => {
+      vi.mocked(fs.existsSync).mockReturnValue(true);
+
+      await compileToWasm(mockConfig, '/output/dir');
+
+      expect(fs.writeFileSync).toHaveBeenCalledTimes(4);
     });
 
     it('should write files with correct names', async () => {
@@ -187,6 +226,7 @@ describe('compiler', () => {
       expect(paths).toContain('/output/dir/test-agent.wasm');
       expect(paths).toContain('/output/dir/test-agent.wat');
       expect(paths).toContain('/output/dir/test-agent.state.json');
+      expect(paths).toContain('/output/dir/test-agent.bundle.js');
     });
 
     it('should return package result with correct paths', async () => {

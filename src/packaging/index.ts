@@ -20,8 +20,8 @@ export { detectAgent, detectAgentType, validateSourcePath } from './detector.js'
 // Compilation
 export {
   compileToWasm,
-  generateStubWasm,
-  generateStubWat,
+  generateWasm,
+  generateWat,
   generateStateJson,
   validateWasmFile,
 } from './compiler.js';
