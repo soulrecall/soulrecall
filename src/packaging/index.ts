@@ -45,6 +45,8 @@ export {
   findGooseConfigs,
   parseClineConfig,
   findClineConfigs,
+  parseGenericConfig,
+  findGenericConfigs,
 } from './parsers/index.js';
 
 // Config Persistence
