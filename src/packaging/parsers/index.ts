@@ -6,3 +6,4 @@
  */
 
 export { parseClawdbotConfig, findClawdbotConfigs } from './clawdbot.js';
+export { parseGooseConfig, findGooseConfigs } from './goose.js';

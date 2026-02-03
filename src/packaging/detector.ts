@@ -7,8 +7,8 @@
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import type { AgentType, AgentConfig, ConfigFilePath } from './types.js';
-import { readAgentConfig } from './config-persistence.js';
+import * as yaml from 'yaml';
+import type { AgentType, AgentConfig } from './types.js';
 
 /**
  * Configuration file patterns for each agent type
@@ -162,18 +162,18 @@ export function detectAgent(sourcePath: string): AgentConfig {
   const agentType = detectAgentType(sourcePath);
 
   const configFile = findConfigFile(sourcePath, agentType);
-  const config = configFile ? tryReadJsonConfig(configFile) : null;
+  const config = configFile ? tryReadConfig(configFile) : null;
 
   const name = extractAgentName(sourcePath, config);
   const entryPoint = detectEntryPoint(sourcePath, agentType);
 
-  return {
-    name,
-    type: agentType,
-    sourcePath: absolutePath,
-    entryPoint,
-    version: config?.version,
-  };
+    return {
+      name,
+      type: agentType,
+      sourcePath: absolutePath,
+      entryPoint,
+      version: (config?.version as string | undefined),
+    };
 }
 
 /**
@@ -197,4 +197,24 @@ export function validateSourcePath(sourcePath: string): { valid: boolean; error?
   }
 
   return { valid: true };
+}
+
+/**
+ * Try to read configuration file (JSON or YAML)
+ */
+function tryReadConfig(filePath: string): Record<string, unknown> | null {
+  try {
+    const content = fs.readFileSync(filePath, 'utf-8');
+
+    // Check file extension to determine format
+    if (filePath.endsWith('.json')) {
+      return JSON.parse(content) as Record<string, unknown>;
+    } else if (filePath.endsWith('.yaml') || filePath.endsWith('.yml') || filePath.endsWith('.gooserc')) {
+      return yaml.parse(content) as Record<string, unknown>;
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
 }
