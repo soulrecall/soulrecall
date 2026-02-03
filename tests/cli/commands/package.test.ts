@@ -152,6 +152,7 @@ describe('package command', () => {
         statePath: '/output/test-agent.state.json',
         wasmSize: 1024,
         timestamp: new Date(),
+        target: 'wasmedge',
       };
 
       displayResult(result);
@@ -179,6 +180,7 @@ describe('package command', () => {
         statePath: '/output/test-agent.state.json',
         wasmSize: 2048, // 2 KB
         timestamp: new Date(),
+        target: 'wasmedge',
       };
 
       displayResult(result);
@@ -229,6 +231,7 @@ describe('package command', () => {
         statePath: '/output/test-agent.state.json',
         wasmSize: 1024,
         timestamp: new Date(),
+        target: 'wasmedge',
       };
       vi.mocked(packageAgent).mockResolvedValue(mockResult);
 
@@ -262,6 +265,7 @@ describe('package command', () => {
         statePath: '/out/test.state.json',
         wasmSize: 100,
         timestamp: new Date(),
+        target: 'wasmedge',
       });
 
       const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});

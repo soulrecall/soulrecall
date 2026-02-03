@@ -186,6 +186,7 @@ describe('compiler', () => {
     };
 
     it('should create output directory if it does not exist', async () => {
+      // @ts-expect-error
       vi.mocked(fs.existsSync).mockReturnValue(false);
 
       await compileToWasm(mockConfig, mockOptions, '/output/dir');
@@ -206,6 +207,7 @@ describe('compiler', () => {
 
       await compileToWasm(mockConfig, mockOptions, '/output/dir');
 
+      // @ts-expect-error
       expect(fs.readFileSync).toHaveBeenCalledWith(
         expect.stringContaining('/path/to/agent/index.ts'),
         'utf-8'
@@ -237,7 +239,7 @@ describe('compiler', () => {
     it('should write files with correct names', async () => {
       vi.mocked(fs.existsSync).mockReturnValue(true);
 
-      await compileToWasm(mockConfig, mockOptions, '/output/dir');
+      await compileToWasm(mockConfig, '/output/dir');
 
       const writeCalls = vi.mocked(fs.writeFileSync).mock.calls;
       const paths = writeCalls.map((call) => call[0] as string);
@@ -251,7 +253,7 @@ describe('compiler', () => {
     it('should return package result with correct paths', async () => {
       vi.mocked(fs.existsSync).mockReturnValue(true);
 
-      const result = await compileToWasm(mockConfig, mockOptions, '/output/dir');
+      const result = await compileToWasm(mockConfig, '/output/dir');
 
       expect(result.wasmPath).toBe('/output/dir/test-agent.wasm');
       expect(result.watPath).toBe('/output/dir/test-agent.wat');
@@ -261,7 +263,7 @@ describe('compiler', () => {
     it('should return package result with wasm size', async () => {
       vi.mocked(fs.existsSync).mockReturnValue(true);
 
-      const result = await compileToWasm(mockConfig, mockOptions, '/output/dir');
+      const result = await compileToWasm(mockConfig, '/output/dir');
 
       expect(result.wasmSize).toBeGreaterThan(0);
     });
@@ -269,7 +271,7 @@ describe('compiler', () => {
     it('should return package result with timestamp', async () => {
       vi.mocked(fs.existsSync).mockReturnValue(true);
 
-      const result = await compileToWasm(mockConfig, mockOptions, '/output/dir');
+      const result = await compileToWasm(mockConfig, '/output/dir');
 
       expect(result.timestamp).toBeInstanceOf(Date);
     });
@@ -277,7 +279,7 @@ describe('compiler', () => {
     it('should return package result with config', async () => {
       vi.mocked(fs.existsSync).mockReturnValue(true);
 
-      const result = await compileToWasm(mockConfig, mockOptions, '/output/dir');
+      const result = await compileToWasm(mockConfig, '/output/dir');
 
       expect(result.config).toEqual(mockConfig);
     });
