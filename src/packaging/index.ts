@@ -43,6 +43,8 @@ export {
   findClawdbotConfigs,
   parseGooseConfig,
   findGooseConfigs,
+  parseClineConfig,
+  findClineConfigs,
 } from './parsers/index.js';
 
 // Config Persistence
