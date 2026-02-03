@@ -71,11 +71,27 @@ export function validateSeedPhrase(seedPhrase: string): boolean {
  */
 export async function deriveKeyFromSeedPhrase(
   seedPhrase: SeedPhrase,
-  options: VetKeysOptions & { salt?: string } = {}
+  options: VetKeysOptions & {
+    salt?: string;
+    keyDerivation?: KeyDerivationMethod;
+    pbkdf2Iterations?: number;
+  } = {}
 ): Promise<DerivedKey> {
   // Validate seed phrase
   if (!validateSeedPhrase(seedPhrase)) {
     throw new Error('Invalid seed phrase');
+  }
+
+  const keyDerivation = options.keyDerivation ?? DEFAULT_KEY_DERIVATION;
+  if (keyDerivation !== 'pbkdf2') {
+    throw new Error(
+      `Unsupported key derivation method: ${keyDerivation}. Only "pbkdf2" is supported.`
+    );
+  }
+
+  const iterations = options.pbkdf2Iterations ?? DEFAULT_PBKDF2_ITERATIONS;
+  if (!Number.isInteger(iterations) || iterations <= 0) {
+    throw new Error('PBKDF2 iterations must be a positive integer.');
   }
 
   // Generate or use provided salt
@@ -88,7 +104,7 @@ export async function deriveKeyFromSeedPhrase(
   const key = crypto.pbkdf2Sync(
     seed,
     Buffer.from(salt, 'hex'),
-    DEFAULT_PBKDF2_ITERATIONS,
+    iterations,
     KEY_LENGTH,
     'sha256'
   );
@@ -96,8 +112,8 @@ export async function deriveKeyFromSeedPhrase(
   return {
     key: key.toString('hex'),
     salt,
-    method: 'pbkdf2',
-    iterations: DEFAULT_PBKDF2_ITERATIONS,
+    method: keyDerivation,
+    iterations,
   };
 }
 
@@ -110,7 +126,12 @@ export async function encryptData(
   options: EncryptionOptions = {}
 ): Promise<EncryptionResult> {
   const algorithm = options.algorithm ?? DEFAULT_ALGORITHM;
-  void (options.keyDerivation ?? DEFAULT_KEY_DERIVATION);
+  const keyDerivation = options.keyDerivation ?? DEFAULT_KEY_DERIVATION;
+  if (keyDerivation !== 'pbkdf2') {
+    throw new Error(
+      `Unsupported key derivation method: ${keyDerivation}. Only "pbkdf2" is supported.`
+    );
+  }
 
   const dataBuffer = typeof data === 'string' ? Buffer.from(data, 'utf-8') : data;
   const originalSize = dataBuffer.length;
@@ -118,6 +139,8 @@ export async function encryptData(
   // Derive encryption key
   const derivedKey = await deriveKeyFromSeedPhrase(seedPhrase, {
     salt: options.salt,
+    keyDerivation,
+    pbkdf2Iterations: options.pbkdf2Iterations,
   });
 
   const key = Buffer.from(derivedKey.key, 'hex');
@@ -166,9 +189,17 @@ export async function decryptData(
     throw new Error('Invalid seed phrase');
   }
 
+  if (encrypted.keyDerivation !== 'pbkdf2') {
+    throw new Error(
+      `Unsupported key derivation method: ${encrypted.keyDerivation}. Only "pbkdf2" is supported.`
+    );
+  }
+
   // Derive decryption key
   const derivedKey = await deriveKeyFromSeedPhrase(seedPhrase, {
     salt: encrypted.salt,
+    keyDerivation: encrypted.keyDerivation,
+    pbkdf2Iterations: encrypted.iterations,
   });
 
   const key = Buffer.from(derivedKey.key, 'hex');
