@@ -13,10 +13,8 @@ import {
   generateWallet,
   importWalletFromPrivateKey,
   importWalletFromSeed,
-  importWalletFromMnemonic,
   getWallet,
   listAgentWallets,
-  hasWallet,
   removeWallet,
 } from '../../src/wallet/index.js';
 import {
@@ -33,6 +31,7 @@ export function walletCommand(): Command {
     .description('Manage agent wallets (ckETH, Polkadot, Solana)')
     .argument('<subcommand>', 'wallet subcommand to execute')
     .option('-a, --agent-id <id>', 'agent ID (required)')
+    .option('-f, --file <path>', 'file path (for import)')
     .action(async (subcommand, options) => {
       await executeWalletCommand(subcommand, options);
     });
@@ -45,7 +44,7 @@ export function walletCommand(): Command {
  */
 async function executeWalletCommand(
   subcommand: string,
-  options: { agentId?: string }
+  options: { agentId?: string; file?: string }
 ): Promise<void> {
   if (!options.agentId) {
     console.error(chalk.red('Error: --agent-id is required'));
@@ -68,6 +67,18 @@ async function executeWalletCommand(
     case 'list':
       await handleList(options.agentId!);
       break;
+    case 'sign':
+      await handleSign(options.agentId!);
+      break;
+    case 'history':
+      await handleHistory(options.agentId!);
+      break;
+    case 'export':
+      await handleExport(options.agentId!);
+      break;
+    case 'import':
+      await handleImport(options.agentId!, options.file);
+      break;
     default:
       console.error(chalk.red(`Unknown subcommand: ${subcommand}`));
       console.log();
@@ -79,6 +90,8 @@ async function executeWalletCommand(
       console.log('  list      - List all wallets');
       console.log('  sign      - Sign transaction');
       console.log('  history   - Get transaction history');
+      console.log('  export    - Export wallets to backup file');
+      console.log('  import    - Import wallets from backup file');
       process.exit(1);
   }
 }
@@ -384,4 +397,36 @@ async function handleList(agentId: string): Promise<void> {
       console.log();
     }
   }
+}
+
+/**
+ * Handle wallet sign
+ */
+async function handleSign(agentId: string): Promise<void> {
+  const { handleSign: signHandler } = await import('./wallet-sign.js');
+  await signHandler(agentId);
+}
+
+/**
+ * Handle wallet history
+ */
+async function handleHistory(agentId: string): Promise<void> {
+  const { handleHistory: historyHandler } = await import('./wallet-history.js');
+  await historyHandler(agentId);
+}
+
+/**
+ * Handle wallet export
+ */
+async function handleExport(agentId: string): Promise<void> {
+  const { handleExport: exportHandler } = await import('./wallet-export.js');
+  await exportHandler(agentId);
+}
+
+/**
+ * Handle wallet import
+ */
+async function handleImport(agentId: string, filePath?: string): Promise<void> {
+  const { handleImport: importHandler } = await import('./wallet-import.js');
+  await importHandler(agentId, filePath || '');
 }
