@@ -69,8 +69,8 @@ export async function executeShow(
       canisterId: resolvedCanisterId,
       network,
       status: status.status,
-      memorySize: status.memorySize,
-      cycles: status.cycles,
+      memorySize: status.memorySize ?? 0n,
+      cycles: status.cycles ?? 0n,
       lastUpdated: new Date().toISOString(),
     };
 

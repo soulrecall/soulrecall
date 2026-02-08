@@ -176,10 +176,16 @@ async function handleConnect(agentId: string): Promise<void> {
   // Display wallet info
   console.log();
   console.log(chalk.cyan('Wallet Info:'));
+
+  if (!wallet) {
+    console.log(chalk.yellow('Wallet not found'));
+    return;
+  }
+
   console.log(`  ID:       ${wallet.id}`);
   console.log(`  Chain:    ${wallet.chain}`);
   console.log(`  Address:  ${wallet.address}`);
-  console.log(`  Created:  ${new Date(wallet.createdAt).toISOString()}`);
+  console.log(`  Created: ${new Date(wallet.createdAt).toISOString()}`);
 
   // Test connection to provider
   const spinner = ora('Testing provider connection...').start();

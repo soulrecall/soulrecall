@@ -101,11 +101,11 @@ export class PolkadotProvider extends BaseWalletProvider {
       throw new Error('Provider not connected');
     }
 
-    try {
+     try {
       const accountInfo = await this.api.query.system.account(address);
       const data = accountInfo.toJSON() as any;
-      const freeBalance = data?.data?.free || '0';
-      const reserved = data?.data?.reserved || '0';
+      const freeBalance = ((data?.data?.free as string) ?? '0');
+      const reserved = ((data?.data?.reserved as string) ?? '0');
       const totalBalance = (BigInt(freeBalance) + BigInt(reserved)).toString();
 
       const balanceInDot = parseFloat(totalBalance) / 10_000_000_000;
@@ -304,7 +304,7 @@ export class PolkadotProvider extends BaseWalletProvider {
 
     try {
       const blockHash = await this.api.rpc.chain.getBlockHash();
-      const events = await this.api.query.system.events.at(blockHash);
+      const events = await this.api.query.system.events.at(blockHash || undefined);
       const eventRecords = events.toHuman() as any[];
 
       let from = '';
@@ -313,8 +313,8 @@ export class PolkadotProvider extends BaseWalletProvider {
       let found = false;
 
       for (const event of eventRecords) {
-        if (event.event?.section === 'balances' && event.event?.method === 'Transfer') {
-          const eventData = event.event.data;
+        if (event.event?.section === 'balances' && event.event?.method === 'Transfer' && event.event?.data) {
+          const eventData = event.event?.data as { from?: string; to?: string; amount?: string };
           [from, to, amount] = eventData;
           found = true;
         }

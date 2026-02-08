@@ -69,9 +69,9 @@ export async function executeRebuild(
   }
 
   // Check if source directory exists
-  if (!fs.existsSync(stateconfig.sourcePath)) {
+  if (!fs.existsSync(state.configsourcePath)) {
     console.log();
-    console.log(chalk.yellow('⚠'), 'Source directory not found:', stateconfig.sourcePath);
+    console.log(chalk.yellow('⚠'), 'Source directory not found:', state.configsourcePath);
     console.log();
     console.log('You need to provide a source code to rebuild agent.');
     console.log('Options:');
@@ -117,7 +117,7 @@ export async function executeRebuild(
 
   try {
     const compileOptions = {
-      sourcePath: stateconfig.sourcePath,
+      sourcePath: state.configsourcePath,
       target: options.target ?? 'wasmedge' as const,
       debug: options.debug ?? false,
       optimize: options.optimize ?? 2,
