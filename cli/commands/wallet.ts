@@ -46,7 +46,7 @@ async function executeWalletCommand(
   subcommand: string,
   options: { agentId?: string; file?: string }
 ): Promise<void> {
-  if (!options.agentId) {
+  if (!options.agentId && subcommand !== 'vetkeys') {
     console.error(chalk.red('Error: --agent-id is required'));
     process.exit(1);
   }
@@ -79,6 +79,18 @@ async function executeWalletCommand(
     case 'import':
       await handleImport(options.agentId!, options.file);
       break;
+    case 'sync':
+      await handleSync(options.agentId!);
+      break;
+    case 'status':
+      await handleStatus(options.agentId!);
+      break;
+    case 'vetkeys':
+      await handleVetKeys();
+      break;
+    case 'queue':
+      await handleQueue(options.agentId!);
+      break;
     default:
       console.error(chalk.red(`Unknown subcommand: ${subcommand}`));
       console.log();
@@ -92,6 +104,10 @@ async function executeWalletCommand(
       console.log('  history   - Get transaction history');
       console.log('  export    - Export wallets to backup file');
       console.log('  import    - Import wallets from backup file');
+      console.log('  sync      - Sync wallets to canister (Phase 5)');
+      console.log('  status    - Get wallet sync status (Phase 5)');
+      console.log('  vetkeys    - VetKeys operations (Phase 5)');
+      console.log('  queue     - Transaction queue operations (Phase 5)');
       process.exit(1);
   }
 }
@@ -435,4 +451,481 @@ async function handleExport(agentId: string): Promise<void> {
 async function handleImport(agentId: string, filePath?: string): Promise<void> {
   const { handleImport: importHandler } = await import('./wallet-import.js');
   await importHandler(agentId, filePath || '');
+}
+
+/**
+ * Handle wallet sync to canister (Phase 5)
+ */
+async function handleSync(agentId: string): Promise<void> {
+  console.log(chalk.bold('\n🔄 Wallet Sync to Canister\n'));
+
+  const { canisterId } = await inquirer.prompt<{ canisterId: string }>([
+    {
+      type: 'input',
+      name: 'canisterId',
+      message: 'Enter canister ID:',
+      validate: (input) => input.length > 0,
+    },
+  ]);
+
+  const { syncAll } = await inquirer.prompt<{ syncAll: boolean }>([
+    {
+      type: 'confirm',
+      name: 'syncAll',
+      message: 'Sync all wallets or specific wallet?',
+      default: true,
+    },
+  ]);
+
+  const spinner = ora('Syncing wallets...').start();
+
+  try {
+    const {
+      syncAgentWallets,
+      syncWalletToCanister,
+      listAgentWallets,
+    } = await import('../../src/wallet/wallet-manager.js');
+
+    if (syncAll) {
+      const result = await syncAgentWallets(agentId, canisterId);
+
+      spinner.succeed('Sync complete');
+
+      console.log();
+      console.log(chalk.cyan('Sync Results:'));
+      console.log(`  Synced:   ${result.synced.length}`);
+      console.log(`  Failed:   ${result.failed.length}`);
+
+      if (result.failed.length > 0) {
+        console.log();
+        console.log(chalk.yellow('Failed wallets:'));
+        for (const fail of result.failed) {
+          console.log(`  - ${fail.walletId}: ${fail.error}`);
+        }
+      }
+    } else {
+      const wallets = listAgentWallets(agentId);
+
+      if (wallets.length === 0) {
+        spinner.warn('No wallets found');
+        return;
+      }
+
+      spinner.stop();
+
+      const { walletId } = await inquirer.prompt<{ walletId: string }>([
+        {
+          type: 'list',
+          name: 'walletId',
+          message: 'Select wallet to sync:',
+          choices: wallets,
+        },
+      ]);
+
+      spinner.start('Syncing wallet...');
+
+      const result = await syncWalletToCanister(agentId, walletId, canisterId);
+
+      if (result.success) {
+        spinner.succeed('Wallet synced successfully');
+        console.log(`  Registered at: ${new Date(result.registeredAt!).toISOString()}`);
+      } else {
+        spinner.fail(`Sync failed: ${result.error}`);
+      }
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    spinner.fail(`Sync failed: ${message}`);
+  }
+}
+
+/**
+ * Handle wallet sync status (Phase 5)
+ */
+async function handleStatus(agentId: string): Promise<void> {
+  console.log(chalk.bold('\n📊 Wallet Sync Status\n'));
+
+  const { canisterId } = await inquirer.prompt<{ canisterId: string }>([
+    {
+      type: 'input',
+      name: 'canisterId',
+      message: 'Enter canister ID:',
+      validate: (input) => input.length > 0,
+    },
+  ]);
+
+  const wallets = (await import('../../src/wallet/wallet-manager.js')).listAgentWallets(agentId);
+
+  if (wallets.length === 0) {
+    console.log(chalk.yellow('No wallets found for this agent'));
+    return;
+  }
+
+  console.log();
+  console.log(chalk.cyan(`Wallets for agent: ${agentId}`));
+  console.log();
+
+  const { getWalletSyncStatus } = await import('../../src/wallet/wallet-manager.js');
+
+  for (const walletId of wallets) {
+    const status = await getWalletSyncStatus(agentId, walletId, canisterId);
+
+    const localIcon = status.localExists ? chalk.green('✓') : chalk.red('✗');
+    const canisterIcon = status.inCanister ? chalk.green('✓') : chalk.red('✗');
+    const syncIcon = status.synced ? chalk.green('✓') : chalk.yellow('○');
+
+    console.log(chalk.white(walletId));
+    console.log(`  Local:     ${localIcon} ${status.localExists ? 'exists' : 'missing'}`);
+    console.log(`  Canister:  ${canisterIcon} ${status.inCanister ? 'registered' : 'not registered'}`);
+    console.log(`  Synced:    ${syncIcon} ${status.synced ? 'yes' : 'no'}`);
+    console.log();
+  }
+}
+
+/**
+ * Handle VetKeys operations (Phase 5)
+ */
+async function handleVetKeys(): Promise<void> {
+  console.log(chalk.bold('\n🔐 VetKeys Operations\n'));
+
+  const { operation } = await inquirer.prompt<{ operation: string }>([
+    {
+      type: 'list',
+      name: 'operation',
+      message: 'Select VetKeys operation:',
+      choices: [
+        { name: 'status', value: 'Get VetKeys status' },
+        { name: 'list', value: 'List encrypted secrets' },
+        { name: 'get', value: 'Get encrypted secret' },
+        { name: 'delete', value: 'Delete encrypted secret' },
+      ],
+    },
+  ]);
+
+  const { canisterId } = await inquirer.prompt<{ canisterId: string }>([
+    {
+      type: 'input',
+      name: 'canisterId',
+      message: 'Enter canister ID:',
+      validate: (input) => input.length > 0,
+    },
+  ]);
+
+  const { VetKeysImplementation } = await import('../../src/security/vetkeys.js');
+  const vetkeys = new VetKeysImplementation({
+    canisterId,
+    useCanister: true,
+  });
+
+  switch (operation) {
+    case 'status':
+      await handleVetKeysStatus(vetkeys);
+      break;
+    case 'list':
+      await handleVetKeysList(vetkeys);
+      break;
+    case 'get':
+      await handleVetKeysGet(vetkeys);
+      break;
+    case 'delete':
+      await handleVetKeysDelete(vetkeys);
+      break;
+  }
+}
+
+/**
+ * Handle VetKeys status operation
+ */
+async function handleVetKeysStatus(vetkeys: any): Promise<void> {
+  const spinner = ora('Fetching VetKeys status...').start();
+
+  try {
+    const status = await vetkeys.getVetKeysStatusFromCanister();
+
+    spinner.succeed('VetKeys status fetched');
+
+    console.log();
+    console.log(chalk.cyan('VetKeys Status:'));
+    console.log(`  Enabled:           ${status.enabled ? chalk.green('yes') : chalk.red('no')}`);
+    console.log(`  Threshold Support: ${status.thresholdSupported ? chalk.green('yes') : chalk.red('no')}`);
+    console.log(`  Mode:              ${status.mode}`);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    spinner.fail(`Failed to fetch status: ${message}`);
+  }
+}
+
+/**
+ * Handle VetKeys list operation
+ */
+async function handleVetKeysList(vetkeys: any): Promise<void> {
+  const spinner = ora('Listing encrypted secrets...').start();
+
+  try {
+    const secrets = await vetkeys.listEncryptedSecretsOnCanister();
+
+    spinner.succeed(`Found ${secrets.length} encrypted secrets`);
+
+    if (secrets.length > 0) {
+      console.log();
+      console.log(chalk.cyan('Encrypted Secrets:'));
+      for (const secretId of secrets) {
+        console.log(`  - ${secretId}`);
+      }
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    spinner.fail(`Failed to list secrets: ${message}`);
+  }
+}
+
+/**
+ * Handle VetKeys get operation
+ */
+async function handleVetKeysGet(vetkeys: any): Promise<void> {
+  const { secretId } = await inquirer.prompt<{ secretId: string }>([
+    {
+      type: 'input',
+      name: 'secretId',
+      message: 'Enter secret ID:',
+      validate: (input) => input.length > 0,
+    },
+  ]);
+
+  const spinner = ora('Fetching encrypted secret...').start();
+
+  try {
+    const secret = await vetkeys.getEncryptedSecretFromCanister(secretId);
+
+    if (secret) {
+      spinner.succeed('Secret found');
+      console.log();
+      console.log(chalk.cyan('Encrypted Secret:'));
+      console.log(`  ID:       ${secretId}`);
+      console.log(`  Algorithm: ${secret.algorithm}`);
+      console.log(`  IV:       ${(Array.from(secret.iv) as number[]).map(b => b.toString(16).padStart(2, '0')).join('')}`);
+      console.log(`  Tag:      ${(Array.from(secret.tag) as number[]).map(b => b.toString(16).padStart(2, '0')).join('')}`);
+      console.log(`  Data:     ${(Array.from(secret.ciphertext) as number[]).slice(0, 32).map(b => b.toString(16).padStart(2, '0')).join('')}...`);
+    } else {
+      spinner.warn('Secret not found');
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    spinner.fail(`Failed to fetch secret: ${message}`);
+  }
+}
+
+/**
+ * Handle VetKeys delete operation
+ */
+async function handleVetKeysDelete(vetkeys: any): Promise<void> {
+  const { secretId } = await inquirer.prompt<{ secretId: string }>([
+    {
+      type: 'input',
+      name: 'secretId',
+      message: 'Enter secret ID to delete:',
+      validate: (input) => input.length > 0,
+    },
+  ]);
+
+  const { confirm } = await inquirer.prompt<{ confirm: boolean }>([
+    {
+      type: 'confirm',
+      name: 'confirm',
+      message: `Are you sure you want to delete secret ${secretId}?`,
+      default: false,
+    },
+  ]);
+
+  if (!confirm) {
+    console.log(chalk.yellow('\nDelete cancelled'));
+    return;
+  }
+
+  const spinner = ora('Deleting encrypted secret...').start();
+
+  try {
+    const success = await vetkeys.deleteEncryptedSecretFromCanister(secretId);
+
+    if (success) {
+      spinner.succeed('Secret deleted successfully');
+    } else {
+      spinner.warn('Delete failed');
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    spinner.fail(`Failed to delete secret: ${message}`);
+  }
+}
+
+/**
+ * Handle transaction queue operations (Phase 5)
+ */
+async function handleQueue(agentId: string): Promise<void> {
+  console.log(chalk.bold('\n📋 Transaction Queue\n'));
+
+  const { operation } = await inquirer.prompt<{ operation: string }>([
+    {
+      type: 'list',
+      name: 'operation',
+      message: 'Select queue operation:',
+      choices: [
+        { name: 'list', value: 'List all transactions' },
+        { name: 'pending', value: 'List pending transactions' },
+        { name: 'stats', value: 'Get queue statistics' },
+        { name: 'clear', value: 'Clear completed transactions' },
+      ],
+    },
+  ]);
+
+  const { canisterId } = await inquirer.prompt<{ canisterId: string }>([
+    {
+      type: 'input',
+      name: 'canisterId',
+      message: 'Enter canister ID:',
+      validate: (input) => input.length > 0,
+    },
+  ]);
+
+  switch (operation) {
+    case 'list':
+      await handleQueueList(agentId, canisterId);
+      break;
+    case 'pending':
+      await handleQueuePending(agentId, canisterId);
+      break;
+    case 'stats':
+      await handleQueueStats(agentId, canisterId);
+      break;
+    case 'clear':
+      await handleQueueClear(agentId, canisterId);
+      break;
+  }
+}
+
+/**
+ * Handle queue list operation
+ */
+async function handleQueueList(_agentId: string, canisterId: string): Promise<void> {
+  const spinner = ora('Fetching transactions...').start();
+
+  try {
+    await import('../../src/canister/actor.js');
+    const { createActor } = await import('../../src/canister/actor.js');
+    const actor = createActor(canisterId);
+
+    const transactions = await actor.getQueuedTransactions();
+
+    spinner.succeed(`Found ${transactions.length} transactions`);
+
+    if (transactions.length > 0) {
+      console.log();
+      console.log(chalk.cyan('Transaction Queue:'));
+      for (const tx of transactions) {
+        console.log(`  ID:     ${tx.id}`);
+        console.log(`  Action: ${tx.action.action}`);
+        console.log(`  Status: ${tx.status}`);
+        console.log(`  Created: ${new Date(Number(tx.createdAt)).toISOString()}`);
+        console.log();
+      }
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    spinner.fail(`Failed to fetch transactions: ${message}`);
+  }
+}
+
+/**
+ * Handle queue pending operation
+ */
+async function handleQueuePending(_agentId: string, canisterId: string): Promise<void> {
+  const spinner = ora('Fetching pending transactions...').start();
+
+  try {
+    await import('../../src/canister/actor.js');
+    const { createActor } = await import('../../src/canister/actor.js');
+    const actor = createActor(canisterId);
+
+    const transactions = await actor.getPendingTransactions();
+
+    spinner.succeed(`Found ${transactions.length} pending transactions`);
+
+    if (transactions.length > 0) {
+      console.log();
+      console.log(chalk.cyan('Pending Transactions:'));
+      for (const tx of transactions) {
+        console.log(`  ID:     ${tx.id}`);
+        console.log(`  Action: ${tx.action.action}`);
+        console.log(`  Priority: ${tx.action.priority}`);
+        console.log(`  Created: ${new Date(Number(tx.createdAt)).toISOString()}`);
+        console.log();
+      }
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    spinner.fail(`Failed to fetch pending transactions: ${message}`);
+  }
+}
+
+/**
+ * Handle queue stats operation
+ */
+async function handleQueueStats(_agentId: string, canisterId: string): Promise<void> {
+  const spinner = ora('Fetching queue statistics...').start();
+
+  try {
+    await import('../../src/canister/actor.js');
+    const { createActor } = await import('../../src/canister/actor.js');
+    const actor = createActor(canisterId);
+
+    const stats = await actor.getTransactionQueueStats();
+
+    spinner.succeed('Queue statistics fetched');
+
+    console.log();
+    console.log(chalk.cyan('Transaction Queue Statistics:'));
+    console.log(`  Total:     ${stats.total}`);
+    console.log(`  Pending:   ${stats.pending}`);
+    console.log(`  Queued:    ${stats.queued}`);
+    console.log(`  Signed:    ${stats.signed}`);
+    console.log(`  Completed: ${stats.completed}`);
+    console.log(`  Failed:    ${stats.failed}`);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    spinner.fail(`Failed to fetch statistics: ${message}`);
+  }
+}
+
+/**
+ * Handle queue clear operation
+ */
+async function handleQueueClear(_agentId: string, canisterId: string): Promise<void> {
+  const { confirm } = await inquirer.prompt<{ confirm: boolean }>([
+    {
+      type: 'confirm',
+      name: 'confirm',
+      message: 'Clear all completed transactions?',
+      default: false,
+    },
+  ]);
+
+  if (!confirm) {
+    console.log(chalk.yellow('\nClear cancelled'));
+    return;
+  }
+
+  const spinner = ora('Clearing completed transactions...').start();
+
+  try {
+    await import('../../src/canister/actor.js');
+    const { createActor } = await import('../../src/canister/actor.js');
+    const actor = createActor(canisterId);
+
+    await actor.clearCompletedTransactions();
+
+    spinner.succeed('Completed transactions cleared');
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    spinner.fail(`Failed to clear transactions: ${message}`);
+  }
 }

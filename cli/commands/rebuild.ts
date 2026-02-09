@@ -36,10 +36,12 @@ export async function executeRebuild(
 
   const spinner = ora('Reading agent state...').start();
 
+  let state: any;
+
   try {
     // Read and parse state
     const content = fs.readFileSync(resolvedPath, 'utf-8');
-    const state = JSON.parse(content);
+    state = JSON.parse(content);
 
     spinner.succeed('Agent state loaded successfully!');
 
@@ -61,7 +63,6 @@ export async function executeRebuild(
     console.log('Context is preserved');
 
     spinner.stop();
-    return;
   } catch (error) {
     spinner.stop();
     const message = error instanceof Error ? error.message : 'Unknown error';
@@ -69,9 +70,9 @@ export async function executeRebuild(
   }
 
   // Check if source directory exists
-  if (!fs.existsSync(state.configsourcePath)) {
+  if (!fs.existsSync(state.config.sourcePath)) {
     console.log();
-    console.log(chalk.yellow('⚠'), 'Source directory not found:', state.configsourcePath);
+    console.log(chalk.yellow('⚠'), 'Source directory not found:', state.config.sourcePath);
     console.log();
     console.log('You need to provide a source code to rebuild agent.');
     console.log('Options:');
@@ -117,13 +118,13 @@ export async function executeRebuild(
 
   try {
     const compileOptions = {
-      sourcePath: state.configsourcePath,
+      sourcePath: state.config.sourcePath,
       target: options.target ?? 'wasmedge' as const,
       debug: options.debug ?? false,
       optimize: options.optimize ?? 2,
     };
 
-    const result = await compileToWasm(stateconfig, compileOptions, path.dirname(resolvedPath));
+    const result = await compileToWasm(state.config, compileOptions, path.dirname(resolvedPath));
 
     compileSpinner.succeed(`Agent compiled successfully!`);
 
