@@ -1,154 +1,99 @@
 # AgentVault
 
-Persistent On-Chain AI Agent Platform - Sovereign, Reconstructible, Autonomous
+Persistent on-chain AI agent tooling for packaging, canister deployment scaffolding, monitoring, and multi-chain wallet operations on ICP.
 
-## Overview
+## Current Status
 
-AgentVault is an open-source CLI and canister system that enables true autonomy for local AI agents. It solves the fundamental problem of agent state persistence and execution reliability by migrating from fragile local file storage to immutable, sovereign Internet Computer (ICP) canisters.
+This repository is active and evolving. The following is accurate for the current codebase:
 
-**Core value proposition:** Any user can fully rebuild and resume their agent on a clean OS install using only chain data and a seed phrase.
+- Packaging pipeline is implemented (`agentvault package`) with WasmEdge-compatible output and optional `ic-wasm` optimization.
+- ICP toolchain wrappers exist (`icp` CLI and `ic-wasm`), plus environment config via `icp.yaml`.
+- Monitoring and management commands are present (info, stats, monitor, health, identity, cycles, tokens).
+- Wallet system is fully implemented (ckETH, Polkadot, Solana) with send, sign, history, export/import, and transaction queue helpers.
+- The Motoko canister currently focuses on wallet registry, transaction queue, and VetKeys mock endpoints.
 
-## Features
+Not yet wired end-to-end:
+- The on-chain agent state/execution interface is declared in `canister/agent.did`, but the Motoko canister does not currently implement those `agent_*` methods.
+- CLI commands `deploy`, `fetch`, `show`, and `exec` use stubbed ICP client logic; they do not persist or read real on-chain agent state yet.
 
-- **Real ICP Deployment** - Deploy agents to ICP canisters with @dfinity/agent SDK integration
-- **Agent Packaging** - Compile local AI agents to WASM for on-chain deployment (esbuild bundling)
-- **Canister Deployment** - Deploy agents to ICP canisters with persistent state
-- **State Reconstruction** - Fetch, decrypt, and rebuild agents from chain data
-- **Cross-Chain Support** - Native interoperability with Ethereum, Bitcoin, Solana via Chain Fusion
-- **Security-First** - VetKeys threshold key derivation for encrypted secrets
+## Repository Layout
 
-## Supported Agents
+- `src/`: core TypeScript library (packaging, deployment, ICP tooling, monitoring, wallet, security)
+- `cli/`: CLI entry points and command handlers
+- `canister/`: Motoko canister code and Candid definitions
+- `tests/`: Vitest suite (unit/integration/CLI)
+- `examples/`: sample agent configs
+- `docs/`, `AI_DOCS/`: product and implementation docs
 
-- Clawdbot (Claude Code)
-- Goose
-- Cline
-- Generic agents
-
-## Requirements
-
-- Node.js 18+
-- dfx (Internet Computer SDK) - for canister development and deployment
-- @dfinity/agent - for ICP canister interaction
-- @dfinity/candid - for Candid interface generation
-- Local dfx replica - `dfx start` for development environment
-- Wallet/identity for signing canister operations (production)
-
-## Installation
+## Quick Start (Local Build)
 
 ```bash
-npm install -g agentvault
+# Clone
+git clone https://github.com/johnnyclem/AgentVault.git
+cd AgentVault
+
+# Install deps
+npm install
+
+# Build TypeScript (outputs to dist/)
+npm run build
+
+# Run the CLI from the repo
+node dist/cli/index.js --help
 ```
 
-## Quick Start
+## Local On-Chain Setup (Current Working Flow)
+
+The steps below set up a local ICP replica and deploy the canister. This is the only fully working on-chain flow today. Agent state backup/restore is not yet wired.
 
 ```bash
-# Initialize a new agent project
-agentvault init
+# 1) Install dfx (see the official ICP SDK instructions)
+# 2) Start a local replica
 
-# Package an agent (bundles with esbuild, generates WASM)
-agentvault package ./path/to/agent
+dfx start --clean --background
 
-# Deploy to ICP canister (uses @dfinity/agent)
-agentvault deploy --network local dist/my-agent.wasm
+# 3) Deploy the AgentVault canister
 
-# View canister status
-agentvault show <canister-id>
+dfx deploy agent_vault
 
-# Fetch and rebuild agent from chain
-agentvault fetch <canister-id>
-agentvault decrypt <canister-id>
-agentvault rebuild <canister-id>
+# 4) Verify canister health
+
+dfx canister call agent_vault getCanisterStatus
 ```
 
-### Development Workflow
+## Packaging an Agent (Local)
 
 ```bash
-# Start local dfx replica (required for local deployment)
-dfx start
+# Package a local agent directory into WASM + state artifacts
+node dist/cli/index.js package ./path/to/agent -o ./dist/agent
 
-# Build canister locally (generates .did file)
-dfx build
-
-# Deploy to local development canister
-agentvault deploy --network local
-
-# Dry run deployment (no changes)
-agentvault deploy --dry-run --network local dist/agent.wasm
+# Optional: enable ic-wasm optimizations when ic-wasm is installed
+node dist/cli/index.js package ./path/to/agent -o ./dist/agent --ic-wasm-optimize --ic-wasm-shrink
 ```
 
-## Documentation
+## Development Commands
 
-See the [docs](./docs) directory for detailed documentation.
-
-## Development Setup
-
-### Prerequisites
-
-1. **Install dfx**:
-   ```bash
-   DFX_VERSION=0.22.0 sh -ci <dfx-installer.install.sh> https://sdk.dfinity.org
-   ```
-
-2. **Start local replica**:
-   ```bash
-   dfx start --clean --background
-   ```
-
-3. **Verify environment**:
-   ```bash
-   dfx ping
-   ```
-
-### Project Structure
-
-```
-agentvault/
-├── cli/              # Command-line interface
-├── src/
-│   ├── packaging/     # Agent detection, bundling, and compilation
-│   ├── deployment/    # ICP client and deployment logic
-│   └── security/       # Encryption and VetKeys integration
-├── canister/         # Motoko canister code
-├── tests/            # Test suite
-├── dfx.json          # dfx configuration
-└── dist/             # Build output (WASM files)
+```bash
+npm run dev         # tsx watch
+npm run build       # tsc build
+npm run start       # run dist/index.js
+npm run test        # vitest run
+npm run test:watch  # vitest watch
+npm run typecheck   # tsc --noEmit
+npm run lint        # eslint
+npm run lint:fix    # eslint --fix
 ```
 
-### Key Files
+## Notes on On-Chain Backup
 
-- **`src/deployment/icpClient.ts`** - Real ICP client with @dfinity/agent integration
-- **`dfx.json`** - Canister configuration for dfx build tool
-- **`canister/agent.mo`** - Motoko canister with stable memory support
-- **`package.json`** - Includes @dfinity/agent and @dfinity/candid dependencies
+On-chain agent state backup/reconstruction is a roadmap item. The intended flow is:
+1) package agent to WASM + state JSON
+2) deploy canister
+3) upload state and WASM to the canister
+4) fetch/decrypt/rebuild from chain
 
-### Known Limitations
-
-- Local development uses fixed canister ID (`aaaaa-bbbbb-...`)
-- Production deployment requires actual canister IDs from dfx
-- Cycles calculated are estimates; real costs may vary
-- Full canister lifecycle management requires additional dfx workflows
-
-### Deployment Progress
-
-**✅ Completed:**
-- Real ICP client implementation
-- @dfinity/agent integration
-- dfx configuration
-- Canister deployment pipeline
-
-**🔄 In Progress:**
-- Candid interface generation
-- WASM execution in canisters
-- Production canister management
-- Identity and signing
-
-**📋 Planned:**
-- Agent-specific config parsers
-- WasmEdge local runtime
-- Comprehensive error handling
-- VetKeys threshold encryption
-- Cross-chain oracles
+Steps 3–4 are not implemented in the current CLI/canister pairing. If you want this wired next, see the PRDs in `AI_DOCS/` and the gaps called out in the code review.
 
 ## License
 
-MIT License - see [LICENSE](./LICENSE) for details.
+MIT License - see [LICENSE](./LICENSE).
