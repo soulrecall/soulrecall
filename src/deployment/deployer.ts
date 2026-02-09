@@ -16,6 +16,9 @@ import type {
   DeploymentStatus,
 } from './types.js';
 import { createICPClient } from './icpClient.js';
+import { detectToolchain } from '../icp/tool-detector.js';
+import * as icpcli from '../icp/icpcli.js';
+import { getEnvironment } from '../icp/environment.js';
 
 /**
  * Extract agent name from WASM file path
@@ -47,13 +50,12 @@ export function validateDeployOptions(options: DeployOptions): {
     });
   }
 
-  // Validate network
-  if (options.network !== 'local' && options.network !== 'ic') {
-    errors.push({
-      code: 'INVALID_NETWORK',
-      message: `Invalid network: ${options.network}. Must be 'local' or 'ic'.`,
-      network: options.network,
-    });
+  // Validate network - now accepts any string (environment names from icp.yaml)
+  const knownNetworks = ['local', 'ic', 'mainnet', 'dev', 'staging', 'production'];
+  if (!knownNetworks.includes(options.network) && !options.environment) {
+    warnings.push(
+      `Network '${options.network}' is not a standard name. Ensure it is defined in your icp.yaml.`
+    );
   }
 
   // Warn about mainnet deployment
@@ -121,6 +123,9 @@ export function getDeploySummary(options: DeployOptions): {
  * Deploy an agent to ICP
  *
  * This is the main entry point for the deployment pipeline.
+ * Uses auto-detection to choose between icp-cli and the @dfinity/agent SDK.
+ *
+ * Priority: icp-cli > @dfinity/agent SDK (with dfx fallback)
  *
  * @param options - Deployment options
  * @returns Deployment result with canister info
@@ -133,6 +138,74 @@ export async function deployAgent(options: DeployOptions): Promise<DeployResult>
     throw new Error(`Deployment validation failed: ${errorMessages}`);
   }
 
+  // Detect available toolchain
+  const toolchain = await detectToolchain();
+
+  // Determine which tool to use
+  if (toolchain.icp.available && (options.environment || options.identity)) {
+    // Use icp-cli when explicitly requesting environments or identity features
+    return deployWithIcpCli(options, validation.warnings);
+  } else if (toolchain.preferredDeployTool === 'icp') {
+    // Prefer icp-cli when available
+    return deployWithIcpCli(options, validation.warnings);
+  } else {
+    // Fall back to @dfinity/agent SDK
+    return deployWithSdk(options, validation.warnings);
+  }
+}
+
+/**
+ * Deploy using icp-cli tool.
+ */
+async function deployWithIcpCli(
+  options: DeployOptions,
+  warnings: string[],
+): Promise<DeployResult> {
+  // Resolve environment from options or network
+  const envName = options.environment ?? options.network;
+  const envConfig = getEnvironment(envName);
+  const identity = options.identity ?? envConfig.identity;
+
+  // Determine deploy mode
+  const mode = options.mode ?? (options.canisterId ? 'upgrade' : 'auto');
+
+  const result = await icpcli.deploy({
+    environment: envName,
+    identity,
+    mode,
+    projectRoot: options.projectRoot,
+  });
+
+  if (!result.success) {
+    throw new Error(`icp-cli deploy failed: ${result.stderr || result.stdout}`);
+  }
+
+  // Parse canister ID from output (best effort)
+  const canisterIdMatch = result.stdout.match(/([a-z0-9]{5}-[a-z0-9]{5}-[a-z0-9]{5}-[a-z0-9]{5}-[a-z0-9]{3})/);
+  const canisterId = canisterIdMatch?.[1] ?? options.canisterId ?? 'unknown';
+
+  const canisterInfo: CanisterInfo = {
+    canisterId,
+    network: options.network,
+    agentName: extractAgentName(options.wasmPath),
+    deployedAt: new Date(),
+  };
+
+  return {
+    canister: canisterInfo,
+    isUpgrade: mode === 'upgrade',
+    warnings: [...warnings, `Deployed via icp-cli (environment: ${envName})`],
+    deployTool: 'icp',
+  };
+}
+
+/**
+ * Deploy using @dfinity/agent SDK (original implementation).
+ */
+async function deployWithSdk(
+  options: DeployOptions,
+  warnings: string[],
+): Promise<DeployResult> {
   // Create ICP client
   const client = createICPClient({
     network: options.network,
@@ -163,7 +236,8 @@ export async function deployAgent(options: DeployOptions): Promise<DeployResult>
     canister: canisterInfo,
     isUpgrade: deployResult.isUpgrade,
     cyclesUsed: deployResult.cyclesUsed,
-    warnings: validation.warnings,
+    warnings,
+    deployTool: 'sdk',
   };
 }
 

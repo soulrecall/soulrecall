@@ -41,6 +41,19 @@ export interface PackageOptions {
   debug?: boolean;
   /** Optimization level (0-3) */
   optimize?: number;
+
+  // ── ic-wasm optimization options ──────────────────────────────────────
+
+  /** Run ic-wasm optimize after WASM generation (requires ic-wasm) */
+  icWasmOptimize?: boolean;
+  /** Run ic-wasm shrink to remove unused functions (requires ic-wasm) */
+  icWasmShrink?: boolean;
+  /** Validate WASM against Candid .did interface (requires ic-wasm) */
+  candidInterface?: string;
+  /** Memory limit to set via ic-wasm resource (e.g. '4GiB') */
+  memoryLimit?: string;
+  /** Compute quota to set via ic-wasm resource */
+  computeQuota?: string;
 }
 
 /**
@@ -73,6 +86,17 @@ export interface PackageResult {
   duration?: number;
   /** Number of functions exported */
   functionCount?: number;
+
+  // ── ic-wasm optimization results ────────────────────────────────────
+
+  /** Original WASM size before ic-wasm optimization (bytes) */
+  originalWasmSize?: number;
+  /** Size reduction percentage from optimization (0-100) */
+  optimizationReductionPercent?: number;
+  /** Whether Candid validation passed */
+  candidValidationPassed?: boolean;
+  /** Optimization warnings */
+  optimizationWarnings?: string[];
 }
 
 /**

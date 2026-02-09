@@ -56,21 +56,21 @@ describe('deployer', () => {
       expect(result.errors.some((e) => e.code === 'INVALID_WASM')).toBe(true);
     });
 
-    it('should return error for invalid network', () => {
-      vi.mocked(fs.existsSync).mockReturnValue(true);
-      vi.mocked(fs.statSync).mockReturnValue({ isFile: () => true } as fs.Stats);
-      vi.mocked(fs.readFileSync).mockReturnValue(
-        Buffer.from([0x00, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00])
-      );
+    it('should return error for invalid network name', async () => {
+    vi.mocked(fs.existsSync).mockReturnValue(true);
+    vi.mocked(fs.statSync).mockReturnValue({ isFile: () => true } as fs.Stats);
+    vi.mocked(fs.readFileSync).mockReturnValue(
+      Buffer.from([0x00, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00])
+    );
 
-      const result = validateDeployOptions({
-        wasmPath: '/path/to/agent.wasm',
-        network: 'invalid' as 'local',
-      });
-
-      expect(result.valid).toBe(false);
-      expect(result.errors.some((e) => e.code === 'INVALID_NETWORK')).toBe(true);
+    const result = validateDeployOptions({
+      wasmPath: '/path/to/agent.wasm',
+      network: 'invalid-network-name' as 'local',
     });
+
+    expect(result.valid).toBe(false);
+    expect(result.errors.some((e) => e.code === 'INVALID_NETWORK')).toBe(true);
+  });
 
     it('should warn about mainnet deployment', () => {
       vi.mocked(fs.existsSync).mockReturnValue(true);

@@ -4,8 +4,17 @@
 
 /**
  * Network target for deployment
+ *
+ * - 'local': Local dfx/icp replica
+ * - 'ic': IC mainnet
+ * - string: Named environment from icp.yaml (e.g. 'dev', 'staging', 'production')
  */
-export type NetworkType = 'local' | 'ic';
+export type NetworkType = 'local' | 'ic' | string;
+
+/**
+ * Which tool is being used for deployment
+ */
+export type DeployToolType = 'icp' | 'dfx' | 'sdk';
 
 /**
  * Deployment status codes
@@ -42,6 +51,19 @@ export interface DeployOptions {
   skipConfirmation?: boolean;
   /** Path to dfx identity to use */
   identityPath?: string;
+
+  // ── icp-cli options ───────────────────────────────────────────────────
+
+  /** Named environment from icp.yaml */
+  environment?: string;
+  /** Identity name for icp-cli */
+  identity?: string;
+  /** Cycles allocation for deployment */
+  cycles?: string;
+  /** Deploy mode (auto, install, reinstall, upgrade) */
+  mode?: 'auto' | 'install' | 'reinstall' | 'upgrade';
+  /** Override project root for icp.yaml lookup */
+  projectRoot?: string;
 }
 
 /**
@@ -56,6 +78,8 @@ export interface DeployResult {
   cyclesUsed?: bigint;
   /** Any warnings during deployment */
   warnings: string[];
+  /** Which tool was used for deployment */
+  deployTool?: DeployToolType;
 }
 
 /**

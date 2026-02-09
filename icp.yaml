@@ -1,0 +1,12 @@
+environments:
+  local:
+    network:
+      type: local
+    replicaCount: 4
+    cycles:
+      initial: 100T
+
+optimization:
+  level: 3
+  shrink: true
+  removeDebug: true

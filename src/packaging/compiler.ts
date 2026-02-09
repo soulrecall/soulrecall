@@ -18,6 +18,8 @@ import {
   type WasmEdgeOptions,
   DEFAULT_WASMEDGE_OPTIONS,
 } from './wasmedge-compiler.js';
+import { runOptimizationPipeline } from '../icp/optimization.js';
+import type { IcWasmOptLevel } from '../icp/types.js';
 
 /**
  * WASM magic bytes (first 4 bytes of any valid .wasm file)
@@ -528,6 +530,64 @@ export async function compileToWasm(
   fs.writeFileSync(watPath, watContent, 'utf-8');
   fs.writeFileSync(statePath, stateContent, 'utf-8');
 
+  // ── ic-wasm optimization pipeline ──────────────────────────────────────
+  const shouldOptimize = options.icWasmOptimize || options.icWasmShrink ||
+    options.candidInterface || options.memoryLimit || options.computeQuota;
+
+  let finalWasmSize = wasmBuffer.length;
+  let originalWasmSize: number | undefined;
+  let optimizationReductionPercent: number | undefined;
+  let candidValidationPassed: boolean | undefined;
+  let optimizationWarnings: string[] | undefined;
+
+  if (shouldOptimize) {
+    originalWasmSize = wasmBuffer.length;
+
+    // Map numeric optimize level (0-3) to IcWasmOptLevel
+    const levelMap: Record<number, IcWasmOptLevel> = {
+      0: 'O0', 1: 'O1', 2: 'O2', 3: 'O3',
+    };
+    const optimizeLevel = levelMap[options.optimize ?? 3] ?? 'O3';
+
+    // Build resource limits map
+    const resourceLimits: Record<string, string> = {};
+    if (options.memoryLimit) {
+      resourceLimits['memory'] = options.memoryLimit;
+    }
+    if (options.computeQuota) {
+      resourceLimits['compute'] = options.computeQuota;
+    }
+
+    const optimizedPath = path.join(outputDir, `${config.name}.optimized.wasm`);
+
+    const pipelineResult = await runOptimizationPipeline({
+      input: wasmPath,
+      output: optimizedPath,
+      optimize: options.icWasmOptimize,
+      optimizeLevel,
+      shrink: options.icWasmShrink,
+      resourceLimits: Object.keys(resourceLimits).length > 0 ? resourceLimits : undefined,
+      candidInterface: options.candidInterface,
+    });
+
+    optimizationWarnings = pipelineResult.warnings;
+    candidValidationPassed = pipelineResult.validationPassed;
+
+    if (pipelineResult.success && fs.existsSync(optimizedPath)) {
+      // Replace the original WASM with the optimized version
+      fs.copyFileSync(optimizedPath, wasmPath);
+      fs.unlinkSync(optimizedPath);
+      finalWasmSize = pipelineResult.finalSize;
+      optimizationReductionPercent = pipelineResult.reductionPercent;
+    } else {
+      // Optimization failed but original WASM is still valid
+      optimizationWarnings = [
+        ...(optimizationWarnings ?? []),
+        'Optimization pipeline did not fully succeed; using unoptimized WASM',
+      ];
+    }
+  }
+
   const result: PackageResult = {
     config,
     wasmPath,
@@ -536,11 +596,15 @@ export async function compileToWasm(
     jsBundlePath,
     sourceMapPath: options.debug ? sourceMapPath : undefined,
     manifestPath,
-    wasmSize: wasmBuffer.length,
+    wasmSize: finalWasmSize,
     target,
     timestamp: new Date(),
     duration: Date.now() - startTime,
     functionCount: 14, // Standard agent interface exports
+    originalWasmSize,
+    optimizationReductionPercent,
+    candidValidationPassed,
+    optimizationWarnings,
   };
 
   // Validate generated WASM

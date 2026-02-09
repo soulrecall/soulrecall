@@ -40,8 +40,6 @@
     "node": ">=18.0.0"
   },
   "devDependencies": {
-    "@dfinity/agent": "^3.4.3",
-    "@dfinity/candid": "^3.4.3",
     "@eslint/js": "^9.18.0",
     "@types/inquirer": "^9.0.9",
     "@types/node": "^22.10.0",
@@ -50,10 +48,11 @@
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.20.0",
     "vitest": "^2.1.0",
-    "yaml": "^2.8.2",
     "zod": "^4.3.6"
   },
   "dependencies": {
+    "@dfinity/agent": "^3.4.3",
+    "@dfinity/candid": "^3.4.3",
     "@dfinity/principal": "^3.4.3",
     "@noble/curves": "^1.7.0",
     "@polkadot/api": "^16.5.4",
@@ -65,8 +64,11 @@
     "cbor-x": "^1.6.0",
     "chalk": "^5.4.1",
     "commander": "^12.1.0",
+    "esbuild": "^0.24.0",
     "ethers": "^6.16.0",
+    "execa": "^8.0.0",
     "inquirer": "^9.3.0",
-    "ora": "^8.1.0"
+    "ora": "^8.1.0",
+    "yaml": "^2.8.2"
   }
 }

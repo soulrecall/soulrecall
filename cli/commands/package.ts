@@ -17,6 +17,11 @@ export interface PackageCommandOptions {
   target?: 'wasmedge' | 'motoko' | 'pure-wasm';
   debug?: boolean;
   optimize?: number;
+  icWasmOptimize?: boolean;
+  icWasmShrink?: boolean;
+  validate?: string;
+  memoryLimit?: string;
+  computeQuota?: string;
 }
 
 /**
@@ -110,7 +115,28 @@ export function displayResult(result: PackageResult): void {
   if (result.manifestPath) {
     console.log(`  Manifest:  ${result.manifestPath}`);
   }
-  console.log();
+  // Display optimization results if available
+  if (result.originalWasmSize !== undefined) {
+    console.log(chalk.cyan('Optimization:'));
+    console.log(`  Original: ${formatSize(result.originalWasmSize)}`);
+    console.log(`  Optimized: ${formatSize(result.wasmSize)}`);
+    if (result.optimizationReductionPercent !== undefined) {
+      console.log(`  Reduction: ${result.optimizationReductionPercent}%`);
+    }
+    if (result.candidValidationPassed !== undefined) {
+      const status = result.candidValidationPassed
+        ? chalk.green('passed')
+        : chalk.red('failed');
+      console.log(`  Candid Validation: ${status}`);
+    }
+    if (result.optimizationWarnings && result.optimizationWarnings.length > 0) {
+      for (const warning of result.optimizationWarnings) {
+        console.log(chalk.yellow(`  Warning: ${warning}`));
+      }
+    }
+    console.log();
+  }
+
   console.log(chalk.cyan('Next steps:'));
   console.log('  1. Review the generated files');
   console.log('  2. Run', chalk.bold('agentvault deploy'), 'to upload to ICP');
@@ -141,6 +167,11 @@ export async function executePackage(
       target: options.target,
       debug: options.debug,
       optimize: options.optimize,
+      icWasmOptimize: options.icWasmOptimize,
+      icWasmShrink: options.icWasmShrink,
+      candidInterface: options.validate,
+      memoryLimit: options.memoryLimit,
+      computeQuota: options.computeQuota,
     };
 
     // Execute packaging
@@ -173,6 +204,11 @@ export function packageCommand(): Command {
     .option('-t, --target <target>', 'compilation target (wasmedge|motoko|pure-wasm)', 'wasmedge')
     .option('--debug', 'enable debugging features (source maps, verbose output)')
     .option('--optimize <level>', 'optimization level (0-3)', '2')
+    .option('--ic-wasm-optimize', 'optimize WASM with ic-wasm (requires ic-wasm)')
+    .option('--ic-wasm-shrink', 'shrink WASM with ic-wasm (requires ic-wasm)')
+    .option('--validate <did-file>', 'validate WASM endpoints against Candid .did file')
+    .option('--memory-limit <limit>', 'set canister memory limit (e.g. 4GiB)')
+    .option('--compute-quota <quota>', 'set canister compute quota')
     .action(async (source: string, options: PackageCommandOptions) => {
       console.log(chalk.bold('\n📦 AgentVault Package\n'));
 

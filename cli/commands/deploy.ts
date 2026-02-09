@@ -20,6 +20,10 @@ export interface DeployCommandOptions {
   canisterId?: string;
   yes?: boolean;
   dryRun?: boolean;
+  env?: string;
+  identity?: string;
+  cycles?: string;
+  mode?: 'auto' | 'install' | 'reinstall' | 'upgrade';
 }
 
 /**
@@ -116,6 +120,9 @@ export function displayResult(result: DeployResult): void {
   if (result.cyclesUsed) {
     console.log(`  Cycles Used: ${formatCycles(result.cyclesUsed)}`);
   }
+  if (result.deployTool) {
+    console.log(`  Deploy Tool: ${result.deployTool}`);
+  }
 
   if (result.warnings.length > 0) {
     console.log();
@@ -193,6 +200,10 @@ export async function executeDeploy(
       network,
       canisterId: options.canisterId,
       skipConfirmation: options.yes,
+      environment: options.env,
+      identity: options.identity,
+      cycles: options.cycles,
+      mode: options.mode,
     };
 
     // Execute deployment
@@ -220,9 +231,13 @@ export function deployCommand(): Command {
     .description('Deploy agent WASM to ICP canister')
     .argument('<wasm>', 'path to compiled WASM file')
     .option('-n, --network <network>', 'target network (local or ic)', 'local')
+    .option('-e, --env <environment>', 'named environment from icp.yaml (e.g. dev, staging, production)')
     .option('-c, --canister-id <id>', 'existing canister ID (for upgrades)')
     .option('-y, --yes', 'skip confirmation prompts')
     .option('--dry-run', 'show what would be deployed without executing')
+    .option('--identity <name>', 'identity name for icp-cli')
+    .option('--cycles <amount>', 'cycles allocation (e.g. 100T)')
+    .option('--mode <mode>', 'deploy mode: auto, install, reinstall, upgrade')
     .action(async (wasm: string, options: DeployCommandOptions) => {
       console.log(chalk.bold('\n🚀 AgentVault Deploy\n'));
 
