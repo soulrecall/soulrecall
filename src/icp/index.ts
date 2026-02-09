@@ -89,3 +89,6 @@ export {
   writeConfig,
   generateDefaultConfig,
 } from './environment.js';
+
+// Batched canister operations
+export * from './batch.js';

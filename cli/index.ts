@@ -29,12 +29,15 @@ import { healthCommand } from './commands/health.js';
 // Phase 3 commands
 import { networkCmd } from './commands/network.js';
 import { testCmd } from './commands/test.js';
-import { promoteCmd } from './commands/promote.js';
+import { promoteCmd } from './commands/promote.ts';
 import { logsCmd } from './commands/logs.js';
 import { rollbackCmd } from './commands/rollback.js';
-import { instrumentCmd } from './commands/instrument.js';
-import { traceCmd } from './commands/trace.js';
+import { instrumentCmd } from './commands/instrument.ts';
+import { traceCmd } from './commands/trace.ts';
 import { profileCmd } from './commands/profile.js';
+
+// Phase 4 commands
+import { backupCmd } from './commands/backup.js';
 
 export function createProgram(): Command {
   const program = new Command();

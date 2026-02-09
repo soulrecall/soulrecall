@@ -1,5 +1,5 @@
 /**
- * ICP Deployment Module
+ * Deployment Module
  *
  * Exports all deployment-related functionality.
  */
@@ -41,3 +41,6 @@ export {
   getDeploymentForRollback,
   getDeploymentsByTimeRange,
 } from './promotion.js';
+
+// Batched operations
+export * from '../icp/batch.js';
