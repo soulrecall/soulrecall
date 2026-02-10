@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { ThemeProvider } from '../providers/ThemeProvider'
+import { ICProvider } from '../providers/ICProvider'
 
 export const metadata: Metadata = {
   title: 'AgentVault - AI Agent Platform',
@@ -14,9 +16,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <div className="min-h-screen bg-background text-foreground">
-          {children}
-        </div>
+        <ThemeProvider>
+          <ICProvider>
+            <div className="min-h-screen bg-background text-foreground">
+              {children}
+            </div>
+          </ICProvider>
+        </ThemeProvider>
       </body>
     </html>
   )
