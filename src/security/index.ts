@@ -12,3 +12,6 @@ export { VetKeysClient } from './types.js';
 
 // Re-export decryptJSON from vetkeys.js
 export { decryptJSON } from './vetkeys.js';
+
+// Multi-sig approval workflows
+export * from './multisig.js';

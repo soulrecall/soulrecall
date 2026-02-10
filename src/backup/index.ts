@@ -4,4 +4,4 @@
  * Exports backup functionality.
  */
 
-export * from './index.js';
+export * from './backup.js';

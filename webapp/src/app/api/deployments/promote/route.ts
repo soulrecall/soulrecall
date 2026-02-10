@@ -1,19 +1,19 @@
 import { NextResponse } from 'next/server';
-import { promoteCanister } from '../../../../src/deployment/promotion.js';
+import { promoteCanister } from '@/deployment/promotion.js';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { from, to, targetCanisterId, blueGreen } = body;
+    const { agentName, from, to, targetCanisterId, blueGreen } = body;
     
-    if (!from || !to) {
+    if (!agentName || !from || !to) {
       return NextResponse.json({
         success: false,
-        error: 'from and to environment names are required',
+        error: 'agentName, from, and to environment names are required',
       }, { status: 400 });
     }
 
-    const result = await promoteCanister(from, to, {
+    const result = await promoteCanister(agentName, from, to, {
       targetCanisterId,
       blueGreen,
     });

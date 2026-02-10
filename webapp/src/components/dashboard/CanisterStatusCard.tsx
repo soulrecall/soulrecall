@@ -1,7 +1,6 @@
 'use client'
 
-import { formatUnits } from '@dfinity/principal'
-import { Activity, Cpu, Database, Server, MoreVertical } from 'lucide-react'
+import { Activity, Cpu, Database, Server, MoreVertical, AlertCircle } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import clsx from 'clsx'
 
@@ -11,6 +10,11 @@ interface CanisterStatusCardProps {
   cycles: bigint
   memory: bigint
   lastActivity: Date
+}
+
+function formatTCycles(cycles: bigint): string {
+  const tcycles = Number(cycles) / 1e12
+  return `${tcycles.toFixed(2)} TC`
 }
 
 export function CanisterStatusCard({
@@ -40,7 +44,7 @@ export function CanisterStatusCard({
 
   const StatusIcon = statusIcons[status]
 
-  const cyclesFormatted = formatUnits(cycles, 12)
+  const cyclesFormatted = formatTCycles(cycles)
   const memoryMB = Number(memory) / 1024 / 1024
 
   return (

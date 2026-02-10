@@ -1,16 +1,15 @@
-import type { Config } from 'next'
+import type { NextConfig } from 'next'
 
-const config: Config = {
+const config: NextConfig = {
   output: 'standalone',
   reactStrictMode: true,
-  swcMinify: true,
   eslint: {
     ignoreDuringBuilds: true,
   },
   experimental: {
     serverComponentsExternalPackages: ['@dfinity/agent', '@dfinity/candid', '@dfinity/principal'],
   },
-  webpack: (config) => {
+  webpack: (config: any) => {
     config.externals.push({
       'utf-8-validate': 'utf-8-validate',
       'buffer': 'buffer',

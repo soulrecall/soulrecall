@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { exportBackup, previewBackup, importBackup, listBackups } from '../../../../src/backup/index.js';
+import { exportBackup, previewBackup, importBackup, listBackups } from '@/backup/index.js';
 
 export async function GET(request: Request) {
   try {
@@ -41,12 +41,12 @@ export async function POST(request: Request) {
     switch (action) {
       case 'export':
         const outputPath = options.output || `./${agentName}.json`;
-        const result = await exportBackup({
+        const exportResult = await exportBackup({
           agentName,
           outputPath,
           includeConfig: true,
         });
-        return NextResponse.json({ success: result.success, data: result });
+        return NextResponse.json({ success: exportResult.success, data: exportResult });
         
       case 'import':
         if (!options.inputPath) {
@@ -55,12 +55,12 @@ export async function POST(request: Request) {
             error: 'inputPath is required for import',
           }, { status: 400 });
         }
-        const result = await importBackup({
+        const importResult = await importBackup({
           inputPath: options.inputPath,
           targetAgentName: options.targetAgentName,
           overwrite: options.overwrite,
         });
-        return NextResponse.json({ success: result.success, data: result });
+        return NextResponse.json({ success: importResult.success, data: importResult });
         
       case 'preview':
         if (!options.inputPath) {

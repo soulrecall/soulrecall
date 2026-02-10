@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getSummary } from '../../../../src/metrics/index.js';
+import { getSummary } from '@/metrics/index.js';
 
 interface RouteContext {
   params: Promise<{ id: string }>;

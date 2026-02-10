@@ -29,15 +29,18 @@ import { healthCommand } from './commands/health.js';
 // Phase 3 commands
 import { networkCmd } from './commands/network.js';
 import { testCmd } from './commands/test.js';
-import { promoteCmd } from './commands/promote.ts';
+import { promoteCmd } from './commands/promote.js';
 import { logsCmd } from './commands/logs.js';
 import { rollbackCmd } from './commands/rollback.js';
-import { instrumentCmd } from './commands/instrument.ts';
-import { traceCmd } from './commands/trace.ts';
+import { instrumentCmd } from './commands/instrument.js';
+import { traceCmd } from './commands/trace.js';
 import { profileCmd } from './commands/profile.js';
 
 // Phase 4 commands
 import { backupCmd } from './commands/backup.js';
+import { archiveCmd } from './commands/archive.js';
+import { inferenceCmd } from './commands/inference.js';
+import { approveCmd } from './commands/approve.js';
 
 export function createProgram(): Command {
   const program = new Command();
@@ -78,6 +81,12 @@ export function createProgram(): Command {
   program.addCommand(instrumentCmd);
   program.addCommand(traceCmd);
   program.addCommand(profileCmd);
+
+  // Phase 4 commands
+  program.addCommand(backupCmd);
+  program.addCommand(archiveCmd);
+  program.addCommand(inferenceCmd);
+  program.addCommand(approveCmd);
 
   return program;
 }

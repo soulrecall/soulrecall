@@ -3,8 +3,18 @@
 import { AlertTriangle, CheckCircle2, XCircle, Bell } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 
+type AlertSeverity = 'critical' | 'warning' | 'info'
+
+interface Alert {
+  id: string
+  severity: AlertSeverity
+  message: string
+  canisterId: string
+  timestamp: Date
+}
+
 export function AlertsFeed() {
-  const alerts = [
+  const alerts: Alert[] = [
     {
       id: '1',
       severity: 'critical',
@@ -28,13 +38,13 @@ export function AlertsFeed() {
     },
   ]
 
-  const severityColors = {
+  const severityColors: Record<AlertSeverity, string> = {
     critical: 'text-red-500 bg-red-500/10',
     warning: 'text-yellow-500 bg-yellow-500/10',
     info: 'text-blue-500 bg-blue-500/10',
   }
 
-  const severityIcons = {
+  const severityIcons: Record<AlertSeverity, any> = {
     critical: XCircle,
     warning: AlertTriangle,
     info: CheckCircle2,

@@ -1,6 +1,7 @@
 'use client'
 
-import { Link, usePathname } from 'next/navigation'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { LayoutDashboard, Activity, Database, Settings, Server, Archive, Wallet, Layers } from 'lucide-react'
 import clsx from 'clsx'
 

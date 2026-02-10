@@ -4,4 +4,4 @@
  * Exports metrics functionality.
  */
 
-export * from './index.js';
+export * from './metrics.js';

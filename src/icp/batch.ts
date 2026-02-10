@@ -97,14 +97,16 @@ function sortOperationsByDeps(operations: BatchOperation[]): BatchOperation[] {
 
     visiting.add(opId);
     const op = opMap.get(opId);
-    if (op !== undefined && op.dependsOn) {
-      for (const depId of op.dependsOn) {
-        visit(depId);
+    if (op !== undefined) {
+      if (op.dependsOn) {
+        for (const depId of op.dependsOn) {
+          visit(depId);
+        }
       }
+      visiting.delete(opId);
+      visited.add(opId);
+      sorted.push(op);
     }
-    visiting.delete(opId);
-    visited.add(opId);
-    sorted.push(op);
   }
 
   for (const op of operations) {
@@ -197,7 +199,6 @@ async function executeOperation(operation: BatchOperation, config: BatchConfig):
 export class BatchExecutor {
   private operations: Map<string, BatchOperation> = new Map();
   private config: BatchConfig;
-  private results: BatchResult[] = [];
 
   constructor(config: Partial<BatchConfig> = {}) {
     this.config = { ...DEFAULT_BATCH_CONFIG, ...config };
@@ -249,8 +250,6 @@ export class BatchExecutor {
         }
       }
     }
-
-    this.results = executionResults;
 
     return {
       total: allOperations.length,
@@ -310,11 +309,10 @@ export class BatchExecutor {
   }
 
   /**
-   * Clear all operations and results
+   * Clear all operations
    */
   clear(): void {
     this.operations.clear();
-    this.results = [];
   }
 }
 

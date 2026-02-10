@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
-import { canisterList } from '../../../../src/network/network-config.js';
+import { listNetworkConfigs } from '@/network/network-config.js';
 
 export async function GET() {
   try {
-    const networks = await canisterList({});
+    const networks = await listNetworkConfigs();
     
     return NextResponse.json({
       success: true,
-      data: networks.stdout,
+      data: networks,
     });
   } catch (error) {
     return NextResponse.json({

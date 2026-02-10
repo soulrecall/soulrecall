@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { readAgentConfig } from '../../../src/packaging/config-persistence.js';
+import { readAgentConfig } from '@/packaging/config-persistence.js';
 
 interface RouteContext {
   params: Promise<{ id: string }>;
@@ -57,7 +57,7 @@ export async function PUT(
     }
 
     const mergedConfig = { ...existingConfig, ...config };
-    await import('../../../src/packaging/config-persistence.js').then(
+    await import('@/packaging/config-persistence.js').then(
       (m) => m.writeAgentConfig(id, mergedConfig)
     );
 

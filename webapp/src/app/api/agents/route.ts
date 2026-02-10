@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { listAgents } from '../../../src/packaging/config-persistence.js';
+import { listAgents } from '@/packaging/config-persistence.js';
 
 export async function GET() {
   try {

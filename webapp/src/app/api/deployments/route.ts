@@ -1,9 +1,19 @@
 import { NextResponse } from 'next/server';
-import { loadDeploymentHistory, getAllDeployments } from '../../../../src/deployment/promotion.js';
+import { loadDeploymentHistory, getAllDeployments } from '@/deployment/promotion.js';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const deployments = await getAllDeployments();
+    const url = new URL(request.url);
+    const agentName = url.searchParams.get('agent');
+    
+    if (!agentName) {
+      return NextResponse.json({
+        success: false,
+        error: 'agent name is required',
+      }, { status: 400 });
+    }
+    
+    const deployments = getAllDeployments(agentName);
     
     return NextResponse.json({
       success: true,

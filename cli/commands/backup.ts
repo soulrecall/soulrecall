@@ -8,8 +8,6 @@ import {
   listBackups,
   deleteBackup,
   formatBackupSize,
-  type BackupResult,
-  type ImportResult,
 } from '../../src/backup/index.js';
 
 const backupCmd = new Command('backup');
@@ -42,9 +40,10 @@ backupCmd
         includeConfig: true,
       });
 
-      if (result.success) {
-        spinner.succeed(chalk.green(`Backup exported to ${result.outputPath}`));
-        console.log(chalk.gray(`Size: ${formatBackupSize(result.sizeBytes)}`));
+      if (result.success && result.path && result.manifest) {
+        spinner.succeed(chalk.green(`Backup exported to ${result.path}`));
+        const sizeBytes = result.sizeBytes || result.manifest.size;
+        console.log(chalk.gray(`Size: ${formatBackupSize(sizeBytes)}`));
         console.log(chalk.gray(`Components: ${result.manifest.components.join(', ')}`));
       } else {
         spinner.fail(chalk.red('Backup export failed'));
@@ -105,7 +104,7 @@ backupCmd
     const spinner = ora('Listing backups...').start();
 
     try {
-      const backups = listBackups(options.agent);
+      const backups = await listBackups(options.agent);
       spinner.succeed(chalk.green(`Found ${backups.length} backup(s)`));
 
       if (backups.length === 0) {
@@ -114,7 +113,7 @@ backupCmd
       }
 
       for (const backup of backups) {
-        console.log(chalk.cyan(backup));
+        console.log(chalk.cyan(JSON.stringify(backup, null, 2)));
       }
     } catch (error) {
       spinner.fail(chalk.red('Failed to list backups'));
@@ -132,7 +131,7 @@ backupCmd
     const spinner = ora(`Deleting backup ${filePath}...`).start();
 
     try {
-      const success = deleteBackup(filePath);
+      const success = await deleteBackup(filePath);
 
       if (success) {
         spinner.succeed(chalk.green(`Backup deleted: ${filePath}`));
@@ -157,6 +156,10 @@ backupCmd
 
     try {
       const manifest = await previewBackup(filePath);
+      if (!manifest) {
+        spinner.fail(chalk.red('Invalid backup file'));
+        process.exit(1);
+      }
       spinner.succeed(chalk.green('Backup manifest preview:'));
 
       console.log(chalk.bold(`Agent: ${manifest.agentName}`));

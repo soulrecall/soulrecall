@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
-import { listWallets } from '../../../../src/wallet/wallet-storage.js';
+import { listAgents } from '@/wallet/wallet-storage.js';
 
 export async function GET() {
   try {
-    const wallets = await listWallets();
+    const agents = listAgents();
     
     return NextResponse.json({
       success: true,
-      data: wallets,
+      data: agents,
     });
   } catch (error) {
     return NextResponse.json({

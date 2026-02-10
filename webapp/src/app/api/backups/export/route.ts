@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { exportBackup } from '../../../../src/backup/index.js';
+import { exportBackup } from '@/backup/index.js';
 
 export async function POST(request: Request) {
   try {
