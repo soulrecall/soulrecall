@@ -5,7 +5,7 @@
  * Generated from agent.did Candid interface.
  */
 
-import { Actor, HttpAgent } from '@dfinity/agent';
+import { Actor, HttpAgent, Identity } from '@dfinity/agent';
 import { idlFactory } from './actor.idl.js';
 
 /**
@@ -311,11 +311,13 @@ export function createAnonymousAgent(host = 'http://localhost:4943'): HttpAgent 
  * Create authenticated agent for mainnet canister access
  *
  * @param host - Host URL (default: https://ic0.app)
+ * @param identity - Identity for signing transactions
  * @returns HTTP agent instance
  */
-export function createAuthenticatedAgent(host = 'https://ic0.app'): HttpAgent {
+export function createAuthenticatedAgent(host = 'https://ic0.app', identity?: Identity): HttpAgent {
   const agent = new HttpAgent({
     host,
+    identity,
   });
 
   return agent;

@@ -121,7 +121,12 @@ export function generateHealthAlerts(
   const memoryBytes = statusInfo.memorySize;
   if (memoryBytes !== undefined) {
     const memoryMB = Number(memoryBytes) / (1024 * 1024);
-    if (thresholds.memoryCriticalPercent !== undefined && memoryMB > 1024 * thresholds.memoryCriticalPercent) {
+    // IC canisters have ~4GB max memory (4096 MB)
+    const maxMemoryMB = 4096;
+    const criticalThresholdMB = maxMemoryMB * ((thresholds.memoryCriticalPercent ?? 0) / 100);
+    const warningThresholdMB = maxMemoryMB * ((thresholds.memoryWarningPercent ?? 0) / 100);
+
+    if (thresholds.memoryCriticalPercent !== undefined && memoryMB > criticalThresholdMB) {
       alerts.push({
         severity: 'critical',
         message: `Memory usage critically high: ${memoryMB.toFixed(2)} MB`,
@@ -131,7 +136,7 @@ export function generateHealthAlerts(
         threshold: `${thresholds.memoryCriticalPercent}%`,
         timestamp: new Date(),
       });
-    } else if (thresholds.memoryWarningPercent !== undefined && memoryMB > 1024 * thresholds.memoryWarningPercent) {
+    } else if (thresholds.memoryWarningPercent !== undefined && memoryMB > warningThresholdMB) {
       alerts.push({
         severity: 'warning',
         message: `Memory usage high: ${memoryMB.toFixed(2)} MB`,

@@ -218,7 +218,20 @@ export class CanisterEncryption {
   ): Promise<boolean> {
     const actualHMAC = await this.generateHMAC(data, key);
 
-    return actualHMAC === expectedHMAC;
+    // Use timing-safe comparison to prevent timing attacks
+    const actualBuffer = Buffer.from(actualHMAC, 'utf8');
+    const expectedBuffer = Buffer.from(expectedHMAC, 'utf8');
+
+    if (actualBuffer.length !== expectedBuffer.length) {
+      return false;
+    }
+
+    let result = 0;
+    for (let i = 0; i < actualBuffer.length; i++) {
+      result |= actualBuffer[i]! ^ expectedBuffer[i]!;
+    }
+
+    return result === 0;
   }
 
   /**

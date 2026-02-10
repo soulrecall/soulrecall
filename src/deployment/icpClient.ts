@@ -6,6 +6,7 @@
  */
 
 import * as fs from 'node:fs';
+import { execa } from 'execa';
 import type {
   ICPClientConfig,
   DeploymentStatus,
@@ -46,8 +47,14 @@ export class ICPClient {
         fetchOptions: { timeout: 5000 },
       });
 
-      // Fetch root key to verify connection
-      await agent.fetchRootKey();
+      // For local networks, fetch root key to verify connection
+      // For mainnet, use agent.status() instead (fetchRootKey is only for local replicas)
+      if (this.config.network === 'local') {
+        await agent.fetchRootKey();
+      } else {
+        // Verify connection by querying agent status
+        await agent.status();
+      }
 
       return { connected: true };
     } catch (error) {
@@ -74,23 +81,51 @@ export class ICPClient {
   }> {
     try {
       // Read WASM file
-      const wasmBuffer = fs.readFileSync(wasmPath);
-      const wasmSize = BigInt(wasmBuffer.length);
       const wasmHash = this.calculateWasmHash(wasmPath);
 
       let targetCanisterId = canisterId || '';
       let isUpgrade = false;
+      let cyclesUsed = BigInt(0);
 
-      // For MVP: Stub implementation that returns simulated canister ID
       if (!targetCanisterId) {
-        // Simulate canister creation
-        targetCanisterId = generateStubCanisterId();
+        // Create new canister using dfx
+        const createResult = await execa('dfx', ['canister', 'create', '--network', this.config.network, '--output-mode', 'json'], {
+          cwd: process.cwd(),
+        });
+
+        const createData = JSON.parse(createResult.stdout);
+        targetCanisterId = createData.canister_id || '';
+        isUpgrade = false;
       } else {
         isUpgrade = true;
       }
 
-      // Calculate cycles (1 cycle per byte for installation)
-      const cyclesUsed = wasmSize;
+      // Ensure we have a canister ID before installing
+      if (!targetCanisterId || targetCanisterId === '') {
+        throw new Error('No canister ID available for deployment');
+      }
+
+      // Install code using dfx
+      const installArgs = [
+        'canister',
+        'install-code',
+        targetCanisterId!,
+        '--wasm',
+        wasmPath!,
+        '--network',
+        this.config.network,
+      ];
+      if (isUpgrade) {
+        installArgs.push('--mode', 'upgrade');
+      }
+
+      const installResult = await execa('dfx', installArgs, {
+        cwd: process.cwd(),
+      });
+
+      // Parse cycles from output (dfx shows cycles consumed)
+      const cyclesMatch = installResult.stdout.match(/(\d+)\s+cycles?/i);
+      cyclesUsed = cyclesMatch ? BigInt(cyclesMatch[1]!) : BigInt(0);
 
       return {
         canisterId: targetCanisterId,
@@ -113,7 +148,7 @@ export class ICPClient {
    * @returns Execution result
    */
   async executeAgent(
-    _canisterId: string,
+    canisterId: string,
     functionName: string,
     args: Uint8Array,
   ): Promise<{
@@ -122,15 +157,48 @@ export class ICPClient {
     error?: string;
   }> {
     try {
-      // For MVP: Return simulated execution result
-      // In production, this would use Actor to call agent.mo
-      const result = new TextEncoder().encode(
-        `Executed ${functionName} with ${args.length} bytes`
-      );
+      // Use the real Actor integration to call the canister method
+      const result = await this.callAgentMethod<any>(canisterId, functionName, [args]);
 
+      // Check if result has 'ok' field for success
+      if (result && typeof result === 'object' && 'ok' in result) {
+        // Handle ok result (could be various types depending on method)
+        const okValue = (result as any).ok;
+        if (okValue instanceof Uint8Array) {
+          return {
+            success: true,
+            result: okValue,
+          };
+        } else if (okValue instanceof Buffer) {
+          return {
+            success: true,
+            result: new Uint8Array(okValue),
+          };
+        } else if (typeof okValue === 'string') {
+          return {
+            success: true,
+            result: new TextEncoder().encode(okValue),
+          };
+        } else {
+          return {
+            success: true,
+            result: undefined,
+          };
+        }
+      }
+
+      // Handle error result
+      if (result && typeof result === 'object' && 'err' in result) {
+        return {
+          success: false,
+          error: (result as any).err,
+        };
+      }
+
+      // Default success for methods that don't return ok/err variants
       return {
         success: true,
-        result,
+        result: undefined,
       };
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unknown error';
@@ -150,7 +218,7 @@ export class ICPClient {
    * @returns Loading result
    */
   async loadAgentWasm(
-    _canisterId: string,
+    canisterId: string,
     wasmPath: string,
     wasmHash?: string,
   ): Promise<{
@@ -169,9 +237,31 @@ export class ICPClient {
         };
       }
 
-      // For MVP: Simulate loading WASM into canister
-      // In production, this would call agent.mo's loadAgentWasm method
-      void wasmBuffer;
+      // Load WASM into canister using dfx
+      const loadResult = await execa('dfx', [
+        'canister',
+        'call',
+        canisterId,
+        'loadAgentWasm',
+        '(vec nat8)',
+        '(vec nat8)',
+        '--network',
+        this.config.network,
+        '--argument',
+        wasmBuffer.toString('hex'),
+        '--argument',
+        calculatedHash,
+      ], {
+        cwd: process.cwd(),
+      });
+
+      // Check if load succeeded
+      if (loadResult.exitCode !== 0) {
+        return {
+          success: false,
+          error: `Failed to load WASM: ${loadResult.stderr}`,
+        };
+      }
 
       return {
         success: true,
@@ -207,15 +297,28 @@ export class ICPClient {
     }
 
     try {
-      // For MVP: Return simulated status
-      // In production, this would query actual canister
+      // Query canister status using dfx
+      const statusResult = await execa('dfx', ['canister', 'status', canisterId, '--network', this.config.network, '--output-mode', 'json'], {
+        cwd: process.cwd(),
+      });
+
+      const statusData = JSON.parse(statusResult.stdout);
+
+      // Map dfx status to our DeploymentStatus
+      let deploymentStatus: DeploymentStatus = 'stopped';
+      if (statusData.status === 'running') {
+        deploymentStatus = 'running';
+      } else if (statusData.status === 'stopping') {
+        deploymentStatus = 'stopping';
+      }
+
       return {
         exists: true,
-        status: 'running',
-        memorySize: BigInt(1024 * 1024), // 1MB
-        cycles: BigInt(10_000_000_000), // 10 trillion cycles
+        status: deploymentStatus,
+        memorySize: statusData.memory_size ? BigInt(statusData.memory_size) : undefined,
+        cycles: statusData.cycles ? BigInt(statusData.cycles) : undefined,
       };
-    } catch {
+    } catch (error) {
       return {
         exists: false,
         status: 'stopped',
@@ -282,11 +385,24 @@ export class ICPClient {
    * Calculate WASM file hash
    *
    * @param wasmPath - Path to WASM file
-   * @returns Base64-encoded hash
+   * @returns SHA-256 hash as hex string
    */
   calculateWasmHash(wasmPath: string): string {
     const buffer = fs.readFileSync(wasmPath);
-    return buffer.toString('base64').substring(0, 32);
+    const hash = this.createSha256Hash(buffer);
+    return hash;
+  }
+
+  /**
+   * Create SHA-256 hash from buffer
+   *
+   * @param buffer - Buffer to hash
+   * @returns Hex-encoded hash
+   */
+  private createSha256Hash(buffer: Buffer): string {
+    const { createHash } = require('node:crypto');
+    const hash = createHash('sha256').update(buffer).digest('hex');
+    return hash;
   }
 
   /**

@@ -39,9 +39,14 @@ export function determineHealthStatus(
   const memoryBytes = statusInfo.memorySize;
   if (memoryBytes !== undefined) {
     const memoryMB = Number(memoryBytes) / (1024 * 1024);
-    if (thresholds.memoryCriticalPercent && memoryMB > 1024 * thresholds.memoryCriticalPercent) {
+    // IC canisters have ~4GB max memory (4096 MB)
+    const maxMemoryMB = 4096;
+    const criticalThresholdMB = maxMemoryMB * ((thresholds.memoryCriticalPercent ?? 0) / 100);
+    const warningThresholdMB = maxMemoryMB * ((thresholds.memoryWarningPercent ?? 0) / 100);
+
+    if (thresholds.memoryCriticalPercent && memoryMB > criticalThresholdMB) {
       return 'critical';
-    } else if (thresholds.memoryWarningPercent && memoryMB > 1024 * thresholds.memoryWarningPercent) {
+    } else if (thresholds.memoryWarningPercent && memoryMB > warningThresholdMB) {
       return 'warning';
     }
   }
@@ -143,7 +148,7 @@ export function generateHealthAlerts(
  */
 function formatCycles(cycles: bigint): string {
   if (cycles >= BigInt(1_000_000_000_000)) {
-    const value = Number(cycles) / 1_000_000_000_000_000;
+    const value = Number(cycles) / 1_000_000_000_000;
     return `${value.toFixed(2)} T`;
   }
   return cycles.toString();

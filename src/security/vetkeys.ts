@@ -252,11 +252,11 @@ export class VetKeysImplementation {
 
     if (algorithm === 'aes-256-gcm') {
       secretBuffer = Buffer.from(secret, 'utf-8');
-      iv = Buffer.alloc(12, 0);
+      iv = crypto.randomBytes(12);
     } else {
       // For other algorithms, use simpler encryption
       secretBuffer = Buffer.from(secret, 'utf-8');
-      iv = Buffer.alloc(16, 0);
+      iv = crypto.randomBytes(16);
     }
 
     const algorithmName = algorithm.replace('-', '');

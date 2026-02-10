@@ -88,13 +88,15 @@ function parseCycleValue(value: string, units: string): bigint {
   if (units === 'T') {
     return BigInt(Math.round(numeric * 1_000_000_000_000));
   } else if (units === 'B') {
-    return BigInt(Math.round(numeric * 1_000_000_000));
+    return BigInt(Math.round(numeric));
   } else if (units === 'M') {
-    return BigInt(Math.round(numeric * 1_000_000_000_000));
+    return BigInt(Math.round(numeric * 1_000_000));
   } else if (units === 'K') {
-    return BigInt(Math.round(numeric * 1_000_000_000_000_000));
+    return BigInt(Math.round(numeric * 1_000));
   } else if (units === 'G') {
     return BigInt(Math.round(numeric * 1_000_000_000));
+  } else if (units === 'μ') {
+    return BigInt(Math.round(numeric / 1_000_000));
   } else {
     return BigInt(Math.round(numeric * 1_000));
   }
