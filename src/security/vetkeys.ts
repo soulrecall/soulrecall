@@ -328,10 +328,55 @@ export class VetKeysImplementation {
   /**
    * Verify encryption was created by VetKeys
    *
-   * In a real implementation, this would query the VetKeys canister.
-   * For now, this always returns true.
+   * Validates that the encrypted data structure is valid and properly formatted.
+   *
+   * @param encrypted - Encrypted data to verify
+   * @returns True if the encryption structure is valid
    */
-  public async verifyEncryption(_encrypted: EncryptedData): Promise<boolean> {
+  public async verifyEncryption(encrypted: EncryptedData): Promise<boolean> {
+    if (!encrypted) {
+      return false;
+    }
+
+    if (!encrypted.algorithm || !['aes-256-gcm', 'chacha20-poly1305'].includes(encrypted.algorithm)) {
+      return false;
+    }
+
+    if (!encrypted.iv || typeof encrypted.iv !== 'string') {
+      return false;
+    }
+
+    const ivBytes = Buffer.from(encrypted.iv, 'hex');
+    const expectedIvLength = encrypted.algorithm === 'aes-256-gcm' ? 12 : 16;
+    if (ivBytes.length !== expectedIvLength) {
+      return false;
+    }
+
+    if (!encrypted.salt || typeof encrypted.salt !== 'string') {
+      return false;
+    }
+
+    const saltBytes = Buffer.from(encrypted.salt, 'hex');
+    if (saltBytes.length < 8) {
+      return false;
+    }
+
+    if (!encrypted.ciphertext || typeof encrypted.ciphertext !== 'string') {
+      return false;
+    }
+
+    const ciphertextBytes = Buffer.from(encrypted.ciphertext, 'hex');
+    if (ciphertextBytes.length === 0) {
+      return false;
+    }
+
+    if (encrypted.encryptedAt) {
+      const timestamp = new Date(encrypted.encryptedAt);
+      if (isNaN(timestamp.getTime())) {
+        return false;
+      }
+    }
+
     return true;
   }
 

@@ -16,6 +16,29 @@ import type {
 import { BaseWalletProvider } from './base-provider.js';
 
 /**
+ * Environment variable names for RPC configuration
+ */
+const ENV_RPC_URL = 'ETHEREUM_RPC_URL';
+const ENV_SEPOLIA_RPC_URL = 'SEPOLIA_RPC_URL';
+const ENV_INFURA_KEY = 'INFURA_API_KEY';
+
+/**
+ * Public RPC endpoints (rate-limited, for fallback only)
+ */
+const PUBLIC_RPC_URLS = {
+  mainnet: [
+    'https://eth.llamarpc.com',
+    'https://rpc.ankr.com/eth',
+    'https://ethereum.publicnode.com',
+  ],
+  sepolia: [
+    'https://rpc.sepolia.org',
+    'https://ethereum-sepolia.publicnode.com',
+    'https://rpc2.sepolia.org',
+  ],
+};
+
+/**
  * ckETH provider configuration
  */
 interface CkEthConfig extends ProviderConfig {
@@ -34,7 +57,57 @@ export class CkEthProvider extends BaseWalletProvider {
 
   constructor(config: CkEthConfig) {
     super(config);
-    this.chainId = config.chainId ?? 1; // Default to mainnet
+    this.chainId = config.chainId ?? 1;
+  }
+
+  /**
+   * Resolve the RPC URL to use for connections
+   *
+   * Priority:
+   * 1. Explicitly configured URL
+   * 2. Environment variable (ETHEREUM_RPC_URL or SEPOLIA_RPC_URL)
+   * 3. Infura with API key from environment
+   * 4. Public RPC endpoints (fallback, rate-limited)
+   *
+   * @returns RPC URL
+   */
+  private resolveRpcUrl(): string {
+    const configUrl = super.getRpcUrl();
+    if (configUrl && !configUrl.includes('YOUR-API-KEY')) {
+      return configUrl;
+    }
+
+    const isTestnet = this.chainId !== 1;
+    const envVar = isTestnet ? ENV_SEPOLIA_RPC_URL : ENV_RPC_URL;
+    const envUrl = process.env[envVar];
+
+    if (envUrl) {
+      return envUrl;
+    }
+
+    const infuraKey = process.env[ENV_INFURA_KEY];
+    if (infuraKey) {
+      return isTestnet
+        ? `https://sepolia.infura.io/v3/${infuraKey}`
+        : `https://mainnet.infura.io/v3/${infuraKey}`;
+    }
+
+    const publicUrls = isTestnet ? PUBLIC_RPC_URLS.sepolia : PUBLIC_RPC_URLS.mainnet;
+    const publicUrl = publicUrls[0];
+
+    if (!publicUrl) {
+      throw new Error(
+        `No RPC URL configured. Set ${envVar} environment variable or provide rpcUrl in config. ` +
+        `Example: export ${envVar}=https://eth.example.com/v3/your-api-key`
+      );
+    }
+
+    console.warn(
+      `Warning: Using public RPC endpoint (${publicUrl}). ` +
+      `For production, set ${envVar} environment variable for better reliability.`
+    );
+
+    return publicUrl;
   }
 
   /**
@@ -43,7 +116,7 @@ export class CkEthProvider extends BaseWalletProvider {
   async connect(): Promise<void> {
     try {
       // Create provider
-      this.provider = new ethers.JsonRpcProvider(this.getRpcUrl());
+      this.provider = new ethers.JsonRpcProvider(this.resolveRpcUrl());
       
       // Verify connection
       const network = await this.provider.getNetwork();
@@ -253,12 +326,41 @@ export class CkEthProvider extends BaseWalletProvider {
 
   /**
    * Get default RPC URL for chain
+   *
+   * @param isTestnet - Whether to get testnet URL
+   * @returns RPC URL from environment or public endpoint
+   * @throws Error if no RPC URL is configured
    */
   static getDefaultRpcUrl(isTestnet: boolean = false): string {
-    if (isTestnet) {
-      return 'https://sepolia.infura.io/v3/YOUR-API-KEY'; // Sepolia testnet
+    const envVar = isTestnet ? ENV_SEPOLIA_RPC_URL : ENV_RPC_URL;
+    const envUrl = process.env[envVar];
+
+    if (envUrl) {
+      return envUrl;
     }
-    return 'https://mainnet.infura.io/v3/YOUR-API-KEY'; // Ethereum mainnet
+
+    const infuraKey = process.env[ENV_INFURA_KEY];
+    if (infuraKey) {
+      return isTestnet
+        ? `https://sepolia.infura.io/v3/${infuraKey}`
+        : `https://mainnet.infura.io/v3/${infuraKey}`;
+    }
+
+    const publicUrls = isTestnet ? PUBLIC_RPC_URLS.sepolia : PUBLIC_RPC_URLS.mainnet;
+    const publicUrl = publicUrls[0];
+
+    if (publicUrl) {
+      console.warn(
+        `Warning: Using public RPC endpoint (${publicUrl}). ` +
+        `For production, set ${envVar} environment variable.`
+      );
+      return publicUrl;
+    }
+
+    throw new Error(
+      `No RPC URL configured. Set ${envVar} environment variable. ` +
+      `Example: export ${envVar}=https://mainnet.infura.io/v3/your-api-key`
+    );
   }
 
   /**

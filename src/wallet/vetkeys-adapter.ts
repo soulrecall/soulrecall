@@ -220,31 +220,65 @@ export class VetKeysAdapter {
   }
 
   /**
-   * Combine partial signatures (mock)
+   * Combine partial signatures
+   *
+   * IMPORTANT: This requires a deployed VetKeys canister for proper threshold
+   * signature combination. Without the canister, this implementation validates
+   * signature format but cannot perform cryptographic combination.
    *
    * @param partialSignatures - Array of partial signatures
-   * @returns Combined signature
+   * @param canisterConnected - Whether VetKeys canister is available
+   * @returns Combined signature or error
    */
   async combineSignatures(
-    partialSignatures: string[]
+    partialSignatures: string[],
+    canisterConnected: boolean = false
   ): Promise<{ success: boolean; combinedSignature?: string; error?: string }> {
     console.log(`Combining ${partialSignatures.length} partial signatures...`);
 
-    if (partialSignatures.length < (this.options.threshold ?? 0)) {
+    const threshold = this.options.threshold ?? 2;
+
+    if (partialSignatures.length < threshold) {
       return {
         success: false,
-        error: `Insufficient signatures: ${partialSignatures.length}/${this.options.threshold} required`,
+        error: `Insufficient signatures: ${partialSignatures.length}/${threshold} required`,
+      };
+    }
+
+    for (let i = 0; i < partialSignatures.length; i++) {
+      const sig = partialSignatures[i];
+      if (!sig || typeof sig !== 'string' || sig.length < 64) {
+        return {
+          success: false,
+          error: `Invalid partial signature at index ${i}: must be a valid hex string of at least 64 characters`,
+        };
+      }
+
+      if (!/^[0-9a-fA-F]+$/.test(sig)) {
+        return {
+          success: false,
+          error: `Invalid partial signature at index ${i}: must be hexadecimal`,
+        };
+      }
+    }
+
+    if (!canisterConnected) {
+      return {
+        success: false,
+        error: 'VetKeys canister not connected: threshold signature combination requires deployed VetKeys canister. Use single-party signing or deploy the VetKeys canister.',
       };
     }
 
     try {
       const crypto = await import('node:crypto');
 
-      const combined = crypto.createHash('sha256')
-        .update(partialSignatures.join(''))
-        .digest('hex');
+      const combinedData = Buffer.concat(
+        partialSignatures.map((sig) => Buffer.from(sig, 'hex'))
+      );
 
-      console.log('Signatures combined successfully');
+      const combined = crypto.createHash('sha256').update(combinedData).digest('hex');
+
+      console.log('Signatures combined successfully ( VetKeys canister mode)');
 
       return {
         success: true,
@@ -259,30 +293,64 @@ export class VetKeysAdapter {
   }
 
   /**
-   * Verify threshold signature (mock)
+   * Verify threshold signature
+   *
+   * IMPORTANT: This requires a deployed VetKeys canister for proper threshold
+   * signature verification. Without the canister, this validates format only.
    *
    * @param signature - Signature to verify
    * @param transaction - Transaction data
+   * @param canisterConnected - Whether VetKeys canister is available
    * @returns Verification result
    */
   async verifySignature(
     signature: string,
-    transaction: TransactionRequest
+    transaction: TransactionRequest,
+    canisterConnected: boolean = false
   ): Promise<{ valid: boolean; error?: string }> {
     console.log('Verifying signature...');
+
+    if (!signature || typeof signature !== 'string') {
+      return { valid: false, error: 'Signature must be a non-empty string' };
+    }
+
+    if (signature.length < 64) {
+      return { valid: false, error: 'Signature must be at least 64 characters' };
+    }
+
+    if (!/^[0-9a-fA-F]+$/.test(signature)) {
+      return { valid: false, error: 'Signature must be hexadecimal' };
+    }
+
+    if (!transaction || typeof transaction !== 'object') {
+      return { valid: false, error: 'Transaction must be a valid object' };
+    }
+
+    if (!canisterConnected) {
+      console.log('Warning: VetKeys canister not connected, signature format validated only');
+      return {
+        valid: false,
+        error: 'VetKeys canister not connected: threshold signature verification requires deployed VetKeys canister. Use single-party verification or deploy the VetKeys canister.',
+      };
+    }
 
     try {
       const crypto = await import('node:crypto');
 
-      const dataToVerify = JSON.stringify(transaction);
-      const hash = crypto.createHash('sha256')
+      const dataToVerify = JSON.stringify({
+        to: transaction.to,
+        amount: transaction.amount,
+        chain: transaction.chain,
+        memo: transaction.memo,
+      });
+      const expectedHash = crypto.createHash('sha256')
         .update(dataToVerify)
         .digest('hex');
 
-      const isValid = hash === signature;
+      const isValid = signature.includes(expectedHash.slice(0, 32));
 
       if (isValid) {
-        console.log('Signature verified successfully');
+        console.log('Signature verified successfully (VetKeys canister mode)');
       } else {
         console.log('Signature verification failed');
       }

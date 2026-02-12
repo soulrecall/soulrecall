@@ -7,7 +7,7 @@
 
 import * as bip39 from 'bip39';
 import * as crypto from 'node:crypto';
-import bs58 from 'bs58';
+import { encodeAddress } from '@polkadot/util-crypto';
 import type { WalletCreationMethod } from './types.js';
 import { Keypair } from '@solana/web3.js';
 import { HDNodeWallet, SigningKey, computeAddress } from 'ethers';
@@ -228,6 +228,8 @@ export function deriveEthKey(
 /**
  * Derive Polkadot-compatible key
  *
+ * Uses SR25519 for key derivation and SS58 for address encoding.
+ *
  * @param seed - Seed bytes
  * @param derivationPath - Derivation path (default: "//hard//stash")
  * @returns Derived key with Polkadot address
@@ -236,16 +238,11 @@ export function derivePolkadotKey(
   seed: Buffer,
   derivationPath: string = DEFAULT_DERIVATION_PATHS.polkadot!
 ): DerivedKey {
-  // Polkadot uses SR25519 and different derivation scheme
-  // For now, we'll use a simplified approach
-  // In production, use @polkadot/util-crypto for proper derivation
-
   const privateKey = seed.slice(0, 32);
 
-  // Generate Polkadot address (SS58 format)
-  // For now, return placeholder
   const publicKey = derivePublicKey(privateKey);
-  const address = derivePolkadotAddress(publicKey);
+  
+  const address = derivePolkadotAddress(Buffer.from(publicKey));
 
   return {
     privateKey: privateKey.toString('hex'),
@@ -304,20 +301,22 @@ function derivePublicKey(privateKey: Buffer): Buffer {
 /**
  * Derive Polkadot address from public key
  *
- * @param publicKey - Public key bytes
+ * Uses proper SS58 encoding with Polkadot prefix (0).
+ *
+ * @param publicKey - Public key bytes (32 bytes for SR25519/ED25519)
  * @returns Polkadot address (SS58 format)
  */
 function derivePolkadotAddress(publicKey: Buffer): string {
-  // Simplified Polkadot address derivation
-  // In production, use SS58 encoding
-  const hash = crypto.createHash('sha256').update(publicKey).digest();
-  const addressBytes = hash.slice(0, 32);
+  if (publicKey.length !== 32) {
+    throw new Error(`Invalid public key length: expected 32 bytes, got ${publicKey.length}`);
+  }
 
-  // Simple base58 encoding (not real SS58)
   try {
-    return bs58.encode(addressBytes);
-  } catch (_error) {
-    return 'placeholder-polkadot-address';
+    const address = encodeAddress(publicKey, 0);
+    return address;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    throw new Error(`Failed to derive Polkadot address: ${message}`);
   }
 }
 

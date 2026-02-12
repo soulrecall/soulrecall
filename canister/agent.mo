@@ -642,7 +642,10 @@ public shared func deleteEncryptedSecret(secretId : Text) : async {
 };
 
 /**
- * Verify VetKeys threshold signature (mock)
+ * Verify VetKeys threshold signature
+ *
+ * IMPORTANT: Requires VetKeys canister deployment.
+ * Without deployed VetKeys canister, returns error.
  *
  * @param transactionId - Transaction ID
  * @param signature - Signature to verify
@@ -652,27 +655,55 @@ public query func verifyThresholdSignature(transactionId : Text, signature : Tex
   #ok : Text;
   #err : Text;
 } {
-  // Mock implementation: always return success
-  #ok("Signature verified: " # transactionId)
+  // Validate inputs
+  if (Text.size(transactionId) == 0) {
+    return #err("Transaction ID cannot be empty");
+  };
+  if (Text.size(signature) < 64) {
+    return #err("Invalid signature: must be at least 64 characters");
+  };
+
+  // VetKeys canister not deployed - return error
+  // In production, this would call the VetKeys canister for verification
+  #err("VetKeys canister not deployed. Threshold signature verification requires deployed VetKeys canister. Use single-party signing or deploy VetKeys.")
 };
 
 /**
- * Derive threshold key via VetKeys (mock)
+ * Derive threshold key via VetKeys
+ *
+ * IMPORTANT: Requires VetKeys canister deployment.
+ * Without deployed VetKeys canister, returns error.
+ * Does NOT store or log the seed phrase.
  *
  * @param seedPhrase - BIP39 seed phrase
- * @param threshold - Threshold number
+ * @param threshold - Threshold number (minimum 2)
  * @returns Derivation result
  */
 public shared func deriveVetKeysKey(seedPhrase : Text, threshold : Nat) : async {
   #ok : Text;
   #err : Text;
 } {
-  // Mock implementation: return success with note
-  #ok("VetKeys key derived (mock): threshold = " # Nat.toText(threshold))
+  // Validate inputs
+  if (Text.size(seedPhrase) == 0) {
+    return #err("Seed phrase cannot be empty");
+  };
+  if (threshold < 2) {
+    return #err("Threshold must be at least 2 for threshold signatures");
+  };
+  if (threshold > 10) {
+    return #err("Threshold cannot exceed 10");
+  };
+
+  // VetKeys canister not deployed - return error
+  // In production, this would call the VetKeys canister for key derivation
+  // The seed phrase is NEVER stored or logged
+  #err("VetKeys canister not deployed. Threshold key derivation requires deployed VetKeys canister. Use single-party key derivation or deploy VetKeys.")
 };
 
 /**
- * Get VetKeys status (mock)
+ * Get VetKeys status
+ *
+ * Reports current VetKeys configuration status.
  *
  * @returns VetKeys configuration status
  */
@@ -681,9 +712,10 @@ public query func getVetKeysStatus() : async {
   thresholdSupported : Bool;
   mode : { #mock; #production };
 } {
+  // VetKeys canister not deployed
   {
     enabled = false;
-    thresholdSupported = false;
+    thresholdSupported = true;  // Supported by architecture, but canister not deployed
     mode = #mock;
   }
 };
