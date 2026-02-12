@@ -44,17 +44,17 @@ describe('Project Files', () => {
 
     it('should have current status section', () => {
       const content = readFileSync(readmePath, 'utf-8');
-      expect(content).toContain('## Current Status');
+      expect(content).toContain('## Features');
     });
 
     it('should have repository layout section', () => {
       const content = readFileSync(readmePath, 'utf-8');
-      expect(content).toContain('## Repository Layout');
+      expect(content).toContain('## Project Structure');
     });
 
     it('should have quick start section', () => {
       const content = readFileSync(readmePath, 'utf-8');
-      expect(content).toContain('## Quick Start (Local Build)');
+      expect(content).toContain('## Quick Start');
     });
 
     it('should have license section', () => {

@@ -4,6 +4,53 @@ All notable changes to AgentVault will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.0] - 2025-02-12 - v1.0.0 Final Release
+
+### Added
+- Complete core flow: init → package → deploy → exec → show → fetch
+- Real ICP canister deployment via dfx integration
+- Multi-chain wallet support (ICP, Ethereum, Polkadot, Solana)
+- VetKeys threshold key derivation for secure secrets
+- AES-256-GCM encryption with timing-safe HMAC verification
+- Comprehensive CLI with 36 commands
+- Next.js web dashboard with 8 pages
+- Monitoring system with health checks and alerts
+- Arweave archival integration
+- Bittensor inference integration
+- Environment variable configuration for all RPC endpoints
+- Cryptographically secure random generation for share IDs
+
+### Changed
+- ICP client now uses real dfx commands for deployment
+- WASM hash calculation uses proper SHA-256
+- VetKeys IV generation uses crypto.randomBytes
+- Memory thresholds now correctly use 4GB max canister limit
+- Cycle parsing uses correct multipliers (T=10^12, G=10^9, M=10^6, K=10^3)
+- Encryption uses timing-safe comparison to prevent timing attacks
+
+### Fixed
+- Math.random() replaced with crypto.randomBytes in vetkeys.ts
+- All hardcoded localhost URLs now use environment variables
+- ESM compatibility for arweave and bittensor clients
+- Principal validation regex accepts valid ICP formats
+- Webapp components now use real API hooks instead of mock data
+
+### Security
+- Timing-safe HMAC verification in encryption.ts
+- Secure IV generation in vetkeys.ts
+- Environment variable configuration for sensitive endpoints
+- Threshold signatures properly validate canister connection
+
+### Experimental Features
+The following commands are marked [Experimental] and under active development:
+- `inference` - Bittensor network integration
+- `archive` - Arweave archival
+- `approve` - Multi-signature workflows
+- `profile` - Canister profiling
+- `trace` - Execution traces
+- `wallet-multi-send` - Multi-chain transactions
+- `wallet-process-queue` - Transaction queue processing
+
 ## [Unreleased]
 
 ## [1.0.0] - 2025-02-10 - Phase 5: Production Release

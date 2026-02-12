@@ -18,6 +18,7 @@ import type { QueuedTransaction } from '../../src/wallet/transaction-queue.js';
  */
 export async function handleProcessQueue(agentId: string, canisterId: string): Promise<void> {
   console.log(chalk.bold('\n🔄 Process Transaction Queue\n'));
+  console.log(chalk.yellow('[Experimental] This feature is under active development and may change.\n'));
 
   const { createActor, createAnonymousAgent } = await import('../../src/canister/actor.js');
 

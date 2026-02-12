@@ -18,6 +18,7 @@
  * This implementation class avoids the naming conflict.
  */
 
+import * as crypto from 'node:crypto';
 import type {
   EncryptedData,
   VetKeysOptions,
@@ -222,7 +223,6 @@ export class VetKeysImplementation {
    * Generate share identifier using cryptographically secure random bytes
    */
   private generateShareId(): string {
-    const crypto = require('node:crypto');
     const randomBytes = crypto.randomBytes(4);
     const timestamp = Date.now().toString(36);
     const randomHex = randomBytes.toString('hex').substring(0, 8);

@@ -27,6 +27,7 @@ interface MultiChainAction {
  */
 export async function handleMultiSend(agentId: string): Promise<void> {
   console.log(chalk.bold('\n💸 Multi-Chain Send\n'));
+  console.log(chalk.yellow('[Experimental] This feature is under active development and may change.\n'));
 
   const walletIds = listAgentWallets(agentId);
 

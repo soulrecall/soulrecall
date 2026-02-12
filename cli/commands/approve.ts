@@ -17,8 +17,9 @@ import {
 const approveCmd = new Command('approve');
 
 approveCmd
-  .description('Manage multi-signature approval workflows')
+  .description('[Experimental] Manage multi-signature approval workflows')
   .action(async () => {
+    console.log(chalk.yellow('[Experimental] This feature is under active development and may change.'));
     console.log(chalk.yellow('Please specify a subcommand: create, list, sign, reject, delete, or cleanup'));
     console.log(chalk.gray(`\nExamples:
   ${chalk.cyan('agentvault approve create deploy <agent-name> "Description"')}${chalk.gray('  Create approval request')}

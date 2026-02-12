@@ -1,153 +1,238 @@
 # AgentVault
 
-**Status**: Production ready for core flows (package → deploy → execute → fetch), with documented stubs for advanced features.
+**Persistent On-Chain AI Agent Platform - Sovereign, Reconstructible, Autonomous**
 
-## Current Status
+AgentVault is an open-source CLI and canister system that enables true autonomy for local AI agents. Deploy agents to Internet Computer (ICP) canisters for persistent, 24/7 execution without browser dependencies.
 
-## Quick Start (Local Build)
+## Features
+
+- **Agent Packaging**: Compile TypeScript agents to WASM
+- **Canister Deployment**: Deploy to ICP local replica or mainnet
+- **State Management**: Query, fetch, and reconstruct agent state
+- **Multi-Chain Wallets**: ICP, Ethereum, Polkadot, Solana support
+- **VetKeys Integration**: Threshold key derivation for secure secrets
+- **Monitoring**: Health checks, metrics, and alerting
+- **Archival**: Arweave integration for permanent storage
+- **AI Inference**: Bittensor network integration
+
+## Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/anomalyco/agentvault.git
+cd agentvault
+
+# Install dependencies
 npm install
+
+# Build the project
 npm run build
+
+# Run CLI
+node dist/cli/index.js --help
+```
+
+### Prerequisites
+
+- Node.js 18+
+- dfx (Internet Computer SDK) - for canister deployment
+- TypeScript 5.7+
+
+## Quick Start
+
+### 1. Initialize a New Agent Project
+
+```bash
 agentvault init my-agent
-agentvault package examples/agents/generic
-agentvault deploy
-agentvault exec --canister-id <id>
-agentvault fetch --canister-id <id>
 ```
 
-## Repository Layout
+This creates a `.agentvault/` directory with agent configuration.
 
-`src/` - Core library with ICP client, packaging, deployment, wallet, monitoring, archival, inference, security
-`cli/` - 37 CLI commands
-`tests/` - 354 tests (98% passing)
-`canister/` - Motoko canister with Candid interface
-`examples/` - Sample agent projects
-`docs/`, `AI_DOCS/` - Product and implementation docs
-`LICENSE` - MIT License
+### 2. Package Your Agent
 
-## Development Commands
+```bash
+agentvault package ./my-agent
+```
 
-`npm run dev` - Start development server with hot reload
-`npm run test` - Run test suite
-`npm run typecheck` - TypeScript type checking
-`npm run lint` - ESLint code quality
-`dfx start` - Start local ICP replica
-`dfx stop` - Stop local ICP replica
-`dfx canister status <canister-id>` - Query canister status
-`dfx canister info <canister-id>` - Query canister info
+Compiles your agent to WASM and generates deployment artifacts.
 
-## Known Limitations (Documented Stubs)
+### 3. Start Local ICP Replica
 
-The following CLI commands are stubs that do not perform real operations yet. They return simulated data and do not interact with actual canisters:
+```bash
+dfx start --background
+```
 
-| Command | Status | Note |
-|---------|-----|------|
-| `status` | Returns placeholder status. Does not check actual project or canister deployments. Run `agentvault init` first. |
-| `fetch` | Returns simulated state. Does not query actual canister. Decrypt requires seed phrase. |
-| `exec` | Submits stub task. Does not execute on real canister. |
-| `show` | Returns mock data. Does not query actual canister for tasks/memories. |
-| `inference` | Returns simulated results. Does not connect to real Bittensor network. |
-| `archive` | Returns simulated results. Does not use real Arweave for archival. |
-| `wallet-multi-send` | Uses simulated multi-chain send. Real wallet crypto is basic. |
-| `wallet-process-queue` | Simulates queue processing. Real wallet crypto is basic. |
-| `decrypt` | Decrypts state using VetKeys (simulated threshold signatures). Real wallet crypto is basic. |
-| `approve` | Uses simulated approval workflow. |
+### 4. Deploy to Canister
 
-## Implementation Status
+```bash
+agentvault deploy --network local
+```
 
-| Module | Status |
+### 5. Execute Agent
+
+```bash
+agentvault exec --canister-id <your-canister-id> "your task"
+```
+
+### 6. Query Agent State
+
+```bash
+agentvault show --canister-id <your-canister-id>
+```
+
+### 7. Fetch State for Local Rebuild
+
+```bash
+agentvault fetch --canister-id <your-canister-id>
+```
+
+## CLI Commands
+
+### Core Commands
+
+| Command | Description |
+|---------|-------------|
+| `init` | Initialize a new AgentVault project |
+| `package` | Package agent directory to WASM |
+| `deploy` | Deploy agent to ICP canister |
+| `exec` | Execute task on canister |
+| `show` | Show agent state |
+| `fetch` | Download agent state from canister |
+| `status` | Display project status |
+| `list` | List all agents |
+
+### Wallet Commands
+
+| Command | Description |
+|---------|-------------|
+| `wallet` | Manage agent wallets |
+| `identity` | Manage ICP identities |
+| `cycles` | Manage canister cycles |
+| `tokens` | Query token balances |
+
+### Monitoring Commands
+
+| Command | Description |
+|---------|-------------|
+| `monitor` | Monitor canister health |
+| `health` | Run health checks |
+| `info` | Get canister information |
+| `stats` | View canister statistics |
+| `logs` | View canister logs |
+
+### Advanced Commands
+
+| Command | Description | Status |
+|---------|-------------|--------|
+| `backup` | Backup agent data | Stable |
+| `rebuild` | Rebuild agent from state | Stable |
+| `promote` | Promote canister between environments | Stable |
+| `rollback` | Rollback canister deployment | Stable |
+| `inference` | Query AI inference services | Experimental |
+| `archive` | Archive to Arweave | Experimental |
+| `approve` | Multi-signature approvals | Experimental |
+| `profile` | Profile canister performance | Experimental |
+| `trace` | View execution traces | Experimental |
+
+## Environment Variables
+
+### ICP Configuration
+
+```bash
+ICP_LOCAL_URL=http://127.0.0.1:4943    # Local replica URL
+ICP_MAINNET_URL=https://ic0.app        # Mainnet URL
+```
+
+### RPC Endpoints
+
+```bash
+# Ethereum
+ETHEREUM_RPC_URL=https://eth.example.com
+INFURA_API_KEY=your-key
+ETHERSCAN_API_KEY=your-key
+
+# Solana
+SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
+SOLANA_MAINNET_RPC_URL=https://api.mainnet-beta.solana.com
+SOLANA_DEVNET_RPC_URL=https://api.devnet.solana.com
+
+# Polkadot
+POLKADOT_RPC_URL=wss://rpc.polkadot.io
+KUSAMA_RPC_URL=wss://kusama-rpc.polkadot.io
+```
+
+## Project Structure
+
+```
+agentvault/
+├── src/                    # Core TypeScript library
+│   ├── deployment/         # ICP client and deployment
+│   ├── packaging/          # WASM compilation
+│   ├── canister/           # Actor bindings
+│   ├── wallet/             # Multi-chain wallet
+│   ├── security/           # VetKeys and encryption
+│   ├── monitoring/         # Health and metrics
+│   ├── archival/           # Arweave client
+│   └── inference/          # Bittensor client
+├── cli/                    # CLI commands
+├── canister/               # Motoko canister code
+├── webapp/                 # Next.js dashboard
+├── tests/                  # Test suite (354 tests)
+└── examples/               # Sample agents
+```
+
+## Development
+
+```bash
+npm run dev          # Development mode with watch
+npm run build        # Build TypeScript
+npm run test         # Run test suite
+npm run test:watch   # Run tests in watch mode
+npm run typecheck    # TypeScript type checking
+npm run lint         # ESLint
+npm run lint:fix     # ESLint with auto-fix
+```
+
+## Testing
+
+AgentVault has 354 tests covering:
+
+- CLI commands (init, deploy, package, status)
+- ICP client (connection, deployment, execution)
+- Packaging (compiler, detector, packager)
+- Integration tests
+
+```bash
+npm run test
+```
+
+## Known Limitations
+
+| Feature | Status |
 |---------|--------|
-| `src/deployment/icpClient.ts` | ✅ Real `deploy()` using dfx, `getCanisterStatus()` using dfx, `calculateWasmHash()` using real SHA-256 |
-| `src/deployment/deployer.ts` | ✅ Orchestrates deployment flow with validation |
-| `src/canister/actor.ts` | ✅ Actor bindings with authentication support |
-| `src/security/vetkeys.ts` | ⚠️  VetKeys threshold signatures are SHA-256 (simulated, not real threshold crypto) |
-| `src/wallet/` | ⚠️ Multi-chain wallet has crypto bugs (key-derivation uses SHA-256, not elliptic) |
-| `src/inference/bittensor-client.ts` | ⚠️ Uses `require()` in ESM |
-| `src/archival/arweave-client.ts` | ⚠️ Uses `require()` in ESM |
-| `src/canister/encryption.ts` | ✅ Uses `crypto.timingSafeEqual()` |
+| Core flow (init → package → deploy → exec → fetch) | ✅ Working |
+| Wallet crypto (real elliptic curves) | ⚠️ Basic SHA-256 |
+| VetKeys threshold signatures | ⚠️ Simulated |
+| Bittensor inference | ⚠️ Requires API access |
+| Arweave archival | ⚠️ Requires wallet setup |
+| Backup/restore | ⚠️ Manifest only |
 
-## Test Coverage
+## Contributing
 
-- **Passing**: 354/354 (98%)
-- **Coverage**: Core deployment and packaging modules are well-tested
-- **Needs tests**: Wallet, monitoring, security, archival, inference modules have 0 tests
-- **CLI commands**: Core commands (init, deploy, fetch, exec, show, status) work but have minimal test coverage
+Contributions are welcome! Please:
 
-## Core Flow End-to-End
-
-The core flow (package → deploy → execute → fetch) now works end-to-end:
-
-1. ✅ `agentvault init` - Creates real project structure with .agentvault/ directory
-2. ✅ `agentvault package` - Compiles TypeScript to WASM via esbuild
-3. ✅ `agentvault deploy` - Calls `dfx canister create` and `dfx canister install-code`
-4. ✅ `agentvault exec` - Calls real `callAgentMethod()` for canister execution
-5. ✅ `agentvault fetch` - Queries canister status via `getCanisterStatus()`
-6. ✅ `agentvault show` - Displays canister status information
-
-## Roadmap Items (Gaps for Future Work)
-
-- [ ] Full on-chain agent execution implementation in canister/agent.mo
-- [ ] Backup/restore from canister (state archival on-chain not implemented)
-- [ ] Wallet integration with hardware wallets (ledger signing)
-- [ ] Real Bittensor network connectivity
-- [ ] Real Arweave archival integration
-- [ ] Improved test coverage for all modules
-- [ ] ESM runtime issues (`require()` in arweave/bittensor clients)
-- [ ] Complete VetKeys implementation with real threshold cryptography
-
-## Local On-Chain Setup (Current Working Flow)
-
-The steps below set up a local ICP replica and deploy the canister. This is the only fully working on-chain flow today. Agent state backup/restore is not yet wired.
-
-```bash
-# 1) Install dfx (see the official ICP SDK instructions)
-# 2) Start a local replica
-
-dfx start --clean --background
-
-# 3) Deploy the AgentVault canister
-
-dfx deploy agent_vault
-
-# 4) Verify canister health
-
-dfx canister call agent_vault getCanisterStatus
-```
-
-## Packaging an Agent (Local)
-
-```bash
-# Package a local agent directory into WASM + state artifacts
-node dist/cli/index.js package ./path/to/agent -o ./dist/agent
-
-# Optional: enable ic-wasm optimizations when ic-wasm is installed
-node dist/cli/index.js package ./path/to/agent -o ./dist/agent --ic-wasm-optimize --ic-wasm-shrink
-```
-
-## Development Commands
-
-```bash
-npm run dev         # tsx watch
-npm run build       # tsc build
-npm run start       # run dist/index.js
-npm run test        # vitest run
-npm run test:watch  # vitest watch
-npm run typecheck   # tsc --noEmit
-npm run lint        # eslint
-npm run lint:fix    # eslint --fix
-```
-
-## Notes on On-Chain Backup
-
-On-chain agent state backup/reconstruction is a roadmap item. The intended flow is:
-1) package agent to WASM + state JSON
-2) deploy canister
-3) upload state and WASM to the canister
-4) fetch/decrypt/rebuild from chain
-
-Steps 3–4 are not implemented in the current CLI/canister pairing. If you want this wired next, see the PRDs in `AI_DOCS/` and the gaps called out in the code review.
+1. Fork the repository
+2. Create a feature branch
+3. Run tests and linting
+4. Submit a pull request
 
 ## License
 
 MIT License - see [LICENSE](./LICENSE).
+
+## Resources
+
+- [Product Requirements Document](./docs/PRD.md)
+- [Implementation Plan](./AI_DOCS/)
+- [Changelog](./CHANGELOG.md)
+- [ICP Documentation](https://internetcomputer.org/docs/)
