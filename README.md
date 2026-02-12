@@ -17,18 +17,20 @@ AgentVault is an open-source CLI and canister system that enables true autonomy 
 
 ## Installation
 
+### From npm (Recommended)
+
 ```bash
-# Clone the repository
+npm install -g agentvault
+agentvault --help
+```
+
+### From Source
+
+```bash
 git clone https://github.com/anomalyco/agentvault.git
 cd agentvault
-
-# Install dependencies
 npm install
-
-# Build the project
 npm run build
-
-# Run CLI
 node dist/cli/index.js --help
 ```
 
@@ -177,7 +179,7 @@ agentvault/
 ├── cli/                    # CLI commands
 ├── canister/               # Motoko canister code
 ├── webapp/                 # Next.js dashboard
-├── tests/                  # Test suite (354 tests)
+├── tests/                  # Test suite (508 tests)
 └── examples/               # Sample agents
 ```
 
@@ -202,7 +204,7 @@ npm run lint:fix     # ESLint with auto-fix
 
 ## Testing
 
-AgentVault has 354 tests covering:
+AgentVault has 508 tests covering:
 
 - CLI commands (init, deploy, package, status)
 - ICP client (connection, deployment, execution)
