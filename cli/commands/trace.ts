@@ -12,7 +12,7 @@ import type { TraceFilter } from '../../src/debugging/types.js';
 export const traceCmd = new Command('trace');
 
 traceCmd
-  .description('View execution traces from instrumented canisters')
+  .description('[Experimental] View execution traces from instrumented canisters')
   .argument('<canister-id>', 'Canister ID')
   .option('-f, --filter <method>', 'Filter by method name')
   .option('-d, --min-duration <ms>', 'Minimum duration in milliseconds')
@@ -21,6 +21,7 @@ traceCmd
   .option('--export <file>', 'Export trace to file')
   .option('--format <format>', 'Export format (json, flamegraph, text)', 'text')
   .action(async (canisterId, options) => {
+    console.log(chalk.yellow('[Experimental] This feature is under active development and may change.'));
     const spinner = ora(`Fetching traces for ${canisterId}...`).start();
 
     try {

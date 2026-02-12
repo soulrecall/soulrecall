@@ -14,8 +14,9 @@ import {
 const inferenceCmd = new Command('inference');
 
 inferenceCmd
-  .description('Query AI inference services (Bittensor network)')
+  .description('[Experimental] Query AI inference services (Bittensor network)')
   .action(async () => {
+    console.log(chalk.yellow('[Experimental] This feature is under active development and may change.'));
     console.log(chalk.yellow('Please specify a subcommand: query, subnets, modules, cache, or stats'));
     console.log(chalk.gray(`\nExamples:
   ${chalk.cyan('agentvault inference query <netuid> <inputs>')}${chalk.gray('    Query inference')}

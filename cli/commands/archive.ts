@@ -14,8 +14,9 @@ import {
 const archiveCmd = new Command('archive');
 
 archiveCmd
-  .description('Archive agent data to permanent storage (Arweave)')
+  .description('[Experimental] Archive agent data to permanent storage (Arweave)')
   .action(async () => {
+    console.log(chalk.yellow('[Experimental] This feature is under active development and may change.'));
     console.log(chalk.yellow('Please specify a subcommand: prepare, list, delete, verify, or stats'));
     console.log(chalk.gray(`\nExamples:
   ${chalk.cyan('agentvault archive prepare <agent-name> <version>')}${chalk.gray('    Prepare agent data for archival')}

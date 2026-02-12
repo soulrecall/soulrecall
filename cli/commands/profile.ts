@@ -13,12 +13,13 @@ import type { ProfileResult } from '../../src/debugging/types.js';
 export const profileCmd = new Command('profile');
 
 profileCmd
-  .description('Profile canister performance')
+  .description('[Experimental] Profile canister performance')
   .argument('<canister-id>', 'Canister ID')
   .option('-d, --duration <seconds>', 'Profile duration in seconds', '30')
   .option('--export <file>', 'Export profile data to file')
   .option('--format <format>', 'Export format (json, flamegraph)', 'json')
   .action(async (canisterId, options) => {
+    console.log(chalk.yellow('[Experimental] This feature is under active development and may change.'));
     const duration = parseInt(options.duration, 10);
     const spinner = ora(`Profiling ${canisterId} for ${duration}s...`).start();
 
