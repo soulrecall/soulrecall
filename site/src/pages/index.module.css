@@ -1,0 +1,118 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.heroBanner {
+  padding: 4rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
+@media screen and (min-width: 996px) {
+  .heroBanner {
+    padding: 6rem 0;
+  }
+}
+
+.heroBanner h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.heroBanner p {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.heroDescription {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.1rem;
+  max-width: 700px;
+  margin: 0 auto 2rem;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.trustBar {
+  background: var(--ifm-color-emphasis-100);
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--ifm-color-emphasis-300);
+}
+
+[data-theme='dark'] .trustBar {
+  background: var(--ifm-color-emphasis-200);
+}
+
+.trustItems {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.trustItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.trustIcon {
+  font-size: 1.25rem;
+}
+
+.quickInstall {
+  padding: 4rem 0;
+  text-align: center;
+  background: var(--ifm-color-emphasis-50);
+}
+
+[data-theme='dark'] .quickInstall {
+  background: var(--ifm-background-color);
+}
+
+.quickInstall h2 {
+  margin-bottom: 1.5rem;
+}
+
+.codeBlock {
+  background: var(--ifm-code-background);
+  border-radius: 8px;
+  padding: 1rem 2rem;
+  display: inline-block;
+  margin-bottom: 1rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+}
+
+.codeBlock code {
+  font-size: 1.1rem;
+  color: var(--ifm-color-primary);
+}
+
+.quickStart {
+  color: var(--ifm-color-emphasis-600);
+}
+
+.quickStart code {
+  background: var(--ifm-code-background);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}

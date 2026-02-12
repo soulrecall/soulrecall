@@ -185,10 +185,10 @@ agentvault/
 
 ## Documentation (v1.0)
 
+- **Website**: https://agentvault.cloud
 - [Documentation index](docs/user/index-v1.0.md)
 - [Comprehensive tutorial](docs/user/tutorial-v1.0.md)
 - [Clawdbot/Claude skill runbook](docs/user/clawdbot-claude-skill.md)
-- [Marketing site plan for agentvault.cloud](docs/marketing/agentvault-cloud-site.md)
 
 ## Development
 
@@ -241,6 +241,9 @@ MIT License - see [LICENSE](./LICENSE).
 
 ## Resources
 
+- **Website**: https://agentvault.cloud
+- **Documentation**: https://agentvault.cloud/docs
+- **npm**: https://www.npmjs.com/package/agentvault
 - [Product Requirements Document](./docs/PRD.md)
 - [Implementation Plan](./AI_DOCS/)
 - [Changelog](./CHANGELOG.md)

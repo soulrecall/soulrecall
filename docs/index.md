@@ -75,5 +75,7 @@ This documentation is for **AgentVault v1.0.0**.
 
 ## Getting Help
 
+- **Website**: https://agentvault.cloud
 - **GitHub Issues**: https://github.com/anomalyco/agentvault/issues
+- **npm**: https://www.npmjs.com/package/agentvault
 - **ICP Documentation**: https://internetcomputer.org/docs/

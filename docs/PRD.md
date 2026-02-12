@@ -217,10 +217,10 @@ interface Task {
 ## 5. Non-Functional Requirements
 
 ### 5.1 Performance
-- **Packaging Time:** <30s to compile agent to WASM
-- **Deploy Time:** <2m to deploy canister
-- **Query Latency:** <500ms (95th percentile) for canister state
-- **Reconstruction:** <10s to decrypt and rebuild agent locally
+- **Packaging Time:** `<30s` to compile agent to WASM
+- **Deploy Time:** `<2m` to deploy canister
+- **Query Latency:** `<500ms` (95th percentile) for canister state
+- **Reconstruction:** `<10s` to decrypt and rebuild agent locally
 
 ### 5.2 Reliability
 - **Uptime:** 99.9%+ canister uptime
@@ -358,15 +358,15 @@ interface Task {
 
 ### 7.2 Quality
 - **Test coverage:** 90%+ for all CLI and canister code
-- **Bug rate:** <0.5 critical bugs per release
+- **Bug rate:** `<0.5` critical bugs per release
 - **Documentation completeness:** All commands documented with examples
 - **User satisfaction:** 4.5/5.0 stars from early adopters
 
 ### 7.3 Performance
-- **CLI execution time:** <200ms (95th percentile)
-- **Deploy time:** <2m (canister creation + upload)
-- **Query latency:** <500ms (95th percentile)
-- **Reconstruction time:** <10s (decrypt + rebuild)
+- **CLI execution time:** `<200ms` (95th percentile)
+- **Deploy time:** `<2m` (canister creation + upload)
+- **Query latency:** `<500ms` (95th percentile)
+- **Reconstruction time:** `<10s` (decrypt + rebuild)
 
 ### 7.4 Reliability
 - **Canister uptime:** 99.9%+

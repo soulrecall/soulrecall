@@ -72,4 +72,6 @@ This is the canonical documentation landing page for AgentVault v1.0.
 ## Versioning Notes
 
 - This index is for **AgentVault v1.0** content.
-- Future versions will have dedicated indexes (e.g., `index-v1.1.md`).
+- Website: https://agentvault.cloud
+- GitHub: https://github.com/anomalyco/agentvault
+- npm: https://www.npmjs.com/package/agentvault

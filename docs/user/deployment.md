@@ -132,7 +132,7 @@ agentvault deploy --canister-id <existing-id> --upgrade
 **Zero-downtime Upgrade:**
 1. Deploy new code with same canister ID
 2. ICP handles code upgrade atomically
-3. Minimal downtime (typically <30 seconds)
+3. Minimal downtime (typically `<30 seconds`)
 
 **Blue-Green Deployment:**
 1. Deploy new canister

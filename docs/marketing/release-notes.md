@@ -107,10 +107,8 @@ Thank you to all contributors who made this release possible:
 
 ## Support
 
-- **Documentation**: https://docs.agentvault.dev
-- **Issues**: https://github.com/your-org/agentvault/issues
-- **Discord**: https://discord.gg/agentvault
-- **X/Twitter**: @agentvaultdev
+- **Documentation**: https://agentvault.cloud/docs
+- **Issues**: https://github.com/anomalyco/agentvault/issues
 
 ## What's Next?
 
@@ -127,4 +125,4 @@ v1.0.1 planning:
 npm install -g agentvault@1.0.0
 ```
 
-**Star on GitHub:** https://github.com/your-org/agentvault
+**Star on GitHub:** https://github.com/anomalyco/agentvault
