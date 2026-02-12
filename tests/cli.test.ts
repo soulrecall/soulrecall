@@ -241,7 +241,7 @@ describe('CLI Framework', () => {
       const content = readFileSync(packageJsonPath, 'utf-8');
       const pkg = JSON.parse(content);
       expect(pkg.bin).toBeDefined();
-      expect(pkg.bin.agentvault).toBe('./dist/cli/index.js');
+      expect(pkg.bin.agentvault).toBe('dist/cli/index.js');
     });
 
     it('should have commander dependency', () => {

@@ -4,7 +4,7 @@
   "description": "Persistent On-Chain AI Agent Platform - Sovereign, Reconstructible, Autonomous",
   "main": "src/index.ts",
   "bin": {
-    "agentvault": "./dist/cli/index.js"
+    "agentvault": "dist/cli/index.js"
   },
   "type": "module",
   "scripts": {

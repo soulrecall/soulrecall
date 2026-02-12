@@ -2,6 +2,7 @@
  * Environment promotion for canister deployment
  *
  * Handles promoting canisters between environments (dev -> staging -> production)
+ * CLE-102: Wired to actual deploy path
  */
 
 import fs from 'node:fs';
@@ -13,9 +14,6 @@ import type { DeploymentHistory } from '../icp/types.js';
 const AGENTVAULT_DIR = path.join(os.homedir(), '.agentvault');
 const HISTORY_DIR = path.join(AGENTVAULT_DIR, 'history');
 
-/**
- * Ensure history directory exists
- */
 function ensureHistoryDir(): void {
   if (!fs.existsSync(AGENTVAULT_DIR)) {
     fs.mkdirSync(AGENTVAULT_DIR, { recursive: true });
@@ -25,17 +23,11 @@ function ensureHistoryDir(): void {
   }
 }
 
-/**
- * Get history file path for an agent
- */
 function getHistoryPath(agentName: string): string {
   ensureHistoryDir();
   return path.join(HISTORY_DIR, `${agentName}.yaml`);
 }
 
-/**
- * Load deployment history for an agent
- */
 export function loadDeploymentHistory(agentName: string): DeploymentHistory[] {
   const historyPath = getHistoryPath(agentName);
   
@@ -53,26 +45,17 @@ export function loadDeploymentHistory(agentName: string): DeploymentHistory[] {
   return [];
 }
 
-/**
- * Save deployment history for an agent
- */
 export function saveDeploymentHistory(agentName: string, history: DeploymentHistory[]): void {
   const historyPath = getHistoryPath(agentName);
   fs.writeFileSync(historyPath, stringify(history), 'utf8');
 }
 
-/**
- * Add a deployment to history
- */
 export function addDeploymentToHistory(deployment: DeploymentHistory): void {
   const history = loadDeploymentHistory(deployment.agentName);
   history.push(deployment);
   saveDeploymentHistory(deployment.agentName, history);
 }
 
-/**
- * Get latest deployment for an agent in an environment
- */
 export function getLatestDeployment(agentName: string, environment: string): DeploymentHistory | null {
   const history = loadDeploymentHistory(agentName);
   const envHistory = history.filter((d) => d.environment === environment && d.success);
@@ -84,24 +67,26 @@ export function getLatestDeployment(agentName: string, environment: string): Dep
   return envHistory.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())[0] ?? null;
 }
 
-/**
- * Get all deployments for an agent
- */
 export function getAllDeployments(agentName: string): DeploymentHistory[] {
   return loadDeploymentHistory(agentName);
 }
 
+export interface PromotionOptions {
+  targetCanisterId?: string;
+  blueGreen?: boolean;
+  wasmPath?: string;
+  skipDeploy?: boolean;
+}
+
 /**
  * Promote a canister from one environment to another
+ * Now calls actual deploy when skipDeploy is false
  */
 export async function promoteCanister(
   agentName: string,
   fromEnv: string,
   toEnv: string,
-  options: {
-    targetCanisterId?: string;
-    blueGreen?: boolean;
-  } = {},
+  options: PromotionOptions = {},
 ): Promise<DeploymentHistory> {
   const sourceDeployment = getLatestDeployment(agentName, fromEnv);
   
@@ -110,6 +95,31 @@ export async function promoteCanister(
   }
   
   const targetCanisterId = options.targetCanisterId || sourceDeployment.canisterId;
+  
+  if (!options.skipDeploy && options.wasmPath) {
+    const { deployAgent } = await import('./deployer.js');
+    
+    const deployResult = await deployAgent({
+      wasmPath: options.wasmPath,
+      network: toEnv,
+      canisterId: targetCanisterId,
+      mode: 'upgrade',
+    });
+
+    const targetDeployment: DeploymentHistory = {
+      agentName,
+      environment: toEnv,
+      canisterId: deployResult.canister.canisterId,
+      wasmHash: deployResult.canister.wasmHash || sourceDeployment.wasmHash,
+      timestamp: new Date(),
+      version: sourceDeployment.version + 1,
+      success: true,
+    };
+    
+    addDeploymentToHistory(targetDeployment);
+    
+    return targetDeployment;
+  }
   
   const targetDeployment: DeploymentHistory = {
     agentName,

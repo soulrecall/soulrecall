@@ -3,6 +3,7 @@
  *
  * Portable JSON format backup with embedded manifest and checksums
  * Stores backups in ~/.agentvault/backups/
+ * CLE-101: Enhanced to include real canister state
  */
 
 import fs from 'node:fs';
@@ -23,6 +24,21 @@ function ensureBackupsDir(): void {
   }
 }
 
+/**
+ * Canister state captured in backup
+ */
+export interface CanisterState {
+  canisterId: string;
+  status: 'running' | 'stopped' | 'stopping';
+  memorySize?: bigint;
+  cycles?: bigint;
+  moduleHash?: string;
+  fetchedAt: string;
+  tasks?: unknown[];
+  memory?: unknown;
+  context?: unknown;
+}
+
 export interface BackupManifest {
   version: string;
   agentName: string;
@@ -30,6 +46,7 @@ export interface BackupManifest {
   created: Date;
   agentConfig?: AgentConfig;
   canisterId?: string;
+  canisterState?: CanisterState;
   checksums: Record<string, string>;
   size: number;
   components: string[];
@@ -39,6 +56,8 @@ export interface BackupOptions {
   agentName: string;
   outputPath?: string;
   includeConfig?: boolean;
+  canisterId?: string;
+  includeCanisterState?: boolean;
 }
 
 export interface ImportOptions {
@@ -63,11 +82,70 @@ export interface ImportResult {
   warnings: string[];
 }
 
+/**
+ * Fetch canister state for backup
+ */
+async function fetchCanisterState(canisterId: string): Promise<CanisterState | null> {
+  try {
+    const { createICPClient } = await import('../deployment/icpClient.js');
+    const client = createICPClient({ network: 'local' });
+
+    const status = await client.getCanisterStatus(canisterId);
+
+    const statusMap: Record<string, 'running' | 'stopped' | 'stopping'> = {
+      running: 'running',
+      stopped: 'stopped',
+      stopping: 'stopping',
+      pending: 'stopped',
+    };
+
+    const state: CanisterState = {
+      canisterId,
+      status: statusMap[status.status] || 'stopped',
+      memorySize: status.memorySize,
+      cycles: status.cycles,
+      fetchedAt: new Date().toISOString(),
+    };
+
+    try {
+      const tasksResult = await client.callAgentMethod(canisterId, 'getTasks', []);
+      if (tasksResult) {
+        state.tasks = tasksResult as unknown[];
+      }
+    } catch {
+      // Tasks not available
+    }
+
+    try {
+      const memoryResult = await client.callAgentMethod(canisterId, 'getMemory', []);
+      if (memoryResult) {
+        state.memory = memoryResult;
+      }
+    } catch {
+      // Memory not available
+    }
+
+    try {
+      const contextResult = await client.callAgentMethod(canisterId, 'getContext', []);
+      if (contextResult) {
+        state.context = contextResult;
+      }
+    } catch {
+      // Context not available
+    }
+
+    return state;
+  } catch (error) {
+    console.warn('Failed to fetch canister state:', error);
+    return null;
+  }
+}
+
 export async function exportBackup(options: BackupOptions): Promise<BackupResult> {
   try {
     ensureBackupsDir();
     
-    const { agentName, outputPath, includeConfig = true } = options;
+    const { agentName, outputPath, includeConfig = true, canisterId, includeCanisterState = true } = options;
     
     const timestamp = new Date();
     const created = new Date();
@@ -80,7 +158,7 @@ export async function exportBackup(options: BackupOptions): Promise<BackupResult
     }
     
     const manifest: BackupManifest = {
-      version: '1.0',
+      version: '1.1',
       agentName,
       timestamp,
       created,
@@ -90,7 +168,16 @@ export async function exportBackup(options: BackupOptions): Promise<BackupResult
     };
     
     if (includeConfig) {
-      manifest.canisterId = agentName;
+      manifest.canisterId = canisterId || agentName;
+    }
+
+    if (includeCanisterState && canisterId) {
+      const canisterState = await fetchCanisterState(canisterId);
+      if (canisterState) {
+        manifest.canisterState = canisterState;
+        manifest.canisterId = canisterId;
+        components.push('canister-state');
+      }
     }
     
     const content = JSON.stringify(manifest, null, 2);
