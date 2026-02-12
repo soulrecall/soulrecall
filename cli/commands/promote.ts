@@ -18,6 +18,8 @@ promoteCmd
   .option('-t, --to <env>', 'Target environment')
   .option('--target-canister <id>', 'Target canister ID (optional)')
   .option('--blue-green', 'Enable blue-green deployment', false)
+  .option('-w, --wasm-path <path>', 'Path to WASM file for actual deployment')
+  .option('--skip-deploy', 'Skip actual deploy, only update history')
   .action(async (agentName, options) => {
     if (!options.from) {
       console.error(chalk.red('Error: --from is required'));
@@ -48,6 +50,8 @@ promoteCmd
       const result = await promoteCanister(agentName, options.from, options.to, {
         targetCanisterId: options.targetCanister,
         blueGreen: options.blueGreen,
+        wasmPath: options.wasmPath,
+        skipDeploy: options.skipDeploy,
       });
 
       spinner.succeed(chalk.green(`Promoted ${agentName} from ${options.from} to ${options.to}`));

@@ -29,8 +29,11 @@ backupCmd
   .description('Export agent configuration and data to a backup file')
   .argument('<agent-name>', 'Agent name to backup')
   .option('-o, --output <path>', 'Output file path', './backup.json')
+  .option('-c, --canister-id <id>', 'Canister ID to include live canister state')
+  .option('--no-canister-state', 'Skip fetching canister state even if canister ID provided')
   .action(async (agentName, options) => {
     const outputPath = options.output.endsWith('.json') ? options.output : `${options.output}.json`;
+    const includeCanisterState = options.canisterId ? options.canisterState !== false : false;
     const spinner = ora(`Exporting backup for ${agentName}...`).start();
 
     try {
@@ -38,6 +41,8 @@ backupCmd
         agentName,
         outputPath,
         includeConfig: true,
+        canisterId: options.canisterId,
+        includeCanisterState,
       });
 
       if (result.success && result.path && result.manifest) {

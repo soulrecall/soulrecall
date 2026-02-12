@@ -19,6 +19,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Bittensor inference integration
 - Environment variable configuration for all RPC endpoints
 - Cryptographically secure random generation for share IDs
+- `backup export --canister-id` option to include live canister state (tasks, memory, context)
+- `promote --wasm-path` option for actual canister deployment during promotion
 
 ### Changed
 - ICP client now uses real dfx commands for deployment
