@@ -4,39 +4,11 @@ import { useState } from 'react'
 import { CheckCircle2, Clock, XCircle, Filter } from 'lucide-react'
 import { StatusBadge } from '@/components/common/StatusBadge'
 import { TimeAgo } from '@/components/common/TimeAgo'
-import { useDeployments } from '@/hooks/useDeployments'
+import { useTasks } from '@/hooks/useTasks'
 import { DataTable } from '@/components/common/DataTable'
+import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import type { Column } from '@/components/common/DataTable'
 import type { Task } from '@/lib/types'
-
-const mockTasks: Task[] = [
-  {
-    id: 'task-1',
-    type: 'deploy',
-    status: 'running',
-    progress: 65,
-    message: 'Building canister wasm',
-    createdAt: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
-  },
-  {
-    id: 'task-2',
-    type: 'backup',
-    status: 'completed',
-    progress: 100,
-    message: 'Backup completed',
-    createdAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
-    completedAt: new Date(Date.now() - 25 * 60 * 1000).toISOString(),
-  },
-  {
-    id: 'task-3',
-    type: 'upgrade',
-    status: 'failed',
-    progress: 45,
-    message: 'Compilation failed',
-    createdAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
-    error: 'TypeScript compilation error in src/index.ts',
-  },
-]
 
 const columns: Column<Task>[] = [
   {
@@ -92,7 +64,7 @@ const columns: Column<Task>[] = [
 
 export default function TasksPage() {
   const [statusFilter, setStatusFilter] = useState<string>('all')
-  const tasks = mockTasks
+  const { tasks, isLoading, error } = useTasks({ status: statusFilter })
 
   const filteredTasks = statusFilter === 'all'
     ? tasks
@@ -124,11 +96,21 @@ export default function TasksPage() {
         </div>
       </div>
 
-      <DataTable
-        columns={columns}
-        data={filteredTasks}
-        emptyMessage="No tasks found"
-      />
+      {isLoading ? (
+        <div className="flex items-center justify-center min-h-[400px]">
+          <LoadingSpinner size="lg" />
+        </div>
+      ) : error ? (
+        <div className="flex items-center justify-center min-h-[400px]">
+          <p className="text-red-500">{error.message}</p>
+        </div>
+      ) : (
+        <DataTable
+          columns={columns}
+          data={filteredTasks}
+          emptyMessage="No tasks found"
+        />
+      )}
     </div>
   )
 }

@@ -472,13 +472,19 @@ export class SolanaProvider extends BaseWalletProvider {
 
   /**
    * Get default RPC URL for network type
+   * Checks environment variables first, then falls back to public RPC endpoints
    */
   private getDefaultRpcUrl(): string {
-    const defaultUrls: Record<string, string> = {
+    const envUrls: Record<string, string | undefined> = {
+      mainnet: process.env.SOLANA_MAINNET_RPC_URL || process.env.SOLANA_RPC_URL,
+      devnet: process.env.SOLANA_DEVNET_RPC_URL || process.env.SOLANA_RPC_URL,
+    };
+
+    const publicUrls: Record<string, string> = {
       mainnet: 'https://api.mainnet-beta.solana.com',
       devnet: 'https://api.devnet.solana.com',
     };
 
-    return defaultUrls[this.network] || defaultUrls.mainnet!;
+    return envUrls[this.network] || publicUrls[this.network] || publicUrls.mainnet!;
   }
 }

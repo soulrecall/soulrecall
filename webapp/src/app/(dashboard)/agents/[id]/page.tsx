@@ -6,37 +6,18 @@ import { ArrowLeft, Activity, Play, Settings, StopCircle, RefreshCw } from 'luci
 import { StatusBadge } from '@/components/common/StatusBadge'
 import { useCanisterStatus } from '@/hooks/useCanisterStatus'
 import { useDeployments } from '@/hooks/useDeployments'
+import { useAgent } from '@/hooks/useAgent'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { formatBytes, formatCycles, formatTimestamp } from '@/lib/utils'
-import type { Agent } from '@/lib/types'
-
-const mockAgent: Agent = {
-  id: 'agent-1',
-  name: 'Sample Agent',
-  status: 'active',
-  canisterId: 'rrkah-fqaaa-aaaaa-aaaaq-cai',
-  config: {
-    entry: 'src/index.ts',
-    memory: 256,
-    compute: 'medium',
-    cycles: 1000000000000n,
-  },
-  metrics: {
-    requests: 1250,
-    errors: 3,
-    avgLatency: 45,
-    uptime: 99.8,
-  },
-  createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-  updatedAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
-}
 
 export default function AgentDetailPage({ params }: { params: { id: string } }) {
-  const { data: canister, isLoading: canisterLoading, error: canisterError } = useCanisterStatus(mockAgent.canisterId)
-  const { deployments, isLoading: deploymentsLoading } = useDeployments({ agentId: mockAgent.id })
+  const { agent, isLoading: agentLoading, error: agentError } = useAgent(params.id)
+  const { data: canister, isLoading: canisterLoading, error: canisterError } = useCanisterStatus(agent?.canisterId || '')
+  const { deployments, isLoading: deploymentsLoading } = useDeployments({ agentId: params.id })
   const [isDeploying, setIsDeploying] = useState(false)
 
   const handleDeploy = async () => {
+    if (!agent) return
     setIsDeploying(true)
     await new Promise((resolve) => setTimeout(resolve, 2000))
     setIsDeploying(false)
@@ -48,6 +29,32 @@ export default function AgentDetailPage({ params }: { params: { id: string } }) 
     setIsDeploying(false)
   }
 
+  if (agentLoading) {
+    return (
+      <div className="p-6 flex items-center justify-center min-h-[400px]">
+        <LoadingSpinner size="lg" />
+      </div>
+    )
+  }
+
+  if (agentError || !agent) {
+    return (
+      <div className="p-6 space-y-6">
+        <div className="flex items-center gap-4">
+          <Link href="/agents" className="text-gray-500 hover:text-gray-700">
+            <ArrowLeft className="w-6 h-6" />
+          </Link>
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Agent Not Found</h1>
+            <p className="text-muted-foreground">
+              {agentError?.message || 'The requested agent could not be found.'}
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
@@ -56,12 +63,12 @@ export default function AgentDetailPage({ params }: { params: { id: string } }) 
             <ArrowLeft className="w-6 h-6" />
           </Link>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">{mockAgent.name}</h1>
+            <h1 className="text-3xl font-bold tracking-tight">{agent.name}</h1>
             <p className="text-muted-foreground">
-              ID: {mockAgent.id}
+              ID: {agent.id}
             </p>
           </div>
-          <StatusBadge status={mockAgent.status} />
+          <StatusBadge status={agent.status} />
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -70,9 +77,9 @@ export default function AgentDetailPage({ params }: { params: { id: string } }) 
             className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50 transition"
           >
             {isDeploying ? <LoadingSpinner size="sm" /> : <Play className="w-4 h-4" />}
-            {mockAgent.status === 'active' ? 'Restart' : 'Deploy'}
+            {agent.status === 'active' ? 'Restart' : 'Deploy'}
           </button>
-          {mockAgent.status === 'active' && (
+          {agent.status === 'active' && (
             <button
               onClick={handleStop}
               disabled={isDeploying}
@@ -83,7 +90,7 @@ export default function AgentDetailPage({ params }: { params: { id: string } }) 
             </button>
           )}
           <Link
-            href={`/agents/${mockAgent.id}/config`}
+            href={`/agents/${agent.id}/config`}
             className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition"
           >
             <Settings className="w-4 h-4" />
@@ -138,19 +145,19 @@ export default function AgentDetailPage({ params }: { params: { id: string } }) 
           <div className="border rounded-lg p-4 space-y-2">
             <p className="flex justify-between">
               <span className="text-gray-600">Requests:</span>
-              <span>{mockAgent.metrics?.requests.toLocaleString()}</span>
+              <span>{agent.metrics?.requests.toLocaleString() ?? 'N/A'}</span>
             </p>
             <p className="flex justify-between">
               <span className="text-gray-600">Errors:</span>
-              <span className="text-red-500">{mockAgent.metrics?.errors}</span>
+              <span className="text-red-500">{agent.metrics?.errors ?? 'N/A'}</span>
             </p>
             <p className="flex justify-between">
               <span className="text-gray-600">Avg Latency:</span>
-              <span>{mockAgent.metrics?.avgLatency}ms</span>
+              <span>{agent.metrics?.avgLatency ? `${agent.metrics.avgLatency}ms` : 'N/A'}</span>
             </p>
             <p className="flex justify-between">
               <span className="text-gray-600">Uptime:</span>
-              <span>{mockAgent.metrics?.uptime}%</span>
+              <span>{agent.metrics?.uptime ? `${agent.metrics.uptime}%` : 'N/A'}</span>
             </p>
           </div>
         </div>
@@ -161,23 +168,23 @@ export default function AgentDetailPage({ params }: { params: { id: string } }) 
         <div className="border rounded-lg p-4 space-y-2">
           <p className="flex justify-between">
             <span className="text-gray-600">Entry Point:</span>
-            <span className="font-mono">{mockAgent.config.entry}</span>
+            <span className="font-mono">{agent.config.entry}</span>
           </p>
           <p className="flex justify-between">
             <span className="text-gray-600">Memory:</span>
-            <span>{mockAgent.config.memory} MB</span>
+            <span>{agent.config.memory} MB</span>
           </p>
           <p className="flex justify-between">
             <span className="text-gray-600">Compute:</span>
-            <span>{mockAgent.config.compute}</span>
+            <span>{agent.config.compute}</span>
           </p>
           <p className="flex justify-between">
             <span className="text-gray-600">Created:</span>
-            <span>{formatTimestamp(mockAgent.createdAt)}</span>
+            <span>{formatTimestamp(agent.createdAt)}</span>
           </p>
           <p className="flex justify-between">
             <span className="text-gray-600">Updated:</span>
-            <span>{formatTimestamp(mockAgent.updatedAt)}</span>
+            <span>{formatTimestamp(agent.updatedAt)}</span>
           </p>
         </div>
       </div>

@@ -481,15 +481,23 @@ export class PolkadotProvider extends BaseWalletProvider {
 
   /**
    * Get default RPC URL for chain type
+   * Checks environment variables first, then falls back to public RPC endpoints
    */
   private getDefaultRpcUrl(): string {
-    const defaultUrls: Record<string, string> = {
+    const envUrls: Record<string, string | undefined> = {
+      polkadot: process.env.POLKADOT_RPC_URL,
+      kusama: process.env.KUSAMA_RPC_URL,
+      westend: process.env.WESTEND_RPC_URL,
+      astar: process.env.ASTAR_RPC_URL,
+    };
+
+    const publicUrls: Record<string, string> = {
       polkadot: 'wss://rpc.polkadot.io',
       kusama: 'wss://kusama-rpc.polkadot.io',
       westend: 'wss://westend-rpc.polkadot.io',
       astar: 'wss://rpc.astar.network',
     };
 
-    return defaultUrls[this.chainType] || defaultUrls.polkadot!;
+    return envUrls[this.chainType] || publicUrls[this.chainType] || publicUrls.polkadot!;
   }
 }

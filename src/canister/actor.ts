@@ -296,12 +296,13 @@ export function createActor(canisterId: string, agent?: HttpAgent): _SERVICE {
 /**
  * Create anonymous agent for local canister access
  *
- * @param host - Host URL (default: http://localhost:4943)
+ * @param host - Host URL (default: from ICP_LOCAL_URL env or http://localhost:4943)
  * @returns HTTP agent instance
  */
-export function createAnonymousAgent(host = 'http://localhost:4943'): HttpAgent {
+export function createAnonymousAgent(host?: string): HttpAgent {
+  const defaultHost = process.env.ICP_LOCAL_URL || 'http://localhost:4943';
   const agent = new HttpAgent({
-    host,
+    host: host ?? defaultHost,
   });
 
   return agent;
@@ -310,13 +311,14 @@ export function createAnonymousAgent(host = 'http://localhost:4943'): HttpAgent 
 /**
  * Create authenticated agent for mainnet canister access
  *
- * @param host - Host URL (default: https://ic0.app)
+ * @param host - Host URL (default: from ICP_MAINNET_URL env or https://ic0.app)
  * @param identity - Identity for signing transactions
  * @returns HTTP agent instance
  */
-export function createAuthenticatedAgent(host = 'https://ic0.app', identity?: Identity): HttpAgent {
+export function createAuthenticatedAgent(host?: string, identity?: Identity): HttpAgent {
+  const defaultHost = process.env.ICP_MAINNET_URL || 'https://ic0.app';
   const agent = new HttpAgent({
-    host,
+    host: host ?? defaultHost,
     identity,
   });
 

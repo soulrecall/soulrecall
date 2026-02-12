@@ -1,42 +1,68 @@
 'use client'
 
-import { Globe, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react'
+import { useState } from 'react'
+import { Globe, CheckCircle2, XCircle, AlertTriangle, RefreshCw } from 'lucide-react'
 import { StatusBadge } from '@/components/common/StatusBadge'
+import { LoadingSpinner } from '@/components/common/LoadingSpinner'
+import { useNetworks } from '@/hooks/useNetworks'
 import type { Network } from '@/lib/types'
 
-const mockNetworks: Network[] = [
-  {
-    name: 'Local Network',
-    status: 'connected',
-    url: 'http://127.0.0.1:4943',
-    nodeCount: 1,
-  },
-  {
-    name: 'IC Mainnet',
-    status: 'connected',
-    url: 'https://ic0.app',
-    nodeCount: 39,
-  },
-  {
-    name: 'IC Testnet',
-    status: 'degraded',
-    url: 'https://rzm7w-iaaaa-aaaab-qa2qa-cai.ic0.app',
-    nodeCount: 10,
-  },
-]
-
 export default function NetworksPage() {
+  const { networks, isLoading, error, refetch } = useNetworks()
+  const [connectingTo, setConnectingTo] = useState<string | null>(null)
+  const [newNetwork, setNewNetwork] = useState({ name: '', url: '' })
+
+  const handleConnect = async (networkName: string) => {
+    setConnectingTo(networkName)
+    await new Promise((resolve) => setTimeout(resolve, 1500))
+    setConnectingTo(null)
+    refetch()
+  }
+
+  const handleAddNetwork = async () => {
+    if (!newNetwork.name || !newNetwork.url) return
+    setNewNetwork({ name: '', url: '' })
+  }
+
+  if (isLoading) {
+    return (
+      <div className="p-6 flex items-center justify-center min-h-[400px]">
+        <LoadingSpinner size="lg" />
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="p-6 space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Networks</h1>
+          <p className="text-red-500">{error.message}</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="p-6 space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Networks</h1>
-        <p className="text-muted-foreground">
-          View and manage ICP network connections
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Networks</h1>
+          <p className="text-muted-foreground">
+            View and manage ICP network connections
+          </p>
+        </div>
+        <button 
+          onClick={() => refetch()}
+          className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition"
+        >
+          <RefreshCw className="w-4 h-4" />
+          Refresh
+        </button>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {mockNetworks.map((network) => (
+        {networks.map((network) => (
           <div key={network.name} className="border rounded-lg p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
@@ -64,8 +90,16 @@ export default function NetworksPage() {
             </div>
 
             <div className="mt-4 pt-4 border-t">
-              <button className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition">
-                Connect
+              <button 
+                onClick={() => handleConnect(network.name)}
+                disabled={connectingTo === network.name}
+                className={`w-full px-4 py-2 rounded transition ${
+                  network.status === 'connected'
+                    ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                } ${connectingTo === network.name ? 'opacity-50 cursor-not-allowed' : ''}`}
+              >
+                {connectingTo === network.name ? 'Connecting...' : network.status === 'connected' ? 'Connected' : 'Connect'}
               </button>
             </div>
           </div>
@@ -82,6 +116,8 @@ export default function NetworksPage() {
             <input
               type="text"
               placeholder="My Custom Network"
+              value={newNetwork.name}
+              onChange={(e) => setNewNetwork(prev => ({ ...prev, name: e.target.value }))}
               className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -92,10 +128,16 @@ export default function NetworksPage() {
             <input
               type="url"
               placeholder="https://..."
+              value={newNetwork.url}
+              onChange={(e) => setNewNetwork(prev => ({ ...prev, url: e.target.value }))}
               className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+          <button 
+            onClick={handleAddNetwork}
+            disabled={!newNetwork.name || !newNetwork.url}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             Add Network
           </button>
         </div>
