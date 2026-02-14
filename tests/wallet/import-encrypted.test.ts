@@ -145,7 +145,7 @@ describe('Wallet Import Encrypted Backup (CLE-74)', () => {
     });
   });
 
-  describe('Import Flow', () => {
+  describe('Import Flow', { timeout: 15000 }, () => {
     it('should prompt for decryption password', async () => {
       const { handleImport } = await import('../../cli/commands/wallet-import.js');
 

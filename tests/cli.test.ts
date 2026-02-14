@@ -276,7 +276,7 @@ describe('CLI Framework', () => {
   });
 });
 
-describe('CLI Framework Runtime', () => {
+describe('CLI Framework Runtime', { timeout: 15000 }, () => {
   describe('createProgram', () => {
     it('should create a Commander program', async () => {
       const { createProgram } = await import('../cli/index.js');

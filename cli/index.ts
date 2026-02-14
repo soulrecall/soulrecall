@@ -41,6 +41,7 @@ import { backupCmd } from './commands/backup.js';
 import { archiveCmd } from './commands/archive.js';
 import { inferenceCmd } from './commands/inference.js';
 import { approveCmd } from './commands/approve.js';
+import { cloudBackupCmd } from './commands/cloud-backup.js';
 
 export function createProgram(): Command {
   const program = new Command();
@@ -87,6 +88,7 @@ export function createProgram(): Command {
   program.addCommand(archiveCmd);
   program.addCommand(inferenceCmd);
   program.addCommand(approveCmd);
+  program.addCommand(cloudBackupCmd);
 
   return program;
 }

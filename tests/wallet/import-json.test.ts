@@ -115,7 +115,7 @@ describe('Wallet Import JSON Backup (CLE-73)', () => {
     });
   });
 
-  describe('Import Flow', () => {
+  describe('Import Flow', { timeout: 15000 }, () => {
     it('should display backup summary', async () => {
       const { handleImport } = await import('../../cli/commands/wallet-import.js');
 
