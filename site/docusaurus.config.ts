@@ -5,7 +5,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 const config: Config = {
   title: 'Agent Vault',
   tagline: "Protecting your agent's neural sovereignty through cryptographic decentralization.",
-  favicon: 'img/favicon.ico',
+  favicon: 'img/logo.svg',
 
   url: 'https://agentvault.cloud',
   baseUrl: '/',
@@ -40,7 +40,7 @@ const config: Config = {
   ],
 
   themeConfig: {
-    image: 'img/og-image.png',
+    image: 'img/og-image.svg',
     metadata: [
       {name: 'keywords', content: 'ICP, Internet Computer, AI agents, blockchain, canister, deployment, Web3'},
       {name: 'twitter:card', content: 'summary_large_image'},
@@ -60,8 +60,7 @@ const config: Config = {
       },
       items: [
         {
-          type: 'docSidebar',
-          sidebarId: 'docsSidebar',
+          to: '/docs',
           position: 'left',
           label: 'Docs',
         },
@@ -78,6 +77,13 @@ const config: Config = {
         {
           href: 'https://github.com/johnnyclem/agentvault',
           label: 'GitHub',
+          className: 'navbar-github-mobile',
+          position: 'left',
+        },
+        {
+          href: 'https://github.com/johnnyclem/agentvault',
+          label: 'GitHub',
+          className: 'navbar-github-desktop',
           position: 'right',
         },
       ],

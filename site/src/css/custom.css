@@ -202,6 +202,33 @@ a {
   text-shadow: 0 0 14px rgba(34, 211, 238, 0.42);
 }
 
+.navbar-sidebar {
+  background: rgba(5, 5, 5, 0.96);
+  backdrop-filter: blur(18px);
+}
+
+.navbar-sidebar__backdrop {
+  background: rgba(2, 6, 16, 0.72);
+}
+
+.navbar-sidebar .menu__link {
+  font-family: 'Syncopate', sans-serif;
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #c4d5f0;
+}
+
+.navbar-sidebar .menu__link:hover,
+.navbar-sidebar .menu__link--active {
+  color: #ffffff;
+  background: rgba(34, 211, 238, 0.12);
+}
+
+.navbar-sidebar .menu__link[href^='https://github.com'] {
+  color: #22d3ee;
+}
+
 .hero--primary {
   --ifm-hero-background-color: transparent;
   --ifm-hero-text-color: var(--soul-text);
@@ -565,6 +592,10 @@ pre {
 }
 
 @media (max-width: 996px) {
+  .navbar-github-desktop {
+    display: none;
+  }
+
   .navbar__title {
     letter-spacing: 0.22em;
   }
@@ -582,6 +613,12 @@ pre {
 
   .theme-code-block::before {
     right: 12px;
+  }
+}
+
+@media (min-width: 997px) {
+  .navbar-github-mobile {
+    display: none;
   }
 }
 
