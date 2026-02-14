@@ -23,9 +23,15 @@ import type {
   DiscoveredArchive,
 } from './types.js';
 
-const AGENTVAULT_DIR = path.join(os.homedir(), '.agentvault');
 const MANIFEST_FILENAME = 'manifest.json';
 const MANIFEST_VERSION = '1.0';
+
+/**
+ * Return the default AgentVault data directory.
+ */
+export function getDefaultVaultDir(): string {
+  return path.join(os.homedir(), '.agentvault');
+}
 
 /**
  * Compute SHA-256 hex digest of a buffer.
@@ -62,7 +68,10 @@ function collectFiles(baseDir: string): string[] {
  * Get the list of source directories/files to include,
  * scoped to a specific agent or the entire vault.
  */
-function getSourcePaths(options: CloudArchiveOptions): { label: string; absPath: string }[] {
+function getSourcePaths(
+  options: CloudArchiveOptions,
+  vaultDir: string,
+): { label: string; absPath: string }[] {
   const sources: { label: string; absPath: string }[] = [];
   const agentName = options.agentName;
 
@@ -70,12 +79,12 @@ function getSourcePaths(options: CloudArchiveOptions): { label: string; absPath:
     if (agentName) {
       sources.push({
         label: 'configs',
-        absPath: path.join(AGENTVAULT_DIR, 'agents', agentName),
+        absPath: path.join(vaultDir, 'agents', agentName),
       });
     } else {
       sources.push({
         label: 'configs',
-        absPath: path.join(AGENTVAULT_DIR, 'agents'),
+        absPath: path.join(vaultDir, 'agents'),
       });
     }
   }
@@ -84,12 +93,12 @@ function getSourcePaths(options: CloudArchiveOptions): { label: string; absPath:
     if (agentName) {
       sources.push({
         label: 'wallets',
-        absPath: path.join(AGENTVAULT_DIR, 'wallets', agentName),
+        absPath: path.join(vaultDir, 'wallets', agentName),
       });
     } else {
       sources.push({
         label: 'wallets',
-        absPath: path.join(AGENTVAULT_DIR, 'wallets'),
+        absPath: path.join(vaultDir, 'wallets'),
       });
     }
   }
@@ -97,14 +106,14 @@ function getSourcePaths(options: CloudArchiveOptions): { label: string; absPath:
   if (options.includeBackups) {
     sources.push({
       label: 'backups',
-      absPath: path.join(AGENTVAULT_DIR, 'backups'),
+      absPath: path.join(vaultDir, 'backups'),
     });
   }
 
   if (options.includeNetworks) {
     sources.push({
       label: 'networks',
-      absPath: path.join(AGENTVAULT_DIR, 'networks'),
+      absPath: path.join(vaultDir, 'networks'),
     });
   }
 
@@ -116,13 +125,20 @@ function getSourcePaths(options: CloudArchiveOptions): { label: string; absPath:
  *
  * Creates a timestamped folder inside the cloud backup dir
  * containing a copy of the selected vault data plus a manifest.
+ *
+ * @param providerBasePath - Root path of the cloud provider sync directory
+ * @param options - What to include in the archive
+ * @param subdirectory - Subdirectory name inside provider (default: AgentVault-Backups)
+ * @param vaultDir - Path to the AgentVault data directory (default: ~/.agentvault)
  */
 export function archiveToCloud(
   providerBasePath: string,
   options: CloudArchiveOptions,
   subdirectory?: string,
+  vaultDir?: string,
 ): CloudArchiveResult {
   try {
+    const effectiveVaultDir = vaultDir || getDefaultVaultDir();
     const cloudDir = resolveCloudBackupDir(providerBasePath, subdirectory);
     const timestamp = new Date()
       .toISOString()
@@ -135,7 +151,7 @@ export function archiveToCloud(
     // Create archive directory
     fs.mkdirSync(archiveDir, { recursive: true });
 
-    const sources = getSourcePaths(options);
+    const sources = getSourcePaths(options, effectiveVaultDir);
     const fileEntries: CloudArchiveFileEntry[] = [];
     const components: string[] = [];
     let totalBytes = 0;
@@ -282,14 +298,20 @@ export function listCloudArchives(
 /**
  * Restore AgentVault data from a cloud archive.
  *
- * Copies files from the archive back into ~/.agentvault/,
+ * Copies files from the archive back into the vault directory,
  * verifying checksums along the way.
+ *
+ * @param archivePath - Path to the archive directory
+ * @param overwrite - Whether to overwrite existing files
+ * @param vaultDir - Path to the AgentVault data directory (default: ~/.agentvault)
  */
 export function restoreFromCloud(
   archivePath: string,
   overwrite: boolean = false,
+  vaultDir?: string,
 ): CloudRestoreResult {
   try {
+    const effectiveVaultDir = vaultDir || getDefaultVaultDir();
     const manifestPath = path.join(archivePath, MANIFEST_FILENAME);
     if (!fs.existsSync(manifestPath)) {
       return {
@@ -353,7 +375,7 @@ export function restoreFromCloud(
         continue;
       }
 
-      const destFile = path.join(AGENTVAULT_DIR, vaultSubdir, restOfPath);
+      const destFile = path.join(effectiveVaultDir, vaultSubdir, restOfPath);
 
       if (fs.existsSync(destFile) && !overwrite) {
         warnings.push(`Skipping existing file (use --overwrite): ${destFile}`);

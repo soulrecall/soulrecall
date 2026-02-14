@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
+import crypto from 'node:crypto';
 import {
   archiveToCloud,
   listCloudArchives,
@@ -10,128 +11,183 @@ import {
 } from '../../src/cloud-storage/cloud-sync.js';
 
 /**
- * Integration-style tests using real temporary directories.
- * Tests the full archive → list → verify → restore cycle.
+ * Fully self-contained integration tests using temporary directories.
+ * No reads or writes to the real ~/.agentvault/ directory.
  */
 describe('cloud-sync', () => {
   let tmpDir: string;
   let cloudDir: string;
+  let fakeVaultDir: string;
 
   beforeEach(() => {
-    // Create temp dirs for isolated tests
     tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'agentvault-cloud-test-'));
     cloudDir = path.join(tmpDir, 'cloud-provider');
+    fakeVaultDir = path.join(tmpDir, 'fake-vault');
 
     fs.mkdirSync(cloudDir, { recursive: true });
+    fs.mkdirSync(fakeVaultDir, { recursive: true });
   });
 
   afterEach(() => {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   });
 
+  /**
+   * Seed a fake vault structure inside our temp directory.
+   */
+  function seedVault(): void {
+    // agents/my-agent/agent.json
+    const agentsDir = path.join(fakeVaultDir, 'agents', 'my-agent');
+    fs.mkdirSync(agentsDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(agentsDir, 'agent.json'),
+      JSON.stringify({ name: 'my-agent', type: 'generic' }),
+    );
+
+    // wallets/my-agent/default.wallet
+    const walletsDir = path.join(fakeVaultDir, 'wallets', 'my-agent');
+    fs.mkdirSync(walletsDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(walletsDir, 'default.wallet'),
+      Buffer.from('fake-wallet-data'),
+    );
+
+    // backups/my-agent-backup.json
+    const backupsDir = path.join(fakeVaultDir, 'backups');
+    fs.mkdirSync(backupsDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(backupsDir, 'my-agent-backup.json'),
+      JSON.stringify({ agentName: 'my-agent', version: '1.0' }),
+    );
+
+    // networks/local.yaml
+    const networksDir = path.join(fakeVaultDir, 'networks');
+    fs.mkdirSync(networksDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(networksDir, 'local.yaml'),
+      'name: local\nurl: http://127.0.0.1:4943\n',
+    );
+  }
+
   describe('archiveToCloud', () => {
-    it('should return error when no data exists to archive', () => {
-      // Empty vault — nothing in ~/.agentvault
-      const result = archiveToCloud(cloudDir, {
-        includeConfigs: true,
-        includeWallets: true,
-        includeBackups: true,
-        includeNetworks: true,
-      });
+    it('should return error when vault is empty', () => {
+      const result = archiveToCloud(
+        cloudDir,
+        {
+          includeConfigs: true,
+          includeWallets: true,
+          includeBackups: true,
+          includeNetworks: true,
+        },
+        undefined,
+        fakeVaultDir,
+      );
 
       expect(result.success).toBe(false);
       expect(result.error).toContain('No data found');
     });
 
-    it('should create archive directory structure', () => {
-      // Create some data in the real ~/.agentvault for testing
-      const home = os.homedir();
-      const vaultDir = path.join(home, '.agentvault');
-      const testAgentDir = path.join(
-        vaultDir,
-        'agents',
-        'cloud-test-agent',
-      );
-      const createdDirs: string[] = [];
+    it('should archive all components from vault', () => {
+      seedVault();
 
-      try {
-        // Seed minimal data
-        fs.mkdirSync(testAgentDir, { recursive: true });
-        createdDirs.push(testAgentDir);
-        fs.writeFileSync(
-          path.join(testAgentDir, 'agent.json'),
-          JSON.stringify({ name: 'cloud-test-agent', type: 'generic' }),
-        );
-
-        const result = archiveToCloud(cloudDir, {
-          agentName: 'cloud-test-agent',
+      const result = archiveToCloud(
+        cloudDir,
+        {
           includeConfigs: true,
-          includeWallets: false,
+          includeWallets: true,
+          includeBackups: true,
+          includeNetworks: true,
+        },
+        undefined,
+        fakeVaultDir,
+      );
+
+      expect(result.success).toBe(true);
+      expect(result.archivePath).toBeDefined();
+      expect(result.fileCount).toBe(4);
+      expect(result.totalBytes).toBeGreaterThan(0);
+
+      // Manifest should exist and be valid
+      const manifestPath = path.join(result.archivePath!, 'manifest.json');
+      expect(fs.existsSync(manifestPath)).toBe(true);
+
+      const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+      expect(manifest.version).toBe('1.0');
+      expect(manifest.components).toContain('configs');
+      expect(manifest.components).toContain('wallets');
+      expect(manifest.components).toContain('backups');
+      expect(manifest.components).toContain('networks');
+      expect(manifest.files.length).toBe(4);
+      expect(manifest.checksum).toBeDefined();
+    });
+
+    it('should archive a specific agent only', () => {
+      seedVault();
+
+      const result = archiveToCloud(
+        cloudDir,
+        {
+          agentName: 'my-agent',
+          includeConfigs: true,
+          includeWallets: true,
           includeBackups: false,
           includeNetworks: false,
-        });
+        },
+        undefined,
+        fakeVaultDir,
+      );
 
-        expect(result.success).toBe(true);
-        expect(result.archivePath).toBeDefined();
-        expect(result.fileCount).toBeGreaterThan(0);
-        expect(result.totalBytes).toBeGreaterThan(0);
+      expect(result.success).toBe(true);
+      expect(result.fileCount).toBe(2); // agent.json + default.wallet
 
-        // Manifest should exist
-        const manifestPath = path.join(result.archivePath!, 'manifest.json');
-        expect(fs.existsSync(manifestPath)).toBe(true);
-
-        const manifest = JSON.parse(
-          fs.readFileSync(manifestPath, 'utf8'),
-        );
-        expect(manifest.version).toBe('1.0');
-        expect(manifest.agentName).toBe('cloud-test-agent');
-        expect(manifest.components).toContain('configs');
-        expect(manifest.files.length).toBeGreaterThan(0);
-        expect(manifest.checksum).toBeDefined();
-      } finally {
-        // Clean up test data
-        for (const dir of createdDirs) {
-          fs.rmSync(dir, { recursive: true, force: true });
-        }
-      }
+      const manifest = JSON.parse(fs.readFileSync(result.manifestPath!, 'utf8'));
+      expect(manifest.agentName).toBe('my-agent');
+      expect(manifest.components).toContain('configs');
+      expect(manifest.components).toContain('wallets');
+      expect(manifest.components).not.toContain('backups');
     });
 
     it('should respect include/exclude options', () => {
-      const home = os.homedir();
-      const vaultDir = path.join(home, '.agentvault');
-      const testAgentDir = path.join(
-        vaultDir,
-        'agents',
-        'cloud-options-test',
-      );
+      seedVault();
 
-      try {
-        fs.mkdirSync(testAgentDir, { recursive: true });
-        fs.writeFileSync(
-          path.join(testAgentDir, 'agent.json'),
-          JSON.stringify({ name: 'cloud-options-test' }),
-        );
-
-        const result = archiveToCloud(cloudDir, {
-          agentName: 'cloud-options-test',
+      const result = archiveToCloud(
+        cloudDir,
+        {
           includeConfigs: true,
           includeWallets: false,
           includeBackups: false,
           includeNetworks: false,
-        });
+        },
+        undefined,
+        fakeVaultDir,
+      );
 
-        expect(result.success).toBe(true);
+      expect(result.success).toBe(true);
 
-        const manifest = JSON.parse(
-          fs.readFileSync(result.manifestPath!, 'utf8'),
-        );
-        expect(manifest.components).toContain('configs');
-        expect(manifest.components).not.toContain('wallets');
-        expect(manifest.components).not.toContain('backups');
-        expect(manifest.components).not.toContain('networks');
-      } finally {
-        fs.rmSync(testAgentDir, { recursive: true, force: true });
-      }
+      const manifest = JSON.parse(fs.readFileSync(result.manifestPath!, 'utf8'));
+      expect(manifest.components).toContain('configs');
+      expect(manifest.components).not.toContain('wallets');
+      expect(manifest.components).not.toContain('backups');
+      expect(manifest.components).not.toContain('networks');
+    });
+
+    it('should use custom subdirectory', () => {
+      seedVault();
+
+      const result = archiveToCloud(
+        cloudDir,
+        {
+          includeConfigs: true,
+          includeWallets: false,
+          includeBackups: false,
+          includeNetworks: false,
+        },
+        'my-custom-subdir',
+        fakeVaultDir,
+      );
+
+      expect(result.success).toBe(true);
+      expect(result.archivePath).toContain('my-custom-subdir');
     });
   });
 
@@ -147,12 +203,7 @@ describe('cloud-sync', () => {
     });
 
     it('should discover archives with valid manifests', () => {
-      // Create a fake archive
-      const archDir = path.join(
-        cloudDir,
-        'AgentVault-Backups',
-        'test-2025-01-01',
-      );
+      const archDir = path.join(cloudDir, 'AgentVault-Backups', 'test-2025-01-01');
       fs.mkdirSync(archDir, { recursive: true });
       fs.writeFileSync(
         path.join(archDir, 'manifest.json'),
@@ -220,6 +271,26 @@ describe('cloud-sync', () => {
       const archives = listCloudArchives(cloudDir);
       expect(archives.length).toBe(0);
     });
+
+    it('should discover archives created by archiveToCloud', () => {
+      seedVault();
+
+      archiveToCloud(
+        cloudDir,
+        {
+          includeConfigs: true,
+          includeWallets: false,
+          includeBackups: false,
+          includeNetworks: false,
+        },
+        undefined,
+        fakeVaultDir,
+      );
+
+      const archives = listCloudArchives(cloudDir);
+      expect(archives.length).toBe(1);
+      expect(archives[0]!.manifest.components).toContain('configs');
+    });
   });
 
   describe('verifyCloudArchive', () => {
@@ -234,16 +305,9 @@ describe('cloud-sync', () => {
       fs.mkdirSync(path.join(archDir, 'configs'), { recursive: true });
 
       const fileContent = Buffer.from('test content');
-      fs.writeFileSync(
-        path.join(archDir, 'configs', 'agent.json'),
-        fileContent,
-      );
+      fs.writeFileSync(path.join(archDir, 'configs', 'agent.json'), fileContent);
 
-      const crypto = require('node:crypto');
-      const fileChecksum = crypto
-        .createHash('sha256')
-        .update(fileContent)
-        .digest('hex');
+      const fileChecksum = crypto.createHash('sha256').update(fileContent).digest('hex');
       const overallChecksum = crypto
         .createHash('sha256')
         .update(Buffer.from(fileChecksum))
@@ -266,24 +330,39 @@ describe('cloud-sync', () => {
         checksum: overallChecksum,
       };
 
-      fs.writeFileSync(
-        path.join(archDir, 'manifest.json'),
-        JSON.stringify(manifest),
-      );
+      fs.writeFileSync(path.join(archDir, 'manifest.json'), JSON.stringify(manifest));
 
       const result = verifyCloudArchive(archDir);
-
       expect(result.valid).toBe(true);
       expect(result.errors).toEqual([]);
+    });
+
+    it('should verify an archive created by archiveToCloud', () => {
+      seedVault();
+
+      const archiveResult = archiveToCloud(
+        cloudDir,
+        {
+          includeConfigs: true,
+          includeWallets: true,
+          includeBackups: false,
+          includeNetworks: false,
+        },
+        undefined,
+        fakeVaultDir,
+      );
+
+      expect(archiveResult.success).toBe(true);
+
+      const verifyResult = verifyCloudArchive(archiveResult.archivePath!);
+      expect(verifyResult.valid).toBe(true);
+      expect(verifyResult.errors).toEqual([]);
     });
 
     it('should detect checksum mismatch', () => {
       const archDir = path.join(tmpDir, 'verify-bad');
       fs.mkdirSync(path.join(archDir, 'configs'), { recursive: true });
-      fs.writeFileSync(
-        path.join(archDir, 'configs', 'agent.json'),
-        'original content',
-      );
+      fs.writeFileSync(path.join(archDir, 'configs', 'agent.json'), 'original content');
 
       const manifest = {
         version: '1.0',
@@ -302,13 +381,9 @@ describe('cloud-sync', () => {
         checksum: 'also-wrong',
       };
 
-      fs.writeFileSync(
-        path.join(archDir, 'manifest.json'),
-        JSON.stringify(manifest),
-      );
+      fs.writeFileSync(path.join(archDir, 'manifest.json'), JSON.stringify(manifest));
 
       const result = verifyCloudArchive(archDir);
-
       expect(result.valid).toBe(false);
       expect(result.errors.length).toBeGreaterThan(0);
     });
@@ -334,13 +409,9 @@ describe('cloud-sync', () => {
         checksum: 'xyz',
       };
 
-      fs.writeFileSync(
-        path.join(archDir, 'manifest.json'),
-        JSON.stringify(manifest),
-      );
+      fs.writeFileSync(path.join(archDir, 'manifest.json'), JSON.stringify(manifest));
 
       const result = verifyCloudArchive(archDir);
-
       expect(result.valid).toBe(false);
       expect(result.errors.some((e) => e.includes('Missing'))).toBe(true);
     });
@@ -349,30 +420,20 @@ describe('cloud-sync', () => {
   describe('restoreFromCloud', () => {
     it('should return error for non-existent archive', () => {
       const result = restoreFromCloud('/nonexistent/archive');
-
       expect(result.success).toBe(false);
       expect(result.error).toContain('No manifest found');
     });
 
-    it('should restore files from a valid archive', () => {
+    it('should restore files to a custom vault directory', () => {
       // Build a minimal valid archive
       const archDir = path.join(tmpDir, 'restore-test');
       const configsDir = path.join(archDir, 'configs');
       fs.mkdirSync(configsDir, { recursive: true });
 
-      const fileContent = Buffer.from(
-        JSON.stringify({ name: 'restored-agent' }),
-      );
-      fs.writeFileSync(
-        path.join(configsDir, 'agent.json'),
-        fileContent,
-      );
+      const fileContent = Buffer.from(JSON.stringify({ name: 'restored-agent' }));
+      fs.writeFileSync(path.join(configsDir, 'agent.json'), fileContent);
 
-      const crypto = require('node:crypto');
-      const fileChecksum = crypto
-        .createHash('sha256')
-        .update(fileContent)
-        .digest('hex');
+      const fileChecksum = crypto.createHash('sha256').update(fileContent).digest('hex');
 
       const manifest = {
         version: '1.0',
@@ -391,38 +452,70 @@ describe('cloud-sync', () => {
         checksum: 'irrelevant-for-restore',
       };
 
-      fs.writeFileSync(
-        path.join(archDir, 'manifest.json'),
-        JSON.stringify(manifest),
-      );
+      fs.writeFileSync(path.join(archDir, 'manifest.json'), JSON.stringify(manifest));
 
-      const result = restoreFromCloud(archDir, true);
+      // Restore to a temp vault dir (NOT ~/.agentvault)
+      const restoreVaultDir = path.join(tmpDir, 'restored-vault');
+      fs.mkdirSync(restoreVaultDir, { recursive: true });
+
+      const result = restoreFromCloud(archDir, true, restoreVaultDir);
 
       expect(result.success).toBe(true);
-      expect(result.restoredFiles).toBeGreaterThanOrEqual(1);
+      expect(result.restoredFiles).toBe(1);
       expect(result.components).toContain('configs');
 
-      // Verify the file landed in ~/.agentvault/agents/
-      const destPath = path.join(
-        os.homedir(),
-        '.agentvault',
-        'agents',
-        'agent.json',
-      );
+      // Verify the file landed in the temp vault
+      const destPath = path.join(restoreVaultDir, 'agents', 'agent.json');
       expect(fs.existsSync(destPath)).toBe(true);
+      const restored = JSON.parse(fs.readFileSync(destPath, 'utf8'));
+      expect(restored.name).toBe('restored-agent');
+    });
 
-      // Clean up
-      fs.rmSync(destPath, { force: true });
+    it('should round-trip: archive then restore', () => {
+      seedVault();
+
+      // Archive
+      const archiveResult = archiveToCloud(
+        cloudDir,
+        {
+          includeConfigs: true,
+          includeWallets: true,
+          includeBackups: true,
+          includeNetworks: true,
+        },
+        undefined,
+        fakeVaultDir,
+      );
+      expect(archiveResult.success).toBe(true);
+
+      // Restore to a fresh vault dir
+      const restoreVaultDir = path.join(tmpDir, 'round-trip-vault');
+      const result = restoreFromCloud(archiveResult.archivePath!, true, restoreVaultDir);
+
+      expect(result.success).toBe(true);
+      expect(result.restoredFiles).toBe(4);
+      expect(result.components).toContain('configs');
+      expect(result.components).toContain('wallets');
+      expect(result.components).toContain('backups');
+      expect(result.components).toContain('networks');
+
+      // Verify restored files match originals
+      const originalConfig = fs.readFileSync(
+        path.join(fakeVaultDir, 'agents', 'my-agent', 'agent.json'),
+        'utf8',
+      );
+      const restoredConfig = fs.readFileSync(
+        path.join(restoreVaultDir, 'agents', 'my-agent', 'agent.json'),
+        'utf8',
+      );
+      expect(restoredConfig).toBe(originalConfig);
     });
 
     it('should skip files with checksum mismatch', () => {
       const archDir = path.join(tmpDir, 'restore-bad-checksum');
       const configsDir = path.join(archDir, 'configs');
       fs.mkdirSync(configsDir, { recursive: true });
-      fs.writeFileSync(
-        path.join(configsDir, 'agent.json'),
-        'some content',
-      );
+      fs.writeFileSync(path.join(configsDir, 'agent.json'), 'some content');
 
       const manifest = {
         version: '1.0',
@@ -441,36 +534,25 @@ describe('cloud-sync', () => {
         checksum: 'x',
       };
 
-      fs.writeFileSync(
-        path.join(archDir, 'manifest.json'),
-        JSON.stringify(manifest),
-      );
+      fs.writeFileSync(path.join(archDir, 'manifest.json'), JSON.stringify(manifest));
 
-      const result = restoreFromCloud(archDir, true);
+      const restoreVaultDir = path.join(tmpDir, 'restore-bad-vault');
+      const result = restoreFromCloud(archDir, true, restoreVaultDir);
 
       expect(result.success).toBe(true);
       expect(result.restoredFiles).toBe(0);
-      expect(
-        result.warnings.some((w) => w.includes('Checksum mismatch')),
-      ).toBe(true);
+      expect(result.warnings.some((w) => w.includes('Checksum mismatch'))).toBe(true);
     });
 
-    it('should not overwrite existing files without --overwrite', () => {
+    it('should not overwrite existing files without overwrite flag', () => {
       const archDir = path.join(tmpDir, 'restore-no-overwrite');
       const configsDir = path.join(archDir, 'configs');
       fs.mkdirSync(configsDir, { recursive: true });
 
       const fileContent = Buffer.from('new-data');
-      fs.writeFileSync(
-        path.join(configsDir, 'agent.json'),
-        fileContent,
-      );
+      fs.writeFileSync(path.join(configsDir, 'agent.json'), fileContent);
 
-      const crypto = require('node:crypto');
-      const checksum = crypto
-        .createHash('sha256')
-        .update(fileContent)
-        .digest('hex');
+      const checksum = crypto.createHash('sha256').update(fileContent).digest('hex');
 
       const manifest = {
         version: '1.0',
@@ -489,35 +571,23 @@ describe('cloud-sync', () => {
         checksum: 'x',
       };
 
-      fs.writeFileSync(
-        path.join(archDir, 'manifest.json'),
-        JSON.stringify(manifest),
-      );
+      fs.writeFileSync(path.join(archDir, 'manifest.json'), JSON.stringify(manifest));
 
       // Create existing file at destination
-      const destDir = path.join(
-        os.homedir(),
-        '.agentvault',
-        'agents',
-      );
+      const restoreVaultDir = path.join(tmpDir, 'no-overwrite-vault');
+      const destDir = path.join(restoreVaultDir, 'agents');
       fs.mkdirSync(destDir, { recursive: true });
       const destFile = path.join(destDir, 'agent.json');
       fs.writeFileSync(destFile, 'existing-data');
 
-      try {
-        const result = restoreFromCloud(archDir, false);
+      const result = restoreFromCloud(archDir, false, restoreVaultDir);
 
-        expect(result.success).toBe(true);
-        expect(result.restoredFiles).toBe(0);
-        expect(
-          result.warnings.some((w) => w.includes('Skipping existing')),
-        ).toBe(true);
+      expect(result.success).toBe(true);
+      expect(result.restoredFiles).toBe(0);
+      expect(result.warnings.some((w) => w.includes('Skipping existing'))).toBe(true);
 
-        // Existing data should be unchanged
-        expect(fs.readFileSync(destFile, 'utf8')).toBe('existing-data');
-      } finally {
-        fs.rmSync(destFile, { force: true });
-      }
+      // Existing data should be unchanged
+      expect(fs.readFileSync(destFile, 'utf8')).toBe('existing-data');
     });
   });
 });
