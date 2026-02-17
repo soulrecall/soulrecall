@@ -1,7 +1,7 @@
 /**
  * Cloud Sync
  *
- * Archive and restore AgentVault data to/from a cloud-synced
+ * Archive and restore SoulRecall data to/from a cloud-synced
  * local directory. Creates a self-contained folder with a JSON
  * manifest so any cloud provider can sync it as plain files.
  *
@@ -27,10 +27,10 @@ const MANIFEST_FILENAME = 'manifest.json';
 const MANIFEST_VERSION = '1.0';
 
 /**
- * Return the default AgentVault data directory.
+ * Return the default SoulRecall data directory.
  */
 export function getDefaultVaultDir(): string {
-  return path.join(os.homedir(), '.agentvault');
+  return path.join(os.homedir(), '.soulrecall');
 }
 
 /**
@@ -121,15 +121,15 @@ function getSourcePaths(
 }
 
 /**
- * Archive AgentVault data to a cloud-synced directory.
+ * Archive SoulRecall data to a cloud-synced directory.
  *
  * Creates a timestamped folder inside the cloud backup dir
  * containing a copy of the selected vault data plus a manifest.
  *
  * @param providerBasePath - Root path of the cloud provider sync directory
  * @param options - What to include in the archive
- * @param subdirectory - Subdirectory name inside provider (default: AgentVault-Backups)
- * @param vaultDir - Path to the AgentVault data directory (default: ~/.agentvault)
+ * @param subdirectory - Subdirectory name inside provider (default: SoulRecall-Backups)
+ * @param vaultDir - Path to the SoulRecall data directory (default: ~/.soulrecall)
  */
 export function archiveToCloud(
   providerBasePath: string,
@@ -205,7 +205,7 @@ export function archiveToCloud(
       fs.rmSync(archiveDir, { recursive: true, force: true });
       return {
         success: false,
-        error: 'No data found to archive. Check that ~/.agentvault contains data.',
+        error: 'No data found to archive. Check that ~/.soulrecall contains data.',
       };
     }
 
@@ -224,7 +224,7 @@ export function archiveToCloud(
       createdAt: new Date().toISOString(),
       platform: os.platform(),
       hostname: os.hostname(),
-      agentVaultVersion: VERSION,
+      soulRecallVersion: VERSION,
       agentName: options.agentName,
       components,
       files: fileEntries,
@@ -296,14 +296,14 @@ export function listCloudArchives(
 }
 
 /**
- * Restore AgentVault data from a cloud archive.
+ * Restore SoulRecall data from a cloud archive.
  *
  * Copies files from the archive back into the vault directory,
  * verifying checksums along the way.
  *
  * @param archivePath - Path to the archive directory
  * @param overwrite - Whether to overwrite existing files
- * @param vaultDir - Path to the AgentVault data directory (default: ~/.agentvault)
+ * @param vaultDir - Path to the SoulRecall data directory (default: ~/.soulrecall)
  */
 export function restoreFromCloud(
   archivePath: string,

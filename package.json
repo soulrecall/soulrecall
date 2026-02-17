@@ -1,10 +1,10 @@
 {
-  "name": "agentvault",
+  "name": "soulrecall",
   "version": "1.0.0",
   "description": "Persistent On-Chain AI Agent Platform - Sovereign, Reconstructible, Autonomous",
   "main": "src/index.ts",
   "bin": {
-    "agentvault": "dist/cli/index.js"
+    "soulrecall": "dist/cli/index.js"
   },
   "type": "module",
   "scripts": {
@@ -39,7 +39,7 @@
     "persistent",
     "reconstructible"
   ],
-  "author": "AgentVault Contributors",
+  "author": "SoulRecall Contributors",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"

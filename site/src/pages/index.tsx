@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
@@ -12,6 +12,7 @@ type WalletId = 'ethereum' | 'icp' | 'arweave';
 type InstallChannel = 'npx' | 'global';
 type ProjectTemplate = 'default' | 'minimal';
 type DeployNetwork = 'local' | 'ic';
+type DeployMode = 'auto' | 'upgrade';
 
 type WalletConnection = {
   address: string;
@@ -27,6 +28,25 @@ type WalletOption = {
   installLabel: string;
   isAvailable: () => boolean;
   connect: () => Promise<WalletConnection>;
+};
+
+type WalletProof = {
+  type: WalletId;
+  address: string;
+  chainName: string;
+  issuedAt: string;
+  nonce: string;
+  message?: string;
+  signature?: string;
+};
+
+type DeployRequestPayload = {
+  agentId: string;
+  sourcePath: string;
+  network: DeployNetwork;
+  canisterId?: string;
+  mode: DeployMode;
+  walletProof: WalletProof;
 };
 
 declare global {
@@ -137,6 +157,59 @@ function shortAddress(address: string): string {
   return `${address.slice(0, 7)}...${address.slice(-5)}`;
 }
 
+function createNonce(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+
+  return `nonce-${Date.now()}-${Math.floor(Math.random() * 1_000_000)}`;
+}
+
+function normalizeApiBase(apiBase: string): string {
+  const trimmed = apiBase.trim();
+  if (!trimmed) {
+    throw new Error('API base URL is required.');
+  }
+
+  return trimmed.replace(/\/$/, '');
+}
+
+function buildWalletProofMessage(input: {
+  agentId: string;
+  network: DeployNetwork;
+  mode: DeployMode;
+  canisterId?: string;
+  issuedAt: string;
+  nonce: string;
+}): string {
+  return [
+    'SoulRecall Deploy Authorization',
+    `agentId=${input.agentId}`,
+    `network=${input.network}`,
+    `mode=${input.mode}`,
+    `canisterId=${input.canisterId ?? 'new'}`,
+    `issuedAt=${input.issuedAt}`,
+    `nonce=${input.nonce}`,
+  ].join('\n');
+}
+
+function buildDeployScriptlet(apiBase: string, payload: DeployRequestPayload): string {
+  const payloadJson = JSON.stringify(payload, null, 2);
+  return `#!/usr/bin/env bash
+set -euo pipefail
+
+API_BASE="${apiBase}"
+
+cat <<'JSON' >/tmp/soulrecall-deploy-payload.json
+${payloadJson}
+JSON
+
+curl -sS -X POST "$API_BASE/api/deployments" \\
+  -H "Content-Type: application/json" \\
+  --data-binary @/tmp/soulrecall-deploy-payload.json
+`;
+}
+
 function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
   const signalMatrix = [
@@ -153,11 +226,11 @@ function HomepageHeader() {
         <p className={styles.protocolTag}>Protocol // 001</p>
         <p className={styles.heroKicker}>Neural Sovereignty</p>
         <Heading as="h1" className={clsx('hero__title', styles.heroTitle)}>
-          Agent Vault
+          Soul Recall
         </Heading>
         <p className={clsx('hero__subtitle', styles.heroSubtitle)}>{siteConfig.tagline}</p>
         <p className={styles.heroDescription}>
-          Agent Vault deploys autonomous agent entities to ICP canisters with cryptographic ownership, continuous execution, and reconstructible memory.
+          Soul Recall deploys autonomous agent entities to ICP canisters with cryptographic ownership, continuous execution, and reconstructible memory.
         </p>
 
         <div className={styles.heroButtons}>
@@ -215,16 +288,16 @@ function ManifestSection() {
           <div className={styles.codeVessel}>
             <pre>
               <code>{`# Initialize and enter project
-agentvault init neural-entity
+soulrecall init neural-entity
 cd neural-entity
 
 # Package and deploy locally
-agentvault package ./
-agentvault deploy --network local
+soulrecall package ./
+soulrecall deploy --network local
 
 # Verify runtime state
-agentvault status
-agentvault health`}</code>
+soulrecall status
+soulrecall health`}</code>
             </pre>
           </div>
 
@@ -253,27 +326,38 @@ function InstantControlSection() {
   const [packagePath, setPackagePath] = useState('./');
   const [network, setNetwork] = useState<DeployNetwork>('local');
   const [canisterId, setCanisterId] = useState('');
-  const [copiedAction, setCopiedAction] = useState<'install' | 'deploy' | null>(null);
+  const [apiBaseUrl, setApiBaseUrl] = useState('');
+  const [copiedAction, setCopiedAction] = useState<'install' | 'deploy' | 'scriptlet' | null>(null);
+  const [scriptlet, setScriptlet] = useState('');
+  const [executeState, setExecuteState] = useState<'idle' | 'running' | 'success' | 'error'>('idle');
+  const [executeMessage, setExecuteMessage] = useState<string | null>(null);
 
   const safeProjectName = projectName.trim() || 'my-agent';
   const safePackagePath = packagePath.trim() || './';
-  const cliPrefix = installChannel === 'global' ? 'agentvault' : 'npx agentvault@latest';
+  const trimmedCanisterId = canisterId.trim();
+  const cliPrefix = installChannel === 'global' ? 'soulrecall' : 'npx soulrecall@latest';
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setApiBaseUrl(window.location.origin);
+    }
+  }, []);
 
   const installCommand = useMemo(() => {
     if (installChannel === 'global') {
-      return `npm install -g agentvault && agentvault init ${safeProjectName} --template ${template}`;
+      return `npm install -g soulrecall && soulrecall init ${safeProjectName} --template ${template}`;
     }
 
-    return `npx agentvault@latest init ${safeProjectName} --template ${template}`;
+    return `npx soulrecall@latest init ${safeProjectName} --template ${template}`;
   }, [installChannel, safeProjectName, template]);
 
   const deployCommand = useMemo(() => {
-    const deployFlags = canisterId.trim()
-      ? `--network ${network} --canister-id ${canisterId.trim()} --upgrade`
+    const deployFlags = trimmedCanisterId
+      ? `--network ${network} --canister-id ${trimmedCanisterId} --upgrade`
       : `--network ${network}`;
 
     return `cd ${safeProjectName} && ${cliPrefix} package ${safePackagePath} && ${cliPrefix} deploy ${deployFlags}`;
-  }, [canisterId, cliPrefix, network, safePackagePath, safeProjectName]);
+  }, [trimmedCanisterId, cliPrefix, network, safePackagePath, safeProjectName]);
 
   const handleConnectWallet = async (wallet: WalletOption) => {
     setSelectedWallet(wallet.id);
@@ -298,7 +382,7 @@ function InstantControlSection() {
     }
   };
 
-  const handleCopy = async (mode: 'install' | 'deploy', value: string) => {
+  const handleCopy = async (mode: 'install' | 'deploy' | 'scriptlet', value: string) => {
     setWalletError(null);
 
     if (typeof navigator === 'undefined' || !navigator.clipboard) {
@@ -312,6 +396,123 @@ function InstantControlSection() {
       setTimeout(() => setCopiedAction(null), 2000);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to copy command.';
+      setWalletError(message);
+    }
+  };
+
+  const buildDeployPayload = async (): Promise<DeployRequestPayload> => {
+    if (!walletConnection) {
+      throw new Error('Connect a wallet before executing deployment.');
+    }
+
+    const mode: DeployMode = trimmedCanisterId ? 'upgrade' : 'auto';
+    const issuedAt = new Date().toISOString();
+    const nonce = createNonce();
+
+    const walletProof: WalletProof = {
+      type: walletConnection.type,
+      address: walletConnection.address,
+      chainName: walletConnection.chainName,
+      issuedAt,
+      nonce,
+    };
+
+    if (walletConnection.type === 'ethereum') {
+      if (typeof window === 'undefined' || !window.ethereum) {
+        throw new Error('MetaMask is required to sign deploy authorization.');
+      }
+
+      const message = buildWalletProofMessage({
+        agentId: safeProjectName,
+        network,
+        mode,
+        canisterId: trimmedCanisterId || undefined,
+        issuedAt,
+        nonce,
+      });
+
+      const signature = await window.ethereum.request({
+        method: 'personal_sign',
+        params: [message, walletConnection.address],
+      });
+
+      if (typeof signature !== 'string' || signature.length === 0) {
+        throw new Error('Wallet signature was not returned.');
+      }
+
+      walletProof.message = message;
+      walletProof.signature = signature;
+    }
+
+    return {
+      agentId: safeProjectName,
+      sourcePath: safePackagePath,
+      network,
+      canisterId: trimmedCanisterId || undefined,
+      mode,
+      walletProof,
+    };
+  };
+
+  const handleExecuteDeploy = async () => {
+    setExecuteState('running');
+    setExecuteMessage(null);
+    setWalletError(null);
+
+    try {
+      const apiBase = normalizeApiBase(apiBaseUrl);
+      const payload = await buildDeployPayload();
+      const generatedScriptlet = buildDeployScriptlet(apiBase, payload);
+      setScriptlet(generatedScriptlet);
+
+      const response = await fetch(`${apiBase}/api/deployments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const body = (await response.json().catch(() => null)) as
+        | {
+            success?: boolean;
+            error?: string | {message?: string};
+            data?: {deployment?: {canisterId?: string}};
+          }
+        | null;
+
+      if (!response.ok || !body?.success) {
+        const errorMessage = typeof body?.error === 'string'
+          ? body.error
+          : body?.error?.message || `Deploy request failed with status ${response.status}`;
+        throw new Error(errorMessage);
+      }
+
+      const deployedCanister = body.data?.deployment?.canisterId;
+      const message = deployedCanister
+        ? `Deployment completed. Canister: ${deployedCanister}`
+        : 'Deployment completed successfully.';
+
+      setExecuteState('success');
+      setExecuteMessage(message);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Deployment execution failed.';
+      setExecuteState('error');
+      setExecuteMessage(message);
+    }
+  };
+
+  const handleCopyScriptlet = async () => {
+    setWalletError(null);
+
+    try {
+      const apiBase = normalizeApiBase(apiBaseUrl);
+      const payload = await buildDeployPayload();
+      const generatedScriptlet = buildDeployScriptlet(apiBase, payload);
+      setScriptlet(generatedScriptlet);
+      await handleCopy('scriptlet', generatedScriptlet);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to prepare scriptlet.';
       setWalletError(message);
     }
   };
@@ -454,6 +655,16 @@ function InstantControlSection() {
                   onChange={(event) => setCanisterId(event.target.value)}
                 />
               </label>
+
+              <label className={styles.field}>
+                <span className={styles.fieldLabel}>Deploy API Base URL</span>
+                <input
+                  className={styles.fieldInput}
+                  placeholder="https://soulrecall-webapp.example.com"
+                  value={apiBaseUrl}
+                  onChange={(event) => setApiBaseUrl(event.target.value)}
+                />
+              </label>
             </div>
 
             <div className={styles.commandBlock}>
@@ -471,6 +682,56 @@ function InstantControlSection() {
 
             <div className={styles.commandBlock}>
               <p className={styles.commandLabel}>1-Click Deploy</p>
+              <pre className={styles.commandShell}>
+                <code>{deployCommand}</code>
+              </pre>
+              <div className={styles.commandActions}>
+                <button
+                  type="button"
+                  className={clsx('button button--secondary button--lg', styles.commandButton)}
+                  onClick={() => void handleCopy('deploy', deployCommand)}>
+                  {copiedAction === 'deploy' ? 'Copied Deploy Command' : 'Copy Deploy Command'}
+                </button>
+                <button
+                  type="button"
+                  className={clsx('button button--primary button--lg', styles.commandButton)}
+                  disabled={!walletConnection || executeState === 'running'}
+                  onClick={() => void handleExecuteDeploy()}>
+                  {executeState === 'running' ? 'Executing Deploy...' : 'Execute 1-Click Deploy'}
+                </button>
+                <button
+                  type="button"
+                  className={clsx('button button--outline button--lg', styles.commandButton)}
+                  disabled={!walletConnection}
+                  onClick={() => void handleCopyScriptlet()}>
+                  {copiedAction === 'scriptlet' ? 'Copied Scriptlet' : 'Copy Deploy Scriptlet'}
+                </button>
+              </div>
+              <p className={styles.walletHint}>
+                `Execute 1-Click Deploy` sends this request to the API base URL above.
+              </p>
+              {executeMessage ? (
+                <p
+                  className={clsx(
+                    styles.executionMessage,
+                    executeState === 'success' ? styles.executionSuccess : styles.executionError
+                  )}>
+                  {executeMessage}
+                </p>
+              ) : null}
+            </div>
+
+            {scriptlet ? (
+              <div className={styles.commandBlock}>
+                <p className={styles.commandLabel}>Copy-And-Paste Scriptlet</p>
+                <pre className={styles.commandShell}>
+                  <code>{scriptlet}</code>
+                </pre>
+              </div>
+            ) : null}
+
+            <div className={styles.commandBlock}>
+              <p className={styles.commandLabel}>CLI Fallback (local execution)</p>
               <pre className={styles.commandShell}>
                 <code>{deployCommand}</code>
               </pre>

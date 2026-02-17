@@ -1,6 +1,6 @@
 # Configuration
 
-Configure your AgentVault projects with YAML configuration files.
+Configure your SoulRecall projects with YAML configuration files.
 
 ## agent.yaml
 
@@ -125,9 +125,9 @@ KUSAMA_RPC_URL=wss://kusama-rpc.polkadot.io
 ### Application Settings
 
 ```bash
-AGENTVAULT_DEBUG=false                  # Enable debug mode
-AGENTVAULT_LOG_LEVEL=info               # Log level
-AGENTVAULT_CACHE_DIR=~/.agentvault      # Cache directory
+SOULRECALL_DEBUG=false                  # Enable debug mode
+SOULRECALL_LOG_LEVEL=info               # Log level
+SOULRECALL_CACHE_DIR=~/.soulrecall      # Cache directory
 ```
 
 ## .env File
@@ -169,19 +169,19 @@ Validate your configuration:
 
 ```bash
 # Validate agent.yaml
-agentvault validate
+soulrecall validate
 
 # Show effective configuration
-agentvault config show
+soulrecall config show
 ```
 
 ## Project Structure
 
-A complete AgentVault project:
+A complete SoulRecall project:
 
 ```
 my-agent/
-├── .agentvault/
+├── .soulrecall/
 │   ├── config.yaml       # Generated configuration
 │   └── state/            # Local state storage
 ├── src/

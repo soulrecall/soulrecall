@@ -1,6 +1,6 @@
 # Goose Example Agent
 
-This is an example Goose agent configuration for AgentVault.
+This is an example Goose agent configuration for SoulRecall.
 
 ## Directory Structure
 
@@ -17,19 +17,19 @@ goose/
 
 ```bash
 cd examples/agents/goose
-agentvault init --verbose
+soulrecall init --verbose
 ```
 
 ### Package Agent
 
 ```bash
-agentvault package
+soulrecall package
 ```
 
 ### Deploy to ICP
 
 ```bash
-agentvault deploy
+soulrecall deploy
 ```
 
 ## Configuration Files

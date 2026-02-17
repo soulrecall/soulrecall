@@ -17,7 +17,7 @@ const cloudBackupCmd = new Command('cloud-backup');
 
 cloudBackupCmd
   .description(
-    'Archive and restore AgentVault data using cloud storage (Google Drive, iCloud, Dropbox, etc.)',
+    'Archive and restore SoulRecall data using cloud storage (Google Drive, iCloud, Dropbox, etc.)',
   )
   .action(async () => {
     console.log(
@@ -28,11 +28,11 @@ cloudBackupCmd
     console.log(
       chalk.gray(`
 Examples:
-  ${chalk.cyan('agentvault cloud-backup providers')}              List detected cloud providers
-  ${chalk.cyan('agentvault cloud-backup archive --provider dropbox')}  Archive vault to Dropbox
-  ${chalk.cyan('agentvault cloud-backup list --provider dropbox')}     List archives in Dropbox
-  ${chalk.cyan('agentvault cloud-backup restore <archive-path>')}      Restore from archive
-  ${chalk.cyan('agentvault cloud-backup verify <archive-path>')}       Verify archive integrity`),
+  ${chalk.cyan('soulrecall cloud-backup providers')}              List detected cloud providers
+  ${chalk.cyan('soulrecall cloud-backup archive --provider dropbox')}  Archive vault to Dropbox
+  ${chalk.cyan('soulrecall cloud-backup list --provider dropbox')}     List archives in Dropbox
+  ${chalk.cyan('soulrecall cloud-backup restore <archive-path>')}      Restore from archive
+  ${chalk.cyan('soulrecall cloud-backup verify <archive-path>')}       Verify archive integrity`),
     );
   });
 
@@ -77,7 +77,7 @@ cloudBackupCmd
 
 cloudBackupCmd
   .command('archive')
-  .description('Archive AgentVault data to a cloud storage provider')
+  .description('Archive SoulRecall data to a cloud storage provider')
   .option(
     '-p, --provider <name>',
     'Cloud provider (google-drive, icloud-drive, dropbox, onedrive)',
@@ -88,7 +88,7 @@ cloudBackupCmd
   .option('--no-wallets', 'Exclude wallet data')
   .option('--no-backups', 'Exclude existing backups')
   .option('--no-networks', 'Exclude network configurations')
-  .option('--subdirectory <name>', 'Subdirectory name inside provider', 'AgentVault-Backups')
+  .option('--subdirectory <name>', 'Subdirectory name inside provider', 'SoulRecall-Backups')
   .action(async (options) => {
     // Resolve provider path
     let providerPath: string;
@@ -107,7 +107,7 @@ cloudBackupCmd
       if (!match) {
         console.error(
           chalk.red(
-            `Unknown provider "${options.provider}". Use "agentvault cloud-backup providers" to see available options.`,
+            `Unknown provider "${options.provider}". Use "soulrecall cloud-backup providers" to see available options.`,
           ),
         );
         process.exit(1);
@@ -191,7 +191,7 @@ cloudBackupCmd
     'Cloud provider (google-drive, icloud-drive, dropbox, onedrive)',
   )
   .option('--path <directory>', 'Custom directory path')
-  .option('--subdirectory <name>', 'Subdirectory name inside provider', 'AgentVault-Backups')
+  .option('--subdirectory <name>', 'Subdirectory name inside provider', 'SoulRecall-Backups')
   .action(async (options) => {
     let providerPath: string;
 
@@ -206,7 +206,7 @@ cloudBackupCmd
       if (!match || !match.available) {
         console.error(
           chalk.red(
-            `Provider "${options.provider}" not available. Run "agentvault cloud-backup providers".`,
+            `Provider "${options.provider}" not available. Run "soulrecall cloud-backup providers".`,
           ),
         );
         process.exit(1);
@@ -275,7 +275,7 @@ cloudBackupCmd
 
 cloudBackupCmd
   .command('restore')
-  .description('Restore AgentVault data from a cloud archive')
+  .description('Restore SoulRecall data from a cloud archive')
   .argument('<archive-path>', 'Path to the archive directory')
   .option('--overwrite', 'Overwrite existing files', false)
   .action(async (archivePath: string, options) => {

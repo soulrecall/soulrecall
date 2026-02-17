@@ -1,6 +1,6 @@
 # Architecture Overview
 
-AgentVault system architecture and design.
+SoulRecall system architecture and design.
 
 ## High-Level Architecture
 
@@ -15,7 +15,7 @@ AgentVault system architecture and design.
            │                  │                  │
            ▼                  ▼                  ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                           AgentVault Core                                │
+│                           SoulRecall Core                                │
 │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐       │
 │  │ Deployment  │ │ Packaging   │ │  Wallet     │ │  Security   │       │
 │  │   Module    │ │   Module    │ │  Module     │ │   Module    │       │
@@ -94,7 +94,7 @@ Next.js application:
 └─────────┘    └─────────┘    └─────────┘    └─────────┘
      │              │              │              │
      ▼              ▼              ▼              ▼
- .agentvault/   dist/*.wasm   ICP Canister   health check
+ .soulrecall/   dist/*.wasm   ICP Canister   health check
    config       artifacts     created        passes
 ```
 
@@ -108,7 +108,7 @@ Next.js application:
        │                  │                  │
        ▼                  ▼                  ▼
   canister state    backup.json       arweave tx
-  to local file     in ~/.agentvault  permanent
+  to local file     in ~/.soulrecall  permanent
 ```
 
 ## Module Dependencies
@@ -145,9 +145,9 @@ Next.js application:
 
 | Path | Content |
 |------|---------|
-| `~/.agentvault/wallets/` | Wallet data (CBOR) |
-| `~/.agentvault/backups/` | Backup files |
-| `~/.agentvault/config/` | Configuration |
+| `~/.soulrecall/wallets/` | Wallet data (CBOR) |
+| `~/.soulrecall/backups/` | Backup files |
+| `~/.soulrecall/config/` | Configuration |
 | `~/.config/dfx/` | ICP identities |
 
 ### Remote Storage

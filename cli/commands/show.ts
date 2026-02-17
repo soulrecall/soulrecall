@@ -229,7 +229,7 @@ export function showCommand(): Command {
     .option('-m, --memories', 'show memories')
     .option('-c, --context', 'show context')
     .action(async (canisterId: string, options: ShowCommandOptions) => {
-      console.log(chalk.bold('\n👁️  AgentVault Show\n'));
+      console.log(chalk.bold('\n👁️  SoulRecall Show\n'));
 
       try {
         await executeShow(canisterId, options);

@@ -21,8 +21,8 @@ import os from 'node:os';
 import crypto from 'node:crypto';
 import { parse, stringify } from 'yaml';
 
-const AGENTVAULT_DIR = path.join(os.homedir(), '.agentvault');
-const APPROVALS_DIR = path.join(AGENTVAULT_DIR, 'approvals');
+const SOULRECALL_DIR = path.join(os.homedir(), '.soulrecall');
+const APPROVALS_DIR = path.join(SOULRECALL_DIR, 'approvals');
 
 export type ApprovalStatus = 'pending' | 'approved' | 'rejected' | 'expired';
 export type ApprovalPolicy = 'all' | 'majority' | 'quorum';
@@ -65,8 +65,8 @@ export interface ApprovalConfig {
 }
 
 function ensureApprovalsDir(): void {
-  if (!fs.existsSync(AGENTVAULT_DIR)) {
-    fs.mkdirSync(AGENTVAULT_DIR, { recursive: true });
+  if (!fs.existsSync(SOULRECALL_DIR)) {
+    fs.mkdirSync(SOULRECALL_DIR, { recursive: true });
   }
   if (!fs.existsSync(APPROVALS_DIR)) {
     fs.mkdirSync(APPROVALS_DIR, { recursive: true });

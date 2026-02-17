@@ -4,7 +4,7 @@ import { ThemeProvider } from '../providers/ThemeProvider'
 import { ICProvider } from '../providers/ICProvider'
 
 export const metadata: Metadata = {
-  title: 'AgentVault - AI Agent Platform',
+  title: 'SoulRecall - AI Agent Platform',
   description: 'Manage persistent AI agents on the Internet Computer',
 }
 

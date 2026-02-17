@@ -1,6 +1,6 @@
-# Neural Codex // AgentVault Documentation
+# Neural Codex // SoulRecall Documentation
 
-AgentVault is a sovereign runtime for autonomous AI entities on ICP canisters. This portal is structured for fast operator onboarding, resilient deployment, and long-term maintenance.
+SoulRecall is a sovereign runtime for autonomous AI entities on ICP canisters. This portal is structured for fast operator onboarding, resilient deployment, and long-term maintenance.
 
 :::note System Information
 Use production docs with an initialized wallet, funded cycles context, and secure mnemonic handling practices.
@@ -50,7 +50,7 @@ Use production docs with an initialized wallet, funded cycles context, and secur
 
 ## Status
 
-- Version: **AgentVault v1.0.0**
-- Website: [agentvault.cloud](https://agentvault.cloud)
-- Source: [github.com/johnnyclem/agentvault](https://github.com/johnnyclem/agentvault)
-- Package: [npmjs.com/package/agentvault](https://www.npmjs.com/package/agentvault)
+- Version: **SoulRecall v1.0.0**
+- Website: [soulrecall.cloud](https://soulrecall.cloud)
+- Source: [github.com/soulrecall/soulrecall](https://github.com/soulrecall/soulrecall)
+- Package: [npmjs.com/package/soulrecall](https://www.npmjs.com/package/soulrecall)

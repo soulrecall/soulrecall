@@ -22,11 +22,11 @@ approveCmd
     console.log(chalk.yellow('[Experimental] This feature is under active development and may change.'));
     console.log(chalk.yellow('Please specify a subcommand: create, list, sign, reject, delete, or cleanup'));
     console.log(chalk.gray(`\nExamples:
-  ${chalk.cyan('agentvault approve create deploy <agent-name> "Description"')}${chalk.gray('  Create approval request')}
-  ${chalk.cyan('agentvault approve list')}${chalk.gray('                     List all requests')}
-  ${chalk.cyan('agentvault approve sign <request-id>')}${chalk.gray('             Sign a request')}
-  ${chalk.cyan('agentvault approve reject <request-id>')}${chalk.gray('          Reject a request')}
-  ${chalk.cyan('agentvault approve pending <signer>')}${chalk.gray('          Show pending requests')}`));
+  ${chalk.cyan('soulrecall approve create deploy <agent-name> "Description"')}${chalk.gray('  Create approval request')}
+  ${chalk.cyan('soulrecall approve list')}${chalk.gray('                     List all requests')}
+  ${chalk.cyan('soulrecall approve sign <request-id>')}${chalk.gray('             Sign a request')}
+  ${chalk.cyan('soulrecall approve reject <request-id>')}${chalk.gray('          Reject a request')}
+  ${chalk.cyan('soulrecall approve pending <signer>')}${chalk.gray('          Show pending requests')}`));
   });
 
 approveCmd

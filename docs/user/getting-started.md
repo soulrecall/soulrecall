@@ -1,12 +1,12 @@
 # Getting Started
 
-This guide will help you get started with AgentVault - an AI agent platform for the Internet Computer.
+This guide will help you get started with SoulRecall - an AI agent platform for the Internet Computer.
 
 ## Prerequisites
 
-Before installing AgentVault, ensure you have:
+Before installing SoulRecall, ensure you have:
 
-- **Node.js 18+** - Required for running AgentVault CLI
+- **Node.js 18+** - Required for running SoulRecall CLI
 - **dfx** - Internet Computer SDK for deploying canisters
   - Install with: `sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"`
   - Verify with: `dfx --version`
@@ -18,16 +18,16 @@ Before installing AgentVault, ensure you have:
 
 ### Global Installation
 
-Install AgentVault globally on your system:
+Install SoulRecall globally on your system:
 
 ```bash
-npm install -g agentvault
+npm install -g soulrecall
 ```
 
 Verify installation:
 
 ```bash
-agentvault --version
+soulrecall --version
 ```
 
 ### Development Installation
@@ -35,8 +35,8 @@ agentvault --version
 For local development or contributing:
 
 ```bash
-git clone https://github.com/your-org/agentvault.git
-cd agentvault
+git clone https://github.com/your-org/soulrecall.git
+cd soulrecall
 npm install
 npm run build
 npm link
@@ -47,7 +47,7 @@ npm link
 Create your first AI agent project:
 
 ```bash
-agentvault init my-first-agent
+soulrecall init my-first-agent
 cd my-first-agent
 ```
 
@@ -91,7 +91,7 @@ cycles: 1000000000000  # 1T cycles
 Test your agent locally before deployment:
 
 ```bash
-agentvault test
+soulrecall test
 ```
 
 This runs the agent in a local test environment with simulated ICP interactions.
@@ -99,8 +99,8 @@ This runs the agent in a local test environment with simulated ICP interactions.
 ### Testing Options
 
 ```bash
-agentvault test --verbose
-agentvault test --coverage
+soulrecall test --verbose
+soulrecall test --coverage
 ```
 
 ## Deployment
@@ -109,10 +109,10 @@ Deploy your agent to the Internet Computer:
 
 ```bash
 # Local deployment
-agentvault deploy --network local
+soulrecall deploy --network local
 
 # Production deployment
-agentvault deploy --network ic
+soulrecall deploy --network ic
 ```
 
 ### Deployment Flags
@@ -129,7 +129,7 @@ agentvault deploy --network ic
 Verify your deployed agent:
 
 ```bash
-agentvault status <canister-id>
+soulrecall status <canister-id>
 ```
 
 ## Troubleshooting
@@ -145,10 +145,10 @@ dfx --version
 **Insufficient cycles**
 ```bash
 # Check wallet balance
-agentvault wallet balance
+soulrecall wallet balance
 
 # Request faucet
-agentvault wallet request
+soulrecall wallet request
 ```
 
 **Build failures**
@@ -161,7 +161,7 @@ npm run build
 **Network timeouts**
 ```bash
 # Check network status
-agentvault network status
+soulrecall network status
 
 # Switch to alternate network
 dfx identity use ic
@@ -177,11 +177,11 @@ dfx identity use ic
 ## Getting Help
 
 ```bash
-agentvault --help
-agentvault <command> --help
+soulrecall --help
+soulrecall <command> --help
 ```
 
 For issues or feature requests, visit:
-- GitHub Issues: https://github.com/your-org/agentvault/issues
-- Discord: https://discord.gg/agentvault
-- Documentation: https://docs.agentvault.dev
+- GitHub Issues: https://github.com/your-org/soulrecall/issues
+- Discord: https://discord.gg/soulrecall
+- Documentation: https://soulrecall.cloud/docs

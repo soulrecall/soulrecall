@@ -1,8 +1,8 @@
-# AgentVault
+# SoulRecall
 
 **Persistent On-Chain AI Agent Platform - Sovereign, Reconstructible, Autonomous**
 
-AgentVault is an open-source CLI and canister system that enables true autonomy for local AI agents. Deploy agents to Internet Computer (ICP) canisters for persistent, 24/7 execution without browser dependencies.
+SoulRecall is an open-source CLI and canister system that enables true autonomy for local AI agents. Deploy agents to Internet Computer (ICP) canisters for persistent, 24/7 execution without browser dependencies.
 
 ## Features
 
@@ -20,15 +20,15 @@ AgentVault is an open-source CLI and canister system that enables true autonomy 
 ### From npm (Recommended)
 
 ```bash
-npm install -g agentvault
-agentvault --help
+npm install -g soulrecall
+soulrecall --help
 ```
 
 ### From Source
 
 ```bash
-git clone https://github.com/anomalyco/agentvault.git
-cd agentvault
+git clone https://github.com/soulrecall/soulrecall.git
+cd soulrecall
 npm install
 npm run build
 node dist/cli/index.js --help
@@ -45,15 +45,15 @@ node dist/cli/index.js --help
 ### 1. Initialize a New Agent Project
 
 ```bash
-agentvault init my-agent
+soulrecall init my-agent
 ```
 
-This creates a `.agentvault/` directory with agent configuration.
+This creates a `.soulrecall/` directory with agent configuration.
 
 ### 2. Package Your Agent
 
 ```bash
-agentvault package ./my-agent
+soulrecall package ./my-agent
 ```
 
 Compiles your agent to WASM and generates deployment artifacts.
@@ -67,25 +67,25 @@ dfx start --background
 ### 4. Deploy to Canister
 
 ```bash
-agentvault deploy --network local
+soulrecall deploy --network local
 ```
 
 ### 5. Execute Agent
 
 ```bash
-agentvault exec --canister-id <your-canister-id> "your task"
+soulrecall exec --canister-id <your-canister-id> "your task"
 ```
 
 ### 6. Query Agent State
 
 ```bash
-agentvault show --canister-id <your-canister-id>
+soulrecall show --canister-id <your-canister-id>
 ```
 
 ### 7. Fetch State for Local Rebuild
 
 ```bash
-agentvault fetch --canister-id <your-canister-id>
+soulrecall fetch --canister-id <your-canister-id>
 ```
 
 ## CLI Commands
@@ -94,7 +94,7 @@ agentvault fetch --canister-id <your-canister-id>
 
 | Command | Description |
 |---------|-------------|
-| `init` | Initialize a new AgentVault project |
+| `init` | Initialize a new SoulRecall project |
 | `package` | Package agent directory to WASM |
 | `deploy` | Deploy agent to ICP canister |
 | `exec` | Execute task on canister |
@@ -166,7 +166,7 @@ KUSAMA_RPC_URL=wss://kusama-rpc.polkadot.io
 ## Project Structure
 
 ```
-agentvault/
+soulrecall/
 ├── src/                    # Core TypeScript library
 │   ├── deployment/         # ICP client and deployment
 │   ├── packaging/          # WASM compilation
@@ -185,7 +185,7 @@ agentvault/
 
 ## Documentation (v1.0)
 
-- **Website**: https://agentvault.cloud
+- **Website**: https://soulrecall.cloud
 - [Documentation index](docs/user/index-v1.0.md)
 - [Comprehensive tutorial](docs/user/tutorial-v1.0.md)
 - [Clawdbot/Claude skill runbook](docs/user/clawdbot-claude-skill.md)
@@ -207,7 +207,7 @@ npm run lint:fix     # ESLint with auto-fix
 
 ## Testing
 
-AgentVault has 508 tests covering:
+SoulRecall has 508 tests covering:
 
 - CLI commands (init, deploy, package, status)
 - ICP client (connection, deployment, execution)
@@ -244,9 +244,9 @@ MIT License - see [LICENSE](./LICENSE).
 
 ## Resources
 
-- **Website**: https://agentvault.cloud
-- **Documentation**: https://agentvault.cloud/docs
-- **npm**: https://www.npmjs.com/package/agentvault
+- **Website**: https://soulrecall.cloud
+- **Documentation**: https://soulrecall.cloud/docs
+- **npm**: https://www.npmjs.com/package/soulrecall
 - [Product Requirements Document](./docs/PRD.md)
 - [Implementation Plan](./AI_DOCS/)
 - [Changelog](./CHANGELOG.md)

@@ -78,7 +78,7 @@ profileCmd
 
       console.log();
       console.log(chalk.yellow('Profiling is in mock mode.'));
-      console.log(chalk.gray('Real profiling requires agentvault instrument and trace collection.'));
+      console.log(chalk.gray('Real profiling requires soulrecall instrument and trace collection.'));
     } catch (error) {
       spinner.fail(chalk.red('Failed to profile canister'));
       const message = error instanceof Error ? error.message : 'Unknown error';

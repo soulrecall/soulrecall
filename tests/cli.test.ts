@@ -32,9 +32,9 @@ describe('CLI Framework', () => {
       expect(content).toContain('export async function run');
     });
 
-    it('should set program name to agentvault', () => {
+    it('should set program name to soulrecall', () => {
       const content = readFileSync(cliIndexPath, 'utf-8');
-      expect(content).toContain(".name('agentvault')");
+      expect(content).toContain(".name('soulrecall')");
     });
 
     it('should configure version option', () => {
@@ -241,7 +241,7 @@ describe('CLI Framework', () => {
       const content = readFileSync(packageJsonPath, 'utf-8');
       const pkg = JSON.parse(content);
       expect(pkg.bin).toBeDefined();
-      expect(pkg.bin.agentvault).toBe('dist/cli/index.js');
+      expect(pkg.bin.soulrecall).toBe('dist/cli/index.js');
     });
 
     it('should have commander dependency', () => {
@@ -282,7 +282,7 @@ describe('CLI Framework Runtime', { timeout: 15000 }, () => {
       const { createProgram } = await import('../cli/index.js');
       const program = createProgram();
       expect(program).toBeDefined();
-      expect(program.name()).toBe('agentvault');
+      expect(program.name()).toBe('soulrecall');
     });
 
     it('should have correct version', async () => {
@@ -386,7 +386,7 @@ describe('CLI Framework Runtime', { timeout: 15000 }, () => {
       const result = await promptForInitOptions({ yes: true });
       expect(result).toEqual({
         name: 'my-agent',
-        description: 'An AgentVault agent',
+        description: 'An SoulRecall agent',
         confirm: true,
       });
     });
@@ -396,7 +396,7 @@ describe('CLI Framework Runtime', { timeout: 15000 }, () => {
       const result = await promptForInitOptions({ yes: true, name: 'custom-agent' });
       expect(result).toEqual({
         name: 'custom-agent',
-        description: 'An AgentVault agent',
+        description: 'An SoulRecall agent',
         confirm: true,
       });
     });

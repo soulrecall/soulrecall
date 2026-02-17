@@ -1,6 +1,6 @@
 # Contributing
 
-How to contribute to AgentVault.
+How to contribute to SoulRecall.
 
 ## Getting Started
 
@@ -8,11 +8,11 @@ How to contribute to AgentVault.
 
 ```bash
 # Fork the repo on GitHub, then clone your fork
-git clone https://github.com/YOUR_USERNAME/agentvault.git
-cd agentvault
+git clone https://github.com/YOUR_USERNAME/soulrecall.git
+cd soulrecall
 
 # Add upstream remote
-git remote add upstream https://github.com/johnnyclem/agentvault.git
+git remote add upstream https://github.com/soulrecall/soulrecall.git
 ```
 
 ### 2. Install Dependencies
@@ -192,7 +192,7 @@ npm run test -- --coverage
 ## Project Structure
 
 ```
-agentvault/
+soulrecall/
 ├── src/              # Core library
 │   ├── deployment/   # ICP client, deployer
 │   ├── packaging/    # WASM compilation

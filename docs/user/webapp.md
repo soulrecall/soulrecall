@@ -1,10 +1,10 @@
 # Web Dashboard Guide
 
-This guide covers using the AgentVault web application for managing AI agents.
+This guide covers using the SoulRecall web application for managing AI agents.
 
 ## Overview
 
-The AgentVault web dashboard provides a graphical interface for:
+The SoulRecall web dashboard provides a graphical interface for:
 - **Agent Management** - Create, configure, deploy, and monitor agents
 - **Canister Monitoring** - View status, cycles, memory, and health
 - **Task Queue** - Monitor background operations and workflows

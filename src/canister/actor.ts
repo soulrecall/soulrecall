@@ -1,7 +1,7 @@
 /**
- * AgentVault Canister Actor Bindings
+ * SoulRecall Canister Actor Bindings
  *
- * TypeScript Actor interface for AgentVault canister.
+ * TypeScript Actor interface for SoulRecall canister.
  * Generated from agent.did Candid interface.
  */
 
@@ -9,7 +9,7 @@ import { Actor, HttpAgent, Identity } from '@dfinity/agent';
 import { idlFactory } from './actor.idl.js';
 
 /**
- * AgentVault canister actor interface
+ * SoulRecall canister actor interface
  * Generated from agent.did Candid interface.
  */
 
@@ -199,7 +199,7 @@ export type CanisterVetKeysStatus = {
 };
 
 /**
- * AgentVault canister actor interface
+ * SoulRecall canister actor interface
  */
 export interface _SERVICE {
   getAgentConfig: () => Promise<[AgentConfig] | []>;
@@ -278,7 +278,7 @@ export interface _SERVICE {
 }
 
 /**
- * Create AgentVault canister actor
+ * Create SoulRecall canister actor
  *
  * @param canisterId - Canister ID to connect to
  * @param agent - HTTP agent instance

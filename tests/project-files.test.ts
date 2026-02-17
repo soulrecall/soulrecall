@@ -20,7 +20,7 @@ describe('Project Files', () => {
     it('should include copyright notice', () => {
       const content = readFileSync(licensePath, 'utf-8');
       expect(content).toContain('Copyright');
-      expect(content).toContain('AgentVault Contributors');
+      expect(content).toContain('SoulRecall Contributors');
     });
 
     it('should include standard MIT license terms', () => {
@@ -39,7 +39,7 @@ describe('Project Files', () => {
 
     it('should have project title', () => {
       const content = readFileSync(readmePath, 'utf-8');
-      expect(content).toContain('# AgentVault');
+      expect(content).toContain('# SoulRecall');
     });
 
     it('should have current status section', () => {

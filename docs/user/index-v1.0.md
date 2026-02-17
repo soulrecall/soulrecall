@@ -1,6 +1,6 @@
 # User Operations Index // v1.0
 
-Canonical operator index for day-to-day AgentVault workflows.
+Canonical operator index for day-to-day SoulRecall workflows.
 
 :::tip Usage Pattern
 Use this page as your runbook navigator during deployment, incident handling, and recovery drills.
@@ -42,6 +42,6 @@ Use this page as your runbook navigator during deployment, incident handling, an
 
 ## External Links
 
-- Website: [agentvault.cloud](https://agentvault.cloud)
-- GitHub: [github.com/johnnyclem/agentvault](https://github.com/johnnyclem/agentvault)
-- npm: [npmjs.com/package/agentvault](https://www.npmjs.com/package/agentvault)
+- Website: [soulrecall.cloud](https://soulrecall.cloud)
+- GitHub: [github.com/soulrecall/soulrecall](https://github.com/soulrecall/soulrecall)
+- npm: [npmjs.com/package/soulrecall](https://www.npmjs.com/package/soulrecall)

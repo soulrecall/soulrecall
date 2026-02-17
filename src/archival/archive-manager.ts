@@ -11,8 +11,8 @@ import os from 'node:os';
 import crypto from 'node:crypto';
 import { parse, stringify } from 'yaml';
 
-const AGENTVAULT_DIR = path.join(os.homedir(), '.agentvault');
-const ARCHIVES_DIR = path.join(AGENTVAULT_DIR, 'archives');
+const SOULRECALL_DIR = path.join(os.homedir(), '.soulrecall');
+const ARCHIVES_DIR = path.join(SOULRECALL_DIR, 'archives');
 const ARCHIVE_INDEX_PATH = path.join(ARCHIVES_DIR, 'index.yaml');
 
 export interface ArchiveMetadata {
@@ -43,8 +43,8 @@ export interface ArchiveResult {
 }
 
 function ensureArchivesDir(): void {
-  if (!fs.existsSync(AGENTVAULT_DIR)) {
-    fs.mkdirSync(AGENTVAULT_DIR, { recursive: true });
+  if (!fs.existsSync(SOULRECALL_DIR)) {
+    fs.mkdirSync(SOULRECALL_DIR, { recursive: true });
   }
   if (!fs.existsSync(ARCHIVES_DIR)) {
     fs.mkdirSync(ARCHIVES_DIR, { recursive: true });

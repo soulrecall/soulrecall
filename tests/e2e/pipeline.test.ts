@@ -9,7 +9,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as os from 'node:os';
 
-const TEST_DIR = path.join(os.tmpdir(), 'agentvault-e2e-test');
+const TEST_DIR = path.join(os.tmpdir(), 'soulrecall-e2e-test');
 const AGENT_DIR = path.join(TEST_DIR, 'test-agent');
 
 vi.mock('execa', () => ({
@@ -48,7 +48,7 @@ describe('E2E Pipeline: init → package → deploy → exec → show → fetch'
   });
 
   describe('init', () => {
-    it('should create .agentvault directory with config files', async () => {
+    it('should create .soulrecall directory with config files', async () => {
       const { executeInit } = await import('../../cli/commands/init.js');
 
       await executeInit(
@@ -57,10 +57,10 @@ describe('E2E Pipeline: init → package → deploy → exec → show → fetch'
         AGENT_DIR
       );
 
-      const agentvaultDir = path.join(AGENT_DIR, '.agentvault');
-      expect(fs.existsSync(agentvaultDir)).toBe(true);
+      const soulrecallDir = path.join(AGENT_DIR, '.soulrecall');
+      expect(fs.existsSync(soulrecallDir)).toBe(true);
 
-      const configPath = path.join(agentvaultDir, 'config', 'agent.config.json');
+      const configPath = path.join(soulrecallDir, 'config', 'agent.config.json');
       expect(fs.existsSync(configPath)).toBe(true);
 
       const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
@@ -78,10 +78,10 @@ describe('E2E Pipeline: init → package → deploy → exec → show → fetch'
       );
 
       const expectedDirs = [
-        '.agentvault/agent',
-        '.agentvault/canister',
-        '.agentvault/config',
-        '.agentvault/src',
+        '.soulrecall/agent',
+        '.soulrecall/canister',
+        '.soulrecall/config',
+        '.soulrecall/src',
       ];
 
       for (const dir of expectedDirs) {
@@ -101,7 +101,7 @@ describe('E2E Pipeline: init → package → deploy → exec → show → fetch'
         AGENT_DIR
       );
 
-      const configPath = path.join(AGENT_DIR, '.agentvault', 'config', 'agent.config.json');
+      const configPath = path.join(AGENT_DIR, '.soulrecall', 'config', 'agent.config.json');
       expect(fs.existsSync(configPath)).toBe(true);
     });
   });
@@ -178,7 +178,7 @@ describe('E2E Pipeline: init → package → deploy → exec → show → fetch'
         AGENT_DIR
       );
 
-      const configPath = path.join(AGENT_DIR, '.agentvault', 'config', 'agent.config.json');
+      const configPath = path.join(AGENT_DIR, '.soulrecall', 'config', 'agent.config.json');
       expect(fs.existsSync(configPath)).toBe(true);
 
       const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));

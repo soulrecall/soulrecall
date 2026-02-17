@@ -1,10 +1,10 @@
 # Deployment Guide
 
-This guide covers deploying AI agents to the Internet Computer using AgentVault.
+This guide covers deploying AI agents to the Internet Computer using SoulRecall.
 
 ## Overview
 
-AgentVault supports two deployment modes:
+SoulRecall supports two deployment modes:
 
 1. **Local Deployment** - Deploy to local ICP replica (development/testing)
 2. **Production Deployment** - Deploy to main ICP network
@@ -59,7 +59,7 @@ Deploy to local ICP for development and testing:
 
 ```bash
 # Deploy to local network
-agentvault deploy --network local
+soulrecall deploy --network local
 ```
 
 ### Local Deployment Process
@@ -78,13 +78,13 @@ agentvault deploy --network local
 dfx start --background
 
 # 2. Deploy agent
-agentvault deploy --network local
+soulrecall deploy --network local
 
 # 3. Test with canister ID
-agentvault exec <canister-id> "test input"
+soulrecall exec <canister-id> "test input"
 
 # 4. View logs
-agentvault logs <canister-id>
+soulrecall logs <canister-id>
 ```
 
 ## Production Deployment
@@ -93,7 +93,7 @@ Deploy to main ICP network for public access:
 
 ```bash
 # Deploy to production
-agentvault deploy --network ic
+soulrecall deploy --network ic
 ```
 
 ### Production Deployment Process
@@ -109,13 +109,13 @@ agentvault deploy --network ic
 
 ```bash
 # Add cycles to canister
-agentvault cycles top-up <canister-id> --amount 1000000000000
+soulrecall cycles top-up <canister-id> --amount 1000000000000
 
 # Check canister cycles
-agentvault cycles balance <canister-id>
+soulrecall cycles balance <canister-id>
 
 # View cycles history
-agentvault cycles history <canister-id>
+soulrecall cycles history <canister-id>
 ```
 
 ## Upgrades
@@ -124,7 +124,7 @@ Upgrade an existing deployed canister:
 
 ```bash
 # Upgrade canister with new code
-agentvault deploy --canister-id <existing-id> --upgrade
+soulrecall deploy --canister-id <existing-id> --upgrade
 ```
 
 ### Upgrade Strategies
@@ -159,7 +159,7 @@ export ICP_IDENTITY=my-wallet
 ```env
 ICP_NETWORK=ic
 ICP_HOST=https://ic0.app
-AGENT_VAULT_DEBUG=false
+SOUL_RECALL_DEBUG=false
 ```
 
 ## Troubleshooting Deployments
@@ -182,7 +182,7 @@ rustc --version
 wasm-pack --version
 
 # Clean build cache
-rm -rf .agentvault/wasm-cache
+rm -rf .soulrecall/wasm-cache
 ```
 
 ### Canister Errors
@@ -190,10 +190,10 @@ rm -rf .agentvault/wasm-cache
 **Insufficient cycles:**
 ```bash
 # Check balance
-agentvault cycles balance
+soulrecall cycles balance
 
 # Add more cycles
-agentvault cycles top-up <canister-id> --amount 5000000000000
+soulrecall cycles top-up <canister-id> --amount 5000000000000
 ```
 
 **Controller permission denied:**
@@ -202,7 +202,7 @@ agentvault cycles top-up <canister-id> --amount 5000000000000
 dfx identity whoami
 
 # Set controller
-agentvault canister set-controller <canister-id> --principal <your-principal>
+soulrecall canister set-controller <canister-id> --principal <your-principal>
 ```
 
 ### Network Issues
@@ -210,22 +210,22 @@ agentvault canister set-controller <canister-id> --principal <your-principal>
 **Connection timeout:**
 ```bash
 # Check network status
-agentvault network status
+soulrecall network status
 
 # Test connectivity
 curl -I https://ic0.app
 
 # Use custom network endpoint
-agentvault deploy --network ic --host https://alternate.icp.host
+soulrecall deploy --network ic --host https://alternate.icp.host
 ```
 
 **Deployment stuck:**
 ```bash
 # Cancel stuck deployment
-agentvault cancel <deployment-id>
+soulrecall cancel <deployment-id>
 
 # Check deployment logs
-agentvault logs <deployment-id>
+soulrecall logs <deployment-id>
 ```
 
 ## Verification
@@ -234,13 +234,13 @@ After deployment, verify your canister:
 
 ```bash
 # Check canister status
-agentvault status <canister-id>
+soulrecall status <canister-id>
 
 # Run health check
-agentvault health <canister-id>
+soulrecall health <canister-id>
 
 # View recent logs
-agentvault logs <canister-id> --last 100
+soulrecall logs <canister-id> --last 100
 ```
 
 ## Rollback
@@ -249,10 +249,10 @@ Rollback to previous deployment if issues occur:
 
 ```bash
 # List available rollbacks
-agentvault rollback list <canister-id>
+soulrecall rollback list <canister-id>
 
 # Perform rollback
-agentvault rollback <canister-id> --version 2
+soulrecall rollback <canister-id> --version 2
 ```
 
 ### Rollback Process
@@ -267,7 +267,7 @@ agentvault rollback <canister-id> --version 2
 
 ### Before Deployment
 
-- [ ] Test agent locally with `agentvault test`
+- [ ] Test agent locally with `soulrecall test`
 - [ ] Ensure sufficient cycles (minimum 1T recommended)
 - [ ] Review and optimize agent code size
 - [ ] Backup existing canister if upgrading
@@ -276,13 +276,13 @@ agentvault rollback <canister-id> --version 2
 ### During Deployment
 
 - [ ] Use verbose mode for debugging: `--verbose`
-- [ ] Monitor deployment progress: `agentvault logs <deployment-id>`
+- [ ] Monitor deployment progress: `soulrecall logs <deployment-id>`
 - [ ] Verify canister health post-deployment
 - [ ] Record deployment ID for rollback reference
 
 ### After Deployment
 
-- [ ] Set up monitoring with `agentvault monitor`
+- [ ] Set up monitoring with `soulrecall monitor`
 - [ ] Configure alerts for canister health
 - [ ] Create initial backup
 - [ ] Document canister ID and access methods
@@ -294,7 +294,7 @@ agentvault rollback <canister-id> --version 2
 Deploy multiple canisters in dependency order:
 
 ```bash
-agentvault deploy --batch canisters.json
+soulrecall deploy --batch canisters.json
 ```
 
 ### Multi-network Deployment
@@ -302,7 +302,7 @@ agentvault deploy --batch canisters.json
 Deploy to multiple networks simultaneously:
 
 ```bash
-agentvault deploy --networks local,ic
+soulrecall deploy --networks local,ic
 ```
 
 ### Custom Deployment Scripts
@@ -312,8 +312,8 @@ Create deployment scripts for complex workflows:
 ```bash
 # deploy-all.sh
 #!/bin/bash
-agentvault deploy --network local --config staging.yaml
-agentvault deploy --network ic --config production.yaml
+soulrecall deploy --network local --config staging.yaml
+soulrecall deploy --network ic --config production.yaml
 ```
 
 ## Next Steps

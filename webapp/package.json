@@ -1,7 +1,7 @@
 {
-  "name": "agentvault-webapp",
+  "name": "soulrecall-webapp",
   "version": "1.0.0",
-  "description": "Web interface for AgentVault - Manage AI agents on ICP",
+  "description": "Web interface for SoulRecall - Manage AI agents on ICP",
   "private": true,
   "scripts": {
     "dev": "next dev",

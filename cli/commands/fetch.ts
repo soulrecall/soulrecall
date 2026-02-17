@@ -117,8 +117,8 @@ export async function executeFetch(
       console.log(chalk.green('✓'), 'State saved to:', chalk.bold(outputPath));
       console.log();
       console.log(chalk.cyan('Next steps:'));
-      console.log('  1. Decrypt the state:', chalk.bold('agentvault decrypt'), `<${outputPath}>`);
-      console.log('  2. Rebuild the agent:', chalk.bold('agentvault rebuild'));
+      console.log('  1. Decrypt the state:', chalk.bold('soulrecall decrypt'), `<${outputPath}>`);
+      console.log('  2. Rebuild the agent:', chalk.bold('soulrecall rebuild'));
     }
 
     // Handle decryption if requested
@@ -172,7 +172,7 @@ async function handleDecryption(stateData: unknown, outputPath: string): Promise
     console.log();
     console.log(chalk.cyan('Next steps:'));
     console.log('  1. Review the decrypted state');
-    console.log('  2. Rebuild the agent:', chalk.bold('agentvault rebuild'));
+    console.log('  2. Rebuild the agent:', chalk.bold('soulrecall rebuild'));
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     spinner.fail(`Decryption failed: ${message}`);
@@ -193,7 +193,7 @@ export function fetchCommand(): Command {
     .option('-o, --output <path>', 'output file path')
     .option('-d, --decrypt', 'decrypt state after fetching')
     .action(async (canisterId: string, options: FetchCommandOptions) => {
-      console.log(chalk.bold('\n📥 AgentVault Fetch\n'));
+      console.log(chalk.bold('\n📥 SoulRecall Fetch\n'));
 
       try {
         await executeFetch(canisterId, options);

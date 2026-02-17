@@ -2,7 +2,7 @@
  * Cloud Storage Types
  *
  * Types for the cloud storage backup feature that lets users
- * archive and restore AgentVault data using consumer cloud
+ * archive and restore SoulRecall data using consumer cloud
  * storage providers (Google Drive, iCloud, Dropbox, etc.)
  * via their local sync directories — no crypto required.
  */
@@ -55,7 +55,7 @@ export interface CloudArchiveManifest {
   createdAt: string;
   platform: string;
   hostname: string;
-  agentVaultVersion: string;
+  soulRecallVersion: string;
   agentName?: string;
   components: string[];
   files: CloudArchiveFileEntry[];

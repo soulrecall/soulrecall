@@ -1,6 +1,6 @@
 # Security Best Practices
 
-Recommendations for secure use of AgentVault.
+Recommendations for secure use of SoulRecall.
 
 ## Secrets Management
 
@@ -49,17 +49,17 @@ echo ".env.*" >> .gitignore
 
 ```bash
 # Generate wallet with strong entropy
-agentvault wallet create --chain ethereum
+soulrecall wallet create --chain ethereum
 
 # Import with caution - clears clipboard after
-agentvault wallet import --chain ethereum --mnemonic
+soulrecall wallet import --chain ethereum --mnemonic
 ```
 
 ### Backup Wallets
 
 ```bash
 # Export encrypted backup
-agentvault wallet export <wallet-id> --format json > wallet-backup.json
+soulrecall wallet export <wallet-id> --format json > wallet-backup.json
 
 # Store backup securely (encrypted USB, offline storage)
 ```
@@ -91,20 +91,20 @@ dfx canister update-settings --remove-controller <principal>
 
 ```bash
 # Local development - isolated
-agentvault deploy --network local
+soulrecall deploy --network local
 
 # Production - public network
-agentvault deploy --network ic
+soulrecall deploy --network ic
 ```
 
 ### Cycles Management
 
 ```bash
 # Monitor cycles regularly
-agentvault cycles balance <canister-id>
+soulrecall cycles balance <canister-id>
 
 # Set up alerts for low cycles
-agentvault monitor --alert --webhook <url>
+soulrecall monitor --alert --webhook <url>
 ```
 
 ## Backup & Recovery
@@ -121,13 +121,13 @@ agentvault monitor --alert --webhook <url>
 
 ```bash
 # Pre-deployment backup
-agentvault backup --canister-id <id>
+soulrecall backup --canister-id <id>
 
 # Export backup for offsite storage
-agentvault backup export <agent-name> -o ./backups/
+soulrecall backup export <agent-name> -o ./backups/
 
 # Archive to Arweave
-agentvault archive upload <backup-id>
+soulrecall archive upload <backup-id>
 ```
 
 ### Recovery Drill
@@ -136,13 +136,13 @@ Regularly test recovery:
 
 ```bash
 # 1. Fetch state
-agentvault fetch --canister-id <id>
+soulrecall fetch --canister-id <id>
 
 # 2. Verify state integrity
-agentvault show --canister-id <id> --verify
+soulrecall show --canister-id <id> --verify
 
 # 3. Test rebuild
-agentvault rebuild --canister-id <id> --dry-run
+soulrecall rebuild --canister-id <id> --dry-run
 ```
 
 ## Network Security
@@ -157,7 +157,7 @@ agentvault rebuild --canister-id <id> --dry-run
 
 ```bash
 # Avoid rate limits with delays
-agentvault deploy --timeout 60000
+soulrecall deploy --timeout 60000
 ```
 
 ### API Security
@@ -175,21 +175,21 @@ export ETHERSCAN_API_KEY=$(cat ~/.secrets/etherscan-key)
 
 ```bash
 # Enable continuous monitoring
-agentvault monitor --canister-id <id> --interval 60000 --alert
+soulrecall monitor --canister-id <id> --interval 60000 --alert
 ```
 
 ### Alert Webhooks
 
 ```bash
 # Configure webhook for alerts
-agentvault monitor --webhook https://hooks.example.com/agentvault
+soulrecall monitor --webhook https://hooks.example.com/soulrecall
 ```
 
 ### Log Analysis
 
 ```bash
 # Monitor for errors
-agentvault logs --canister-id <id> --level error --follow
+soulrecall logs --canister-id <id> --level error --follow
 ```
 
 ## Operational Security Checklist

@@ -11,12 +11,12 @@ import os from 'node:os';
 import { parse, stringify } from 'yaml';
 import type { DeploymentHistory } from '../icp/types.js';
 
-const AGENTVAULT_DIR = path.join(os.homedir(), '.agentvault');
-const HISTORY_DIR = path.join(AGENTVAULT_DIR, 'history');
+const SOULRECALL_DIR = path.join(os.homedir(), '.soulrecall');
+const HISTORY_DIR = path.join(SOULRECALL_DIR, 'history');
 
 function ensureHistoryDir(): void {
-  if (!fs.existsSync(AGENTVAULT_DIR)) {
-    fs.mkdirSync(AGENTVAULT_DIR, { recursive: true });
+  if (!fs.existsSync(SOULRECALL_DIR)) {
+    fs.mkdirSync(SOULRECALL_DIR, { recursive: true });
   }
   if (!fs.existsSync(HISTORY_DIR)) {
     fs.mkdirSync(HISTORY_DIR, { recursive: true });

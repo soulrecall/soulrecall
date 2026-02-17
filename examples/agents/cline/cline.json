@@ -1,8 +1,8 @@
 {
-  "$schema": "https://agentvault.dev/schemas/cline-config-v1.json",
+  "$schema": "https://soulrecall.cloud/schemas/cline-config-v1.json",
   "name": "example-cline",
   "type": "cline",
-  "description": "Example Cline agent for AgentVault",
+  "description": "Example Cline agent for SoulRecall",
   "version": "1.0.0",
   "mode": "auto",
   "claudeVersion": "3.5",

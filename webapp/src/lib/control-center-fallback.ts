@@ -35,7 +35,7 @@ export const controlCenterFallback: ControlCenterData = {
   crew: [
     {
       name: 'johnnyclem',
-      rig: 'AgentVault',
+      rig: 'SoulRecall',
       state: 'Ready',
       hook: 'mail',
       activity: 'Dispatch review',
@@ -78,16 +78,16 @@ export const controlCenterFallback: ControlCenterData = {
     { id: 'm3', from: 'Watchtower', subject: 'Replica latency recovered', age: '25m ago' },
   ],
   mergeQueue: [
-    { pr: '#14', repo: 'AgentVault', title: 'Cloud backup retry policy', ci: 'Fail' },
-    { pr: '#13', repo: 'AgentVault', title: 'Canister health lane cleanup', ci: 'Pending' },
-    { pr: '#12', repo: 'AgentVault', title: 'Bump esbuild + lock refresh', ci: 'Pass' },
+    { pr: '#14', repo: 'SoulRecall', title: 'Cloud backup retry policy', ci: 'Fail' },
+    { pr: '#13', repo: 'SoulRecall', title: 'Canister health lane cleanup', ci: 'Pending' },
+    { pr: '#12', repo: 'SoulRecall', title: 'Bump esbuild + lock refresh', ci: 'Pass' },
   ],
   escalations: [
     { id: 'E-10', severity: 'P1', title: 'No heartbeat on rig NeonRelay', owner: 'mira-17' },
     { id: 'E-09', severity: 'P2', title: 'Merge queue blocked > 20m', owner: 'atlas-9' },
   ],
   rigs: [
-    { name: 'AgentVault', polecats: 2, crew: 3, agents: '👁️ 🌩️' },
+    { name: 'SoulRecall', polecats: 2, crew: 3, agents: '👁️ 🌩️' },
     { name: 'DustRunner', polecats: 1, crew: 2, agents: '🛰️ 🧭' },
     { name: 'NeonRelay', polecats: 1, crew: 2, agents: '🛠️ 🔦' },
   ],

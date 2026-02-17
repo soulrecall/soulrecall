@@ -186,7 +186,7 @@ function buildMail(
 function buildMergeQueue(deployments: Deployment[]): ControlCenterMergeItem[] {
   const items = deployments.slice(0, 6).map((deployment, index) => ({
     pr: `#${20 - index}`,
-    repo: 'AgentVault',
+    repo: 'SoulRecall',
     title: `${deployment.agentId} ${deployment.status} deployment`,
     ci:
       deployment.status === 'completed'
@@ -203,7 +203,7 @@ function buildMergeQueue(deployments: Deployment[]): ControlCenterMergeItem[] {
   return [
     {
       pr: '#0',
-      repo: 'AgentVault',
+      repo: 'SoulRecall',
       title: 'No active merge items',
       ci: 'Pending',
     },

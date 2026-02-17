@@ -1,10 +1,10 @@
 # Canister Architecture
 
-AgentVault canister internals and design.
+SoulRecall canister internals and design.
 
 ## Canister Overview
 
-AgentVault deploys AI agents as ICP canisters. Each canister:
+SoulRecall deploys AI agents as ICP canisters. Each canister:
 
 - Runs agent code compiled to WASM
 - Stores agent state persistently
@@ -177,13 +177,13 @@ await ic.call_with_cycles(
 
 ```bash
 # Check cycles balance
-agentvault cycles balance <canister-id>
+soulrecall cycles balance <canister-id>
 
 # Top-up cycles
-agentvault cycles top-up <canister-id> --amount 1T
+soulrecall cycles top-up <canister-id> --amount 1T
 
 # View history
-agentvault cycles history <canister-id>
+soulrecall cycles history <canister-id>
 ```
 
 ## Controllers
@@ -220,7 +220,7 @@ dfx canister update-settings --remove-controller <principal>
 
 ```bash
 # Upgrade canister
-agentvault deploy --canister-id <id> --upgrade
+soulrecall deploy --canister-id <id> --upgrade
 ```
 
 ### Upgrade Safety
@@ -258,13 +258,13 @@ func requires_controller() {
 
 ```bash
 # Basic health
-agentvault health <canister-id>
+soulrecall health <canister-id>
 
 # Detailed status
-agentvault info <canister-id>
+soulrecall info <canister-id>
 
 # Statistics
-agentvault stats <canister-id>
+soulrecall stats <canister-id>
 ```
 
 ### Metrics Available

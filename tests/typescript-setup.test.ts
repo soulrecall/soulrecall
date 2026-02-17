@@ -60,9 +60,9 @@ describe('TypeScript Project Setup', () => {
       expect(content).toContain('export const VERSION');
     });
 
-    it('should export AgentVaultConfig interface', () => {
+    it('should export SoulRecallConfig interface', () => {
       const content = readFileSync(indexPath, 'utf-8');
-      expect(content).toContain('export interface AgentVaultConfig');
+      expect(content).toContain('export interface SoulRecallConfig');
     });
 
     it('should export createConfig function', () => {

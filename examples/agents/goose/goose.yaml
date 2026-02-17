@@ -1,9 +1,9 @@
 # Goose Agent Configuration
-# This file configures a Goose AI agent for AgentVault
+# This file configures a Goose AI agent for SoulRecall
 
 name: example-goose
 type: goose
-description: Example Goose agent for AgentVault
+description: Example Goose agent for SoulRecall
 version: 1.0.0
 
 # Model Configuration

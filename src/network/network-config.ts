@@ -1,7 +1,7 @@
 /**
- * Network configuration management for AgentVault
+ * Network configuration management for SoulRecall
  *
- * Manages local network configurations stored in ~/.agentvault/networks/
+ * Manages local network configurations stored in ~/.soulrecall/networks/
  */
 
 import fs from 'node:fs';
@@ -10,15 +10,15 @@ import os from 'node:os';
 import { parse, stringify } from 'yaml';
 import type { NetworkConfig } from '../icp/types.js';
 
-const AGENTVAULT_DIR = path.join(os.homedir(), '.agentvault');
-const NETWORKS_DIR = path.join(AGENTVAULT_DIR, 'networks');
+const SOULRECALL_DIR = path.join(os.homedir(), '.soulrecall');
+const NETWORKS_DIR = path.join(SOULRECALL_DIR, 'networks');
 
 /**
  * Ensure the networks directory exists
  */
 function ensureNetworksDir(): void {
-  if (!fs.existsSync(AGENTVAULT_DIR)) {
-    fs.mkdirSync(AGENTVAULT_DIR, { recursive: true });
+  if (!fs.existsSync(SOULRECALL_DIR)) {
+    fs.mkdirSync(SOULRECALL_DIR, { recursive: true });
   }
   if (!fs.existsSync(NETWORKS_DIR)) {
     fs.mkdirSync(NETWORKS_DIR, { recursive: true });

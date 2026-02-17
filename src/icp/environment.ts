@@ -21,7 +21,7 @@ import type {
 const CONFIG_SEARCH_PATHS = [
   'icp.yaml',
   'icp.yml',
-  '.agentvault/icp.yaml',
+  '.soulrecall/icp.yaml',
 ];
 
 /**
@@ -183,7 +183,7 @@ export function writeConfig(
  */
 export function generateDefaultConfig(): IcpProjectConfig {
   return {
-    name: 'agentvault-project',
+    name: 'soulrecall-project',
     defaultEnvironment: 'local',
     environments: {
       local: {

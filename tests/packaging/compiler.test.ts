@@ -184,7 +184,7 @@ describe('compiler', () => {
       const stateJson = generateStateJson(mockConfig);
       const state = JSON.parse(stateJson);
 
-      expect(state.$schema).toBe('https://agentvault.dev/schemas/agent-state-v1.json');
+      expect(state.$schema).toBe('https://soulrecall.cloud/schemas/agent-state-v1.json');
     });
 
     it('should initialize state as not initialized', () => {

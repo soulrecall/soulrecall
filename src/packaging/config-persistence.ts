@@ -1,7 +1,7 @@
 /**
  * Config Persistence Module
  *
- * Manages agent configuration storage in ~/.agentvault/agents/<agent-id>/
+ * Manages agent configuration storage in ~/.soulrecall/agents/<agent-id>/
  * Supports reading, writing, and listing agent configurations.
  */
 
@@ -11,14 +11,14 @@ import * as os from 'node:os';
 import type { ParsedAgentConfig } from './config-schemas.js';
 
 /**
- * Base agent vault directory
+ * Base soul recall directory
  */
-const AGENT_VAULT_DIR = path.join(os.homedir(), '.agentvault');
+const SOUL_RECALL_DIR = path.join(os.homedir(), '.soulrecall');
 
 /**
- * Agents directory within agent vault
+ * Agents directory within soul recall
  */
-const AGENTS_DIR = path.join(AGENT_VAULT_DIR, 'agents');
+const AGENTS_DIR = path.join(SOUL_RECALL_DIR, 'agents');
 
 /**
  * Get config file path for an agent
@@ -32,11 +32,11 @@ export function getConfigPath(agentId: string, fileName: string = 'agent.json'):
 }
 
 /**
- * Ensure agent vault directories exist
+ * Ensure soul recall directories exist
  */
 export function ensureVaultStructure(): void {
-  if (!fs.existsSync(AGENT_VAULT_DIR)) {
-    fs.mkdirSync(AGENT_VAULT_DIR, { recursive: true, mode: 0o700 });
+  if (!fs.existsSync(SOUL_RECALL_DIR)) {
+    fs.mkdirSync(SOUL_RECALL_DIR, { recursive: true, mode: 0o700 });
   }
   
   if (!fs.existsSync(AGENTS_DIR)) {

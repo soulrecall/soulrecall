@@ -53,8 +53,8 @@ export async function getAgents(options: ListCommandOptions): Promise<AgentInfo[
 async function getLocalAgents(): Promise<AgentInfo[]> {
   const agents: AgentInfo[] = [];
 
-  // Check for agentvault directory
-  const agentDir = path.join(process.cwd(), '.agentvault');
+  // Check for soulrecall directory
+  const agentDir = path.join(process.cwd(), '.soulrecall');
 
   if (fs.existsSync(agentDir)) {
     const agentsDir = path.join(agentDir, 'agents');
@@ -145,7 +145,7 @@ export function displayAgents(agents: AgentInfo[], options: ListCommandOptions):
   if (agents.length === 0) {
     console.log(chalk.yellow('No agents found.'));
     console.log();
-    console.log('Create a new agent with:', chalk.bold('agentvault init'));
+    console.log('Create a new agent with:', chalk.bold('soulrecall init'));
     return;
   }
 
@@ -204,7 +204,7 @@ export function listCommand(): Command {
     .option('--local', 'show only local agents')
     .option('-j, --json', 'output as JSON')
     .action(async (options: ListCommandOptions) => {
-      console.log(chalk.bold('\n📋 AgentVault List\n'));
+      console.log(chalk.bold('\n📋 SoulRecall List\n'));
 
       try {
         await executeList(options);

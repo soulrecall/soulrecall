@@ -91,7 +91,7 @@ export async function executeDecrypt(
     console.log();
     console.log(chalk.cyan('Next steps:'));
     console.log('  1. Review the decrypted state');
-    console.log('  2. Rebuild agent:', chalk.bold('agentvault rebuild'));
+    console.log('  2. Rebuild agent:', chalk.bold('soulrecall rebuild'));
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     spinner.fail(`Decryption failed: ${message}`);
@@ -110,7 +110,7 @@ export function decryptCommand(): Command {
     .argument('<file>', 'encrypted state file to decrypt')
     .option('-o, --output <path>', 'output file path')
     .action(async (file: string, options: DecryptCommandOptions) => {
-      console.log(chalk.bold('\n🔓 AgentVault Decrypt\n'));
+      console.log(chalk.bold('\n🔓 SoulRecall Decrypt\n'));
 
       try {
         await executeDecrypt(file, options);

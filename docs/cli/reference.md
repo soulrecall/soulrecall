@@ -1,11 +1,11 @@
 # CLI Reference
 
-Complete reference for all AgentVault CLI commands.
+Complete reference for all SoulRecall CLI commands.
 
 ## Global Options
 
 ```bash
-agentvault [options] <command>
+soulrecall [options] <command>
 
 Options:
   -V, --version          Output version number
@@ -20,18 +20,18 @@ Options:
 
 ### init
 
-Initialize a new AgentVault project.
+Initialize a new SoulRecall project.
 
 ```bash
-agentvault init [options] <project-name>
+soulrecall init [options] <project-name>
 
 Options:
   -t, --template <name>  Use a template (default, minimal)
   --force                Overwrite existing directory
 
 Examples:
-  agentvault init my-agent
-  agentvault init my-agent --template minimal
+  soulrecall init my-agent
+  soulrecall init my-agent --template minimal
 ```
 
 ### package
@@ -39,7 +39,7 @@ Examples:
 Package agent directory to WASM.
 
 ```bash
-agentvault package [options] <path>
+soulrecall package [options] <path>
 
 Options:
   -o, --output <dir>     Output directory
@@ -47,8 +47,8 @@ Options:
   --no-optimize          Disable optimizations
 
 Examples:
-  agentvault package ./
-  agentvault package ./my-agent --output ./dist
+  soulrecall package ./
+  soulrecall package ./my-agent --output ./dist
 ```
 
 ### deploy
@@ -56,7 +56,7 @@ Examples:
 Deploy agent to ICP canister.
 
 ```bash
-agentvault deploy [options]
+soulrecall deploy [options]
 
 Options:
   -n, --network <network>  Network (local, ic)
@@ -67,9 +67,9 @@ Options:
   --timeout <ms>           Deployment timeout
 
 Examples:
-  agentvault deploy --network local
-  agentvault deploy --network ic --cycles 2000000000000
-  agentvault deploy --canister-id abcde-aaaab --upgrade
+  soulrecall deploy --network local
+  soulrecall deploy --network ic --cycles 2000000000000
+  soulrecall deploy --canister-id abcde-aaaab --upgrade
 ```
 
 ### exec
@@ -77,7 +77,7 @@ Examples:
 Execute task on canister.
 
 ```bash
-agentvault exec [options] <task>
+soulrecall exec [options] <task>
 
 Options:
   -c, --canister-id <id>   Canister ID (required)
@@ -85,8 +85,8 @@ Options:
   --async                  Execute asynchronously
 
 Examples:
-  agentvault exec --canister-id abcde-aaaab "analyze data"
-  agentvault exec -c abcde-aaaab "process input" --async
+  soulrecall exec --canister-id abcde-aaaab "analyze data"
+  soulrecall exec -c abcde-aaaab "process input" --async
 ```
 
 ### show
@@ -94,7 +94,7 @@ Examples:
 Show agent state.
 
 ```bash
-agentvault show [options]
+soulrecall show [options]
 
 Options:
   -c, --canister-id <id>   Canister ID (required)
@@ -102,8 +102,8 @@ Options:
   --field <field>          Show specific field
 
 Examples:
-  agentvault show --canister-id abcde-aaaab
-  agentvault show -c abcde-aaaab --format json
+  soulrecall show --canister-id abcde-aaaab
+  soulrecall show -c abcde-aaaab --format json
 ```
 
 ### fetch
@@ -111,7 +111,7 @@ Examples:
 Download agent state from canister.
 
 ```bash
-agentvault fetch [options]
+soulrecall fetch [options]
 
 Options:
   -c, --canister-id <id>   Canister ID (required)
@@ -119,8 +119,8 @@ Options:
   --include-memory         Include memory dump
 
 Examples:
-  agentvault fetch --canister-id abcde-aaaab
-  agentvault fetch -c abcde-aaaab -o ./state.json
+  soulrecall fetch --canister-id abcde-aaaab
+  soulrecall fetch -c abcde-aaaab -o ./state.json
 ```
 
 ### status
@@ -128,15 +128,15 @@ Examples:
 Display project status.
 
 ```bash
-agentvault status [options]
+soulrecall status [options]
 
 Options:
   -c, --canister-id <id>   Specific canister ID
   --json                   JSON output
 
 Examples:
-  agentvault status
-  agentvault status --canister-id abcde-aaaab
+  soulrecall status
+  soulrecall status --canister-id abcde-aaaab
 ```
 
 ### list
@@ -144,7 +144,7 @@ Examples:
 List all agents.
 
 ```bash
-agentvault list [options]
+soulrecall list [options]
 
 Options:
   --format <format>        Output format (table, json, ids)
@@ -152,9 +152,9 @@ Options:
   --network <network>      Filter by network
 
 Examples:
-  agentvault list
-  agentvault list --format json
-  agentvault list --filter "my-*"
+  soulrecall list
+  soulrecall list --format json
+  soulrecall list --filter "my-*"
 ```
 
 ---
@@ -166,7 +166,7 @@ Examples:
 Manage agent wallets.
 
 ```bash
-agentvault wallet [command] [options]
+soulrecall wallet [command] [options]
 
 Subcommands:
   create                  Create new wallet
@@ -183,10 +183,10 @@ Options:
   --wallet-id <id>        Wallet ID
 
 Examples:
-  agentvault wallet create --chain ethereum
-  agentvault wallet list
-  agentvault wallet balance --wallet-id wallet-123
-  agentvault wallet transfer --to <address> --amount 1.5
+  soulrecall wallet create --chain ethereum
+  soulrecall wallet list
+  soulrecall wallet balance --wallet-id wallet-123
+  soulrecall wallet transfer --to <address> --amount 1.5
 ```
 
 ### wallet create
@@ -194,7 +194,7 @@ Examples:
 Create a new wallet.
 
 ```bash
-agentvault wallet create [options]
+soulrecall wallet create [options]
 
 Options:
   --chain <chain>         Chain type (required)
@@ -202,8 +202,8 @@ Options:
   --name <name>           Wallet name
 
 Examples:
-  agentvault wallet create --chain ethereum
-  agentvault wallet create --chain solana --name "main-sol"
+  soulrecall wallet create --chain ethereum
+  soulrecall wallet create --chain solana --name "main-sol"
 ```
 
 ### wallet import
@@ -211,7 +211,7 @@ Examples:
 Import existing wallet.
 
 ```bash
-agentvault wallet import [options]
+soulrecall wallet import [options]
 
 Options:
   --chain <chain>         Chain type
@@ -220,8 +220,8 @@ Options:
   --file <path>           Import from file
 
 Examples:
-  agentvault wallet import --chain ethereum --mnemonic
-  agentvault wallet import --chain solana --private-key
+  soulrecall wallet import --chain ethereum --mnemonic
+  soulrecall wallet import --chain solana --private-key
 ```
 
 ### wallet export
@@ -229,15 +229,15 @@ Examples:
 Export wallet for backup.
 
 ```bash
-agentvault wallet export [options] <wallet-id>
+soulrecall wallet export [options] <wallet-id>
 
 Options:
   --format <format>       Output format (json, mnemonic)
   --show                  Show sensitive data
 
 Examples:
-  agentvault wallet export wallet-123 --format json
-  agentvault wallet export wallet-123 --show --format mnemonic
+  soulrecall wallet export wallet-123 --format json
+  soulrecall wallet export wallet-123 --show --format mnemonic
 ```
 
 ### identity
@@ -245,7 +245,7 @@ Examples:
 Manage ICP identities.
 
 ```bash
-agentvault identity [command] [options]
+soulrecall identity [command] [options]
 
 Subcommands:
   list                    List identities
@@ -256,10 +256,10 @@ Subcommands:
   whoami                  Show current identity
 
 Examples:
-  agentvault identity list
-  agentvault identity create my-identity
-  agentvault identity use my-identity
-  agentvault identity whoami
+  soulrecall identity list
+  soulrecall identity create my-identity
+  soulrecall identity use my-identity
+  soulrecall identity whoami
 ```
 
 ### cycles
@@ -267,7 +267,7 @@ Examples:
 Manage canister cycles.
 
 ```bash
-agentvault cycles [command] [options]
+soulrecall cycles [command] [options]
 
 Subcommands:
   balance                 Check cycles balance
@@ -276,9 +276,9 @@ Subcommands:
   history                 View cycles history
 
 Examples:
-  agentvault cycles balance <canister-id>
-  agentvault cycles top-up <canister-id> --amount 1000000000000
-  agentvault cycles history <canister-id>
+  soulrecall cycles balance <canister-id>
+  soulrecall cycles top-up <canister-id> --amount 1000000000000
+  soulrecall cycles history <canister-id>
 ```
 
 ### tokens
@@ -286,7 +286,7 @@ Examples:
 Query token balances.
 
 ```bash
-agentvault tokens [options]
+soulrecall tokens [options]
 
 Options:
   --chain <chain>         Chain type
@@ -294,9 +294,9 @@ Options:
   --token <token>         Token symbol or canister ID
 
 Examples:
-  agentvault tokens --chain ethereum
-  agentvault tokens --chain solana --address <address>
-  agentvault tokens --chain icp --token ckBTC
+  soulrecall tokens --chain ethereum
+  soulrecall tokens --chain solana --address <address>
+  soulrecall tokens --chain icp --token ckBTC
 ```
 
 ---
@@ -308,7 +308,7 @@ Examples:
 Monitor canister health.
 
 ```bash
-agentvault monitor [options]
+soulrecall monitor [options]
 
 Options:
   -c, --canister-id <id>   Canister ID
@@ -317,8 +317,8 @@ Options:
   --webhook <url>          Alert webhook URL
 
 Examples:
-  agentvault monitor --canister-id abcde-aaaab
-  agentvault monitor -c abcde-aaaab --interval 10000 --alert
+  soulrecall monitor --canister-id abcde-aaaab
+  soulrecall monitor -c abcde-aaaab --interval 10000 --alert
 ```
 
 ### health
@@ -326,7 +326,7 @@ Examples:
 Run health checks.
 
 ```bash
-agentvault health [options]
+soulrecall health [options]
 
 Options:
   -c, --canister-id <id>   Canister ID
@@ -334,8 +334,8 @@ Options:
   --json                   JSON output
 
 Examples:
-  agentvault health
-  agentvault health --canister-id abcde-aaaab --detailed
+  soulrecall health
+  soulrecall health --canister-id abcde-aaaab --detailed
 ```
 
 ### info
@@ -343,15 +343,15 @@ Examples:
 Get canister information.
 
 ```bash
-agentvault info [options]
+soulrecall info [options]
 
 Options:
   -c, --canister-id <id>   Canister ID (required)
   --json                   JSON output
 
 Examples:
-  agentvault info --canister-id abcde-aaaab
-  agentvault info -c abcde-aaaab --json
+  soulrecall info --canister-id abcde-aaaab
+  soulrecall info -c abcde-aaaab --json
 ```
 
 ### stats
@@ -359,7 +359,7 @@ Examples:
 View canister statistics.
 
 ```bash
-agentvault stats [options]
+soulrecall stats [options]
 
 Options:
   -c, --canister-id <id>   Canister ID
@@ -367,8 +367,8 @@ Options:
   --format <format>        Output format (table, json)
 
 Examples:
-  agentvault stats --canister-id abcde-aaaab
-  agentvault stats -c abcde-aaaab --period 24h
+  soulrecall stats --canister-id abcde-aaaab
+  soulrecall stats -c abcde-aaaab --period 24h
 ```
 
 ### logs
@@ -376,7 +376,7 @@ Examples:
 View canister logs.
 
 ```bash
-agentvault logs [options]
+soulrecall logs [options]
 
 Options:
   -c, --canister-id <id>   Canister ID (required)
@@ -386,9 +386,9 @@ Options:
   --since <time>           Show logs since time
 
 Examples:
-  agentvault logs --canister-id abcde-aaaab
-  agentvault logs -c abcde-aaaab -f
-  agentvault logs -c abcde-aaaab --level error --since 1h
+  soulrecall logs --canister-id abcde-aaaab
+  soulrecall logs -c abcde-aaaab -f
+  soulrecall logs -c abcde-aaaab --level error --since 1h
 ```
 
 ---
@@ -400,7 +400,7 @@ Examples:
 Backup agent data.
 
 ```bash
-agentvault backup [command] [options]
+soulrecall backup [command] [options]
 
 Subcommands:
   create                  Create backup
@@ -416,9 +416,9 @@ Options:
   --no-canister-state      Skip fetching canister state
 
 Examples:
-  agentvault backup --canister-id abcde-aaaab
-  agentvault backup export my-agent -o ./backup.json
-  agentvault backup list --canister-id abcde-aaaab
+  soulrecall backup --canister-id abcde-aaaab
+  soulrecall backup export my-agent -o ./backup.json
+  soulrecall backup list --canister-id abcde-aaaab
 ```
 
 ### rebuild
@@ -426,7 +426,7 @@ Examples:
 Rebuild agent from state.
 
 ```bash
-agentvault rebuild [options]
+soulrecall rebuild [options]
 
 Options:
   -c, --canister-id <id>   Canister ID (required)
@@ -434,8 +434,8 @@ Options:
   --verify                 Verify after rebuild
 
 Examples:
-  agentvault rebuild --canister-id abcde-aaaab
-  agentvault rebuild -c abcde-aaaab --state-file ./state.json
+  soulrecall rebuild --canister-id abcde-aaaab
+  soulrecall rebuild -c abcde-aaaab --state-file ./state.json
 ```
 
 ---
@@ -447,7 +447,7 @@ Examples:
 Promote canister between environments.
 
 ```bash
-agentvault promote [options] <agent-name>
+soulrecall promote [options] <agent-name>
 
 Options:
   -f, --from <env>         Source environment
@@ -458,9 +458,9 @@ Options:
   --skip-deploy            Skip actual deploy, only update history
 
 Examples:
-  agentvault promote my-agent --from staging --to production
-  agentvault promote my-agent -f local -t staging --blue-green
-  agentvault promote my-agent -f staging -t prod -w ./dist/agent.wasm
+  soulrecall promote my-agent --from staging --to production
+  soulrecall promote my-agent -f local -t staging --blue-green
+  soulrecall promote my-agent -f staging -t prod -w ./dist/agent.wasm
 ```
 
 ### rollback
@@ -468,7 +468,7 @@ Examples:
 Rollback canister deployment.
 
 ```bash
-agentvault rollback [options]
+soulrecall rollback [options]
 
 Options:
   -c, --canister-id <id>   Canister ID (required)
@@ -477,8 +477,8 @@ Options:
   --force                  Force rollback without confirmation
 
 Examples:
-  agentvault rollback --canister-id abcde-aaaab --list
-  agentvault rollback -c abcde-aaaab --version 3
+  soulrecall rollback --canister-id abcde-aaaab --list
+  soulrecall rollback -c abcde-aaaab --version 3
 ```
 
 ---
@@ -490,7 +490,7 @@ Examples:
 Query AI inference services (Bittensor).
 
 ```bash
-agentvault inference [options]
+soulrecall inference [options]
 
 Options:
   --prompt <text>          Prompt text
@@ -499,8 +499,8 @@ Options:
   --timeout <ms>           Request timeout
 
 Examples:
-  agentvault inference --prompt "Hello, world"
-  agentvault inference --prompt "Analyze this" --model text-generation
+  soulrecall inference --prompt "Hello, world"
+  soulrecall inference --prompt "Analyze this" --model text-generation
 ```
 
 ### archive
@@ -508,7 +508,7 @@ Examples:
 Archive to Arweave.
 
 ```bash
-agentvault archive [command] [options]
+soulrecall archive [command] [options]
 
 Subcommands:
   upload                  Upload to Arweave
@@ -518,9 +518,9 @@ Subcommands:
   estimate                Estimate cost
 
 Examples:
-  agentvault archive upload ./backup.json
-  agentvault archive status <tx-id>
-  agentvault archive estimate --size 1048576
+  soulrecall archive upload ./backup.json
+  soulrecall archive status <tx-id>
+  soulrecall archive estimate --size 1048576
 ```
 
 ### approve
@@ -528,7 +528,7 @@ Examples:
 Multi-signature approvals.
 
 ```bash
-agentvault approve [command] [options]
+soulrecall approve [command] [options]
 
 Subcommands:
   create                  Create approval request
@@ -541,9 +541,9 @@ Options:
   --signer <id>           Signer ID
 
 Examples:
-  agentvault approve create --request "Deploy to production"
-  agentvault approve list
-  agentvault approve sign --request-id req-123
+  soulrecall approve create --request "Deploy to production"
+  soulrecall approve list
+  soulrecall approve sign --request-id req-123
 ```
 
 ### profile
@@ -551,7 +551,7 @@ Examples:
 Profile canister performance.
 
 ```bash
-agentvault profile [options]
+soulrecall profile [options]
 
 Options:
   -c, --canister-id <id>   Canister ID (required)
@@ -559,8 +559,8 @@ Options:
   --output <path>          Output file
 
 Examples:
-  agentvault profile --canister-id abcde-aaaab
-  agentvault profile -c abcde-aaaab --duration 60000
+  soulrecall profile --canister-id abcde-aaaab
+  soulrecall profile -c abcde-aaaab --duration 60000
 ```
 
 ### trace
@@ -568,7 +568,7 @@ Examples:
 View execution traces.
 
 ```bash
-agentvault trace [options]
+soulrecall trace [options]
 
 Options:
   -c, --canister-id <id>   Canister ID (required)
@@ -576,8 +576,8 @@ Options:
   --format <format>        Output format (table, json)
 
 Examples:
-  agentvault trace --canister-id abcde-aaaab
-  agentvault trace -c abcde-aaaab --limit 50
+  soulrecall trace --canister-id abcde-aaaab
+  soulrecall trace -c abcde-aaaab --limit 50
 ```
 
 ---
@@ -597,12 +597,12 @@ Examples:
 
 ```bash
 # General help
-agentvault --help
+soulrecall --help
 
 # Command-specific help
-agentvault <command> --help
+soulrecall <command> --help
 
 # Examples
-agentvault deploy --help
-agentvault wallet --help
+soulrecall deploy --help
+soulrecall wallet --help
 ```

@@ -1,19 +1,19 @@
 {
-  "name": "@agentvault/examples/generic",
+  "name": "@soulrecall/examples/generic",
   "version": "1.0.0",
-  "description": "Example Generic agent configuration for AgentVault",
+  "description": "Example Generic agent configuration for SoulRecall",
   "type": "module",
   "scripts": {
-    "package": "agentvault package",
-    "deploy": "agentvault deploy"
+    "package": "soulrecall package",
+    "deploy": "soulrecall deploy"
   },
   "keywords": [
-    "agentvault",
+    "soulrecall",
     "generic",
     "example",
     "ai-agent"
   ],
-  "author": "AgentVault",
+  "author": "SoulRecall",
   "license": "MIT",
   "dependencies": {}
 }

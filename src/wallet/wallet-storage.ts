@@ -1,7 +1,7 @@
 /**
  * Wallet Storage Module
  *
- * Manages encrypted wallet persistence in ~/.agentvault/wallets/
+ * Manages encrypted wallet persistence in ~/.soulrecall/wallets/
  * Provides per-agent wallet isolation and encryption.
  */
 
@@ -25,7 +25,7 @@ import type {
  * @returns Wallet base directory
  */
 export function getWalletBaseDir(options: WalletStorageOptions = {}): string {
-  const baseDir = options.baseDir || path.join(os.homedir(), '.agentvault', 'wallets');
+  const baseDir = options.baseDir || path.join(os.homedir(), '.soulrecall', 'wallets');
   return baseDir;
 }
 

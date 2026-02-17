@@ -1,8 +1,8 @@
-# AgentVault Security Audit Report
+# SoulRecall Security Audit Report
 
 **Version:** v1.0.0  
 **Date:** February 12, 2026  
-**Scope:** Internal security review of AgentVault codebase
+**Scope:** Internal security review of SoulRecall codebase
 
 ---
 
@@ -18,7 +18,7 @@ This security audit identified **23 findings** across 7 security domains. The co
 | Low | 8 | Consider fixing |
 | Info | 4 | Positive findings / documentation |
 
-**Overall Assessment:** AgentVault is suitable for v1.0 release with documented limitations. High-severity findings should be addressed in v1.1.
+**Overall Assessment:** SoulRecall is suitable for v1.0 release with documented limitations. High-severity findings should be addressed in v1.1.
 
 ---
 
@@ -241,11 +241,11 @@ export interface WalletData {
 **Severity:** Low  
 **File:** `src/wallet/wallet-storage.ts:27-62`
 
-Wallet files stored at predictable paths: `~/.agentvault/wallets/{agentId}/{walletId}.wallet`
+Wallet files stored at predictable paths: `~/.soulrecall/wallets/{agentId}/{walletId}.wallet`
 
 **Mitigation:** Directory permissions default to user-only.
 
-**Recommendation:** Ensure `~/.agentvault` has restrictive permissions (0700).
+**Recommendation:** Ensure `~/.soulrecall` has restrictive permissions (0700).
 
 ---
 
@@ -461,7 +461,7 @@ fs.renameSync(tempPath, walletPath);
 **Severity:** Low  
 **File:** `src/backup/backup.ts:15-16`
 
-Backups stored in `~/.agentvault/backups/` which may be world-readable.
+Backups stored in `~/.soulrecall/backups/` which may be world-readable.
 
 **Recommendation:** Explicitly set directory permissions to 0700.
 

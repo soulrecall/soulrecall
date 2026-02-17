@@ -1,6 +1,6 @@
 # Clawdbot Example Agent
 
-This is an example Clawdbot agent configuration for AgentVault.
+This is an example Clawdbot agent configuration for SoulRecall.
 
 ## Directory Structure
 
@@ -19,19 +19,19 @@ This is an example Clawdbot agent configuration for AgentVault.
 
 ```bash
 cd examples/agents/clawdbot
-agentvault init --verbose
+soulrecall init --verbose
 ```
 
 ### Package Agent
 
 ```bash
-agentvault package
+soulrecall package
 ```
 
 ### Deploy to ICP
 
 ```bash
-agentvault deploy
+soulrecall deploy
 ```
 
 ## Configuration Files

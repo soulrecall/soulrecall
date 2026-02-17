@@ -1,7 +1,7 @@
 /**
  * Wallet Command
  *
- * Main wallet management command for AgentVault.
+ * Main wallet management command for SoulRecall.
  * Provides CLI interface for wallet operations.
  */
 

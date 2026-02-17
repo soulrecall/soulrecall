@@ -1,6 +1,6 @@
 Implementation Plan: ICP Tools Integration (All Phases)
 Overview
-This plan implements the full PRD across 8 weeks, integrating ic-wasm and icp-cli into AgentVault with auto-detection of available tools.
+This plan implements the full PRD across 8 weeks, integrating ic-wasm and icp-cli into SoulRecall with auto-detection of available tools.
 ---
 Phase 1: Core Integration (Weeks 1-3)
 Week 1: Tool Wrappers
@@ -216,7 +216,7 @@ Files to create:
 - src/deployment/promotion.ts
 - cli/commands/promote.ts
 - cli/commands/rollback.ts
-- ~/.agentvault/icp.yaml (example config)
+- ~/.soulrecall/icp.yaml (example config)
 Tests:
 - tests/config/icp-config.test.ts
 - tests/deployment/promotion.test.ts
@@ -258,8 +258,8 @@ Tests:
 ---
 Configuration Files
 New config files to create:
-1. ~/.agentvault/icp.yaml - ICP environment configuration
-2. ~/.agentvault/toolchain.yaml - Toolchain settings
+1. ~/.soulrecall/icp.yaml - ICP environment configuration
+2. ~/.soulrecall/toolchain.yaml - Toolchain settings
 3. config/icp.schema.json - Zod validation schema
 Example icp.yaml structure:
 environments:

@@ -1,19 +1,19 @@
-# Clawdbot / Claude skill: install, bootstrap, and backup (AgentVault v1.0)
+# Clawdbot / Claude skill: install, bootstrap, and backup (SoulRecall v1.0)
 
 Use this page as a simple operator runbook.
 
-## 1) Install AgentVault CLI
+## 1) Install SoulRecall CLI
 
 ```bash
-npm install -g agentvault
-agentvault --help
+npm install -g soulrecall
+soulrecall --help
 ```
 
 If using the repository source:
 
 ```bash
-git clone https://github.com/johnnyclem/agentvault.git
-cd agentvault
+git clone https://github.com/soulrecall/soulrecall.git
+cd soulrecall
 npm install
 npm run build
 node dist/cli/index.js --help
@@ -22,13 +22,13 @@ node dist/cli/index.js --help
 ## 2) Bootstrap a new agent project
 
 ```bash
-agentvault init my-agent
+soulrecall init my-agent
 cd my-agent
 ```
 
 Expected result:
 
-- `.agentvault/` config directory exists.
+- `.soulrecall/` config directory exists.
 - project is ready for packaging.
 
 ## 3) Package and deploy
@@ -42,30 +42,30 @@ dfx start --background
 Package your agent:
 
 ```bash
-agentvault package ./
+soulrecall package ./
 ```
 
 Deploy:
 
 ```bash
-agentvault deploy --network local
+soulrecall deploy --network local
 ```
 
 ## 4) Verify status and health
 
 ```bash
-agentvault status
-agentvault health
+soulrecall status
+soulrecall health
 ```
 
-Use `agentvault info` for additional runtime details.
+Use `soulrecall info` for additional runtime details.
 
 ## 5) Backup your agent
 
 Run a backup after successful deployment and periodically after updates:
 
 ```bash
-agentvault backup --canister-id <YOUR_CANISTER_ID>
+soulrecall backup --canister-id <YOUR_CANISTER_ID>
 ```
 
 Recommended backup cadence:
@@ -79,7 +79,7 @@ Recommended backup cadence:
 To validate disaster recovery readiness, perform recurring test restores in a non-production environment:
 
 ```bash
-agentvault fetch --canister-id <YOUR_CANISTER_ID>
+soulrecall fetch --canister-id <YOUR_CANISTER_ID>
 ```
 
 Then compare expected state snapshots and run smoke checks.
@@ -88,11 +88,11 @@ Then compare expected state snapshots and run smoke checks.
 
 You can copy this into your Claude/Clawdbot operational prompt:
 
-> When managing AgentVault agents, always follow this order: install/verify CLI, bootstrap project, package, deploy, run status + health checks, then create a backup. Never deploy without a fresh backup. For any incident, fetch and verify the latest known-good state before attempting rollback.
+> When managing SoulRecall agents, always follow this order: install/verify CLI, bootstrap project, package, deploy, run status + health checks, then create a backup. Never deploy without a fresh backup. For any incident, fetch and verify the latest known-good state before attempting rollback.
 
 ## Minimal day-2 operations checklist
 
-- [ ] `agentvault status` is healthy.
+- [ ] `soulrecall status` is healthy.
 - [ ] last backup completed and is timestamped.
 - [ ] restore drill tested recently.
 - [ ] deployment change log captured.

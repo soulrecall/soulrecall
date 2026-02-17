@@ -104,7 +104,7 @@ export function serializeState(
   const opts = { ...DEFAULT_OPTIONS, ...options };
 
   const serialized: SerializedAgentState = {
-    $schema: `https://agentvault.dev/schemas/agent-state-v${SCHEMA_VERSION}.json`,
+    $schema: `https://soulrecall.cloud/schemas/agent-state-v${SCHEMA_VERSION}.json`,
     version: SCHEMA_VERSION,
     agent: {
       name: state.config.name,

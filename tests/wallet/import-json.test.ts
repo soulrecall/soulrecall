@@ -9,7 +9,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as os from 'node:os';
 
-const TEST_DIR = path.join(os.tmpdir(), 'agentvault-import-test');
+const TEST_DIR = path.join(os.tmpdir(), 'soulrecall-import-test');
 const BACKUP_FILE = path.join(TEST_DIR, 'backup.json');
 
 vi.mock('inquirer', () => ({

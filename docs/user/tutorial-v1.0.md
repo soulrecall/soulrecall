@@ -1,4 +1,4 @@
-# AgentVault v1.0 comprehensive tutorial
+# SoulRecall v1.0 comprehensive tutorial
 
 This tutorial walks from local setup to deployment, monitoring, and backup operations.
 
@@ -6,7 +6,7 @@ This tutorial walks from local setup to deployment, monitoring, and backup opera
 
 By the end, you will:
 
-- initialize an AgentVault project,
+- initialize an SoulRecall project,
 - package and deploy an agent,
 - inspect runtime status,
 - perform backup and recovery-oriented validation.
@@ -21,15 +21,15 @@ By the end, you will:
 ## Step 1 — Install and verify CLI
 
 ```bash
-npm install -g agentvault
-agentvault --help
+npm install -g soulrecall
+soulrecall --help
 ```
 
 Repository workflow alternative:
 
 ```bash
-git clone https://github.com/johnnyclem/agentvault.git
-cd agentvault
+git clone https://github.com/soulrecall/soulrecall.git
+cd soulrecall
 npm install
 npm run build
 node dist/cli/index.js --help
@@ -38,11 +38,11 @@ node dist/cli/index.js --help
 ## Step 2 — Create your first project
 
 ```bash
-agentvault init demo-agent
+soulrecall init demo-agent
 cd demo-agent
 ```
 
-You should see project scaffolding and `.agentvault/` configuration.
+You should see project scaffolding and `.soulrecall/` configuration.
 
 ## Step 3 — Start a local ICP environment
 
@@ -59,7 +59,7 @@ dfx ping
 ## Step 4 — Package your agent
 
 ```bash
-agentvault package ./
+soulrecall package ./
 ```
 
 Packaging compiles assets and prepares deployment artifacts.
@@ -67,7 +67,7 @@ Packaging compiles assets and prepares deployment artifacts.
 ## Step 5 — Deploy to local canister
 
 ```bash
-agentvault deploy --network local
+soulrecall deploy --network local
 ```
 
 Record the generated canister ID.
@@ -75,9 +75,9 @@ Record the generated canister ID.
 ## Step 6 — Inspect runtime status
 
 ```bash
-agentvault status
-agentvault info
-agentvault health
+soulrecall status
+soulrecall info
+soulrecall health
 ```
 
 Use this triad for baseline observability after each deployment.
@@ -85,8 +85,8 @@ Use this triad for baseline observability after each deployment.
 ## Step 7 — Execute and inspect state
 
 ```bash
-agentvault exec --canister-id <YOUR_CANISTER_ID> "run a simple task"
-agentvault show --canister-id <YOUR_CANISTER_ID>
+soulrecall exec --canister-id <YOUR_CANISTER_ID> "run a simple task"
+soulrecall show --canister-id <YOUR_CANISTER_ID>
 ```
 
 ## Step 8 — Backup strategy
@@ -94,7 +94,7 @@ agentvault show --canister-id <YOUR_CANISTER_ID>
 Create a backup snapshot:
 
 ```bash
-agentvault backup --canister-id <YOUR_CANISTER_ID>
+soulrecall backup --canister-id <YOUR_CANISTER_ID>
 ```
 
 Recommended pattern:
@@ -108,7 +108,7 @@ Recommended pattern:
 Fetch state for local reconstruction testing:
 
 ```bash
-agentvault fetch --canister-id <YOUR_CANISTER_ID>
+soulrecall fetch --canister-id <YOUR_CANISTER_ID>
 ```
 
 Validate recovered state against expected behavior and logs.

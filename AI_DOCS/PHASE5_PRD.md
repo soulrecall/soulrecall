@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-Phase 5 brings AgentVault to production-ready state with three focus areas:
+Phase 5 brings SoulRecall to production-ready state with three focus areas:
 
 1. **Testing & Quality Assurance** - Comprehensive test coverage, CI/CD pipeline, load testing
 2. **Documentation** - User guides, API docs, migration guides, examples
@@ -224,11 +224,11 @@ From `npm run typecheck`:
 Create `docs/user/`:
 
 1. `getting-started.md`:
-   - Installation instructions (`npm install -g agentvault`)
+   - Installation instructions (`npm install -g soulrecall`)
    - Prerequisites (dfx, Node.js 18+)
-   - First project: `agentvault init my-agent`
-   - Local testing: `agentvault test`
-   - Deployment: `agentvault deploy`
+   - First project: `soulrecall init my-agent`
+   - Local testing: `soulrecall test`
+   - Deployment: `soulrecall deploy`
 
 2. `deployment.md`:
    - Local deployment (`dfx` integration)
@@ -259,7 +259,7 @@ Create `docs/user/`:
 
 6. `troubleshooting.md`:
    - Common errors and solutions
-   - Debug mode (`agentvault --debug`)
+   - Debug mode (`soulrecall --debug`)
    - Log locations
    - Getting help (GitHub issues, Discord/community)
 
@@ -423,7 +423,7 @@ Update `dfx.json`:
 ```json
 {
   "canisters": {
-    "agent_vault": {
+    "soul_recall": {
       "main": "canister/agent.mo",
       "type": "motoko"
     }
@@ -520,7 +520,7 @@ Create `docs/marketing/`:
 - [ ] `CHANGELOG.md` created
 
 ### Final Deliverable
-- [ ] AgentVault v1.0.0 published to npm
+- [ ] SoulRecall v1.0.0 published to npm
 - [ ] Public announcement on GitHub
 - [ ] Documentation website live (or linked from README)
 - [ ] Example agents updated and tested
@@ -534,7 +534,7 @@ Phase 5 is complete when:
 1. **Test Coverage**: 80%+ across all modules (verified by Vitest reports)
 2. **CI/CD**: Every push triggers automated tests and passes
 3. **Documentation**: User can install and deploy without asking questions
-4. **Package**: `npm install -g agentvault` works and all commands available
+4. **Package**: `npm install -g soulrecall` works and all commands available
 5. **Security**: No critical vulnerabilities, audit passed
 6. **Announcement**: Public release with v1.0.0 tag
 

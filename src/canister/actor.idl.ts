@@ -1,5 +1,5 @@
 /**
- * Candid IDL Factory for AgentVault canister
+ * Candid IDL Factory for SoulRecall canister
  *
  * This file provides the IDL factory function used to create canister actors.
  * It's manually generated based on agent.did to avoid build-time dependencies.

@@ -373,7 +373,7 @@ export class VetKeysClient {
     // Derive key using PBKDF2
     const key = crypto.pbkdf2Sync(
       seed,
-      'agentvault-encryption-key',
+      'soulrecall-encryption-key',
       100000,
       32,
       'sha256',

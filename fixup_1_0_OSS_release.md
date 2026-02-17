@@ -1,4 +1,4 @@
-AgentVault v1 Release Code Review
+SoulRecall v1 Release Code Review
 Executive Summary
 All 354 tests pass. TypeScript and ESLint pass with 0 errors. The codebase has 76 src files and 37 CLI files with 4,333 lines of tests.
 ---
@@ -25,8 +25,8 @@ Day 2: Security & Monitoring (H5, H8-H11) ✅ COMPLETE
 Day 3: CLI Stubs (M8-M11) ✅ COMPLETE
 | Task | Status | Notes |
 |------|--------|-------|
-| Task 3.1: Implement init command (M8) | ✅ | init.ts:69-140: Creates .agentvault/, config, .gitignore |
-| Task 3.2: Implement status command (M9) | ✅ | status.ts:19-65: Checks .agentvault/, reads config, checks deployment |
+| Task 3.1: Implement init command (M8) | ✅ | init.ts:69-140: Creates .soulrecall/, config, .gitignore |
+| Task 3.2: Implement status command (M9) | ✅ | status.ts:19-65: Checks .soulrecall/, reads config, checks deployment |
 | Task 3.3: Fix fetch command (M10) | ✅ | fetch.ts:82-87: Uses callAgentMethod('agent_get_state') |
 | Task 3.4: Fix exec command (M11) | ✅ | exec.ts:69-73: Uses callAgentMethod('execute') |
 | Task 3.5: Fix show command | ✅ | show.ts:79-100: Uses callAgentMethod for tasks, memories, context |
@@ -104,12 +104,12 @@ Code Quality ✅
 - [x] All 354 tests pass
 - [x] No hardcoded secrets in codebase
 Core Flow ⚠️
-- [x] agentvault init creates project structure
-- [x] agentvault package compiles agent to WASM
-- [x] agentvault deploy deploys to canister (via dfx)
-- [x] agentvault exec executes on-chain
-- [x] agentvault show queries state
-- [x] agentvault fetch downloads state
+- [x] soulrecall init creates project structure
+- [x] soulrecall package compiles agent to WASM
+- [x] soulrecall deploy deploys to canister (via dfx)
+- [x] soulrecall exec executes on-chain
+- [x] soulrecall show queries state
+- [x] soulrecall fetch downloads state
 - [ ] E2E test validates full pipeline
 Security ⚠️
 - [x] VetKeys uses proper key derivation

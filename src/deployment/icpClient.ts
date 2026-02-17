@@ -449,7 +449,7 @@ export class ICPClient {
    * Resolve canister ID from dfx output.
    */
   private async resolveCanisterId(): Promise<string> {
-    const candidateNames = ['agent_vault', 'agent-vault'];
+    const candidateNames = ['soul_recall', 'soul-recall'];
 
     for (const canisterName of candidateNames) {
       try {

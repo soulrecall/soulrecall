@@ -139,7 +139,7 @@ export async function executeRebuild(
     console.log();
     console.log(chalk.cyan('Next steps:'));
     console.log('  1. Test rebuilt agent locally');
-    console.log('  2. Deploy with:', chalk.bold('agentvault deploy'));
+    console.log('  2. Deploy with:', chalk.bold('soulrecall deploy'));
   } catch (error) {
     compileSpinner.fail('Compilation failed');
     const message = error instanceof Error ? error.message : 'Unknown error';
@@ -164,7 +164,7 @@ export function rebuildCommand(): Command {
     .option('--debug', 'enable debugging features')
     .option('--optimize <level>', 'optimization level (0-3)', '2')
     .action(async (stateFile: string, options: RebuildCommandOptions) => {
-      console.log(chalk.bold('\n🔧 AgentVault Rebuild\n'));
+      console.log(chalk.bold('\n🔧 SoulRecall Rebuild\n'));
 
       try {
         await executeRebuild(stateFile, options);

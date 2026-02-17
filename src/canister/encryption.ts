@@ -175,7 +175,7 @@ export class CanisterEncryption {
 
       const key = crypto.pbkdf2Sync(
         bip39Seed,
-        'agentvault-canister-encryption',
+        'soulrecall-canister-encryption',
         100000,
         32,
         'sha256'

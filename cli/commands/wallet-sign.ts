@@ -72,7 +72,7 @@ function saveSignedTransaction(
   agentId: string,
   chain: string
 ): string {
-  const outputDir = path.join(process.cwd(), '.agentvault', 'signed-txs');
+  const outputDir = path.join(process.cwd(), '.soulrecall', 'signed-txs');
 
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });

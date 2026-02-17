@@ -73,8 +73,8 @@ export function isValidPrincipal(principal: string): boolean {
 
 export function getLocalCanisterId(canisterName: string): string {
   const canisterIds: Record<string, string> = {
-    agent_vault_backend: process.env.AGENT_VAULT_BACKEND_CANISTER_ID || '',
-    agent_vault_frontend: process.env.AGENT_VAULT_FRONTEND_CANISTER_ID || '',
+    soul_recall_backend: process.env.SOUL_RECALL_BACKEND_CANISTER_ID || '',
+    soul_recall_frontend: process.env.SOUL_RECALL_FRONTEND_CANISTER_ID || '',
   }
   return canisterIds[canisterName] || ''
 }

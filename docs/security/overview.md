@@ -1,6 +1,6 @@
 # Security Overview
 
-AgentVault's security model and architecture.
+SoulRecall's security model and architecture.
 
 ## Security Architecture
 
@@ -11,7 +11,7 @@ AgentVault's security model and architecture.
 │                      User's Machine                          │
 │  ┌─────────────┐   ┌─────────────┐   ┌─────────────┐       │
 │  │   CLI       │   │   Wallet    │   │   Config    │       │
-│  │   AgentVault│   │   Storage   │   │   Files     │       │
+│  │   SoulRecall│   │   Storage   │   │   Files     │       │
 │  └──────┬──────┘   └──────┬──────┘   └──────┬──────┘       │
 │         │                 │                  │               │
 │         └─────────────────┼──────────────────┘               │
@@ -46,7 +46,7 @@ AgentVault's security model and architecture.
 
 ### 1. Encryption
 
-AgentVault uses AES-256-GCM and ChaCha20-Poly1305 for data encryption:
+SoulRecall uses AES-256-GCM and ChaCha20-Poly1305 for data encryption:
 
 - **Key Derivation**: PBKDF2 with 100,000 iterations
 - **IV Generation**: Cryptographically random 12-byte IV
@@ -58,7 +58,7 @@ AgentVault uses AES-256-GCM and ChaCha20-Poly1305 for data encryption:
 | Key Type | Storage | Protection |
 |----------|---------|------------|
 | ICP Identity | `~/.config/dfx/` | dfx managed |
-| Wallet Private Keys | `~/.agentvault/wallets/` | CBOR serialized |
+| Wallet Private Keys | `~/.soulrecall/wallets/` | CBOR serialized |
 | Mnemonics | Not stored after import | Memory only |
 | API Keys | Environment variables | User responsibility |
 

@@ -30,15 +30,15 @@ Task 1.1: Network CLI Commands
 Files to Create:
 - cli/commands/network.ts
 Subcommands to implement:
-agentvault network create --name <net-name> --nodes <n>  # Create local network config
-agentvault network start <net-name>                    # Start local network
-agentvault network stop <net-name>                     # Stop local network
-agentvault network status <net-name>                   # Get network status
-agentvault network list                                # List all networks
-agentvault network ping <net-name>                     # Check connectivity
+soulrecall network create --name <net-name> --nodes <n>  # Create local network config
+soulrecall network start <net-name>                    # Start local network
+soulrecall network stop <net-name>                     # Stop local network
+soulrecall network status <net-name>                   # Get network status
+soulrecall network list                                # List all networks
+soulrecall network ping <net-name>                     # Check connectivity
 Implementation Details:
 - Wrap existing icpcli.networkStart(), networkStop(), networkStatus(), networkList(), networkPing()
-- Add network configuration storage in ~/.agentvault/networks/
+- Add network configuration storage in ~/.soulrecall/networks/
 - Support creating named network configs (stored as YAML)
 - Add create subcommand with options: --nodes, --replica-count, --cycles
 Task 1.2: Local Deployment Helper
@@ -51,7 +51,7 @@ Functions:
 - getLocalNetworkStatus(): Promise<NetworkStatus>
 Features:
 - Fast deployment to running local network (skip dfx)
-- Snapshot canister state to .agentvault/snapshots/
+- Snapshot canister state to .soulrecall/snapshots/
 - Quick restore from snapshot
 - Debugging mode flags (source maps, verbose logging)
 Task 1.3: Local Test Runner
@@ -59,10 +59,10 @@ Files to Create:
 - src/testing/local-runner.ts
 - cli/commands/test.ts
 Commands:
-agentvault test <agent-name> --network <net> --unit           # Run unit tests
-agentvault test <agent-name> --network <net> --integration  # Integration tests
-agentvault test <agent-name> --network <net> --load-test    # Load test
-agentvault test <agent-name> --watch                       # Watch mode for TDD
+soulrecall test <agent-name> --network <net> --unit           # Run unit tests
+soulrecall test <agent-name> --network <net> --integration  # Integration tests
+soulrecall test <agent-name> --network <net> --load-test    # Load test
+soulrecall test <agent-name> --watch                       # Watch mode for TDD
 Implementation:
 - Use vitest with ICP canister targets
 - Generate test reports (JUnit, HTML)
@@ -74,7 +74,7 @@ Week 7: Multi-Environment Deployment
 Task 2.1: Enhanced Environment Config
 Files to Update:
 - src/icp/environment.ts (extend existing)
-- Create ~/.agentvault/icp.yaml.example (example config)
+- Create ~/.soulrecall/icp.yaml.example (example config)
 Enhanced Features:
 environments:
   local:
@@ -118,20 +118,20 @@ Files to Create:
 - src/deployment/promotion.ts
 - cli/commands/promote.ts
 Commands:
-agentvault promote <agent-name> --from dev --to staging    # Promote canister
-agentvault promote <agent-name> --from staging --to prod   # Blue-green deploy
+soulrecall promote <agent-name> --from dev --to staging    # Promote canister
+soulrecall promote <agent-name> --from staging --to prod   # Blue-green deploy
 Features:
 - Fetch WASM hash from source canister
 - Deploy to target environment
-- Track deployment history in ~/.agentvault/history/
+- Track deployment history in ~/.soulrecall/history/
 - Rollback support (revert to previous version)
 - Blue/green deployment support (parallel canisters)
 Task 2.3: Environment Rollback
 Files to Create:
 - cli/commands/rollback.ts
 Commands:
-agentvault rollback <agent-name> --env <env> --version <v>  # Rollback
-agentvault rollback <agent-name> --env <env> --to <timestamp> # Rollback to time
+soulrecall rollback <agent-name> --env <env> --version <v>  # Rollback
+soulrecall rollback <agent-name> --env <env> --to <timestamp> # Rollback to time
 Features:
 - List deployment history for canister
 - Select version to rollback to
@@ -157,9 +157,9 @@ Files to Create:
 - src/debugging/dashboard.ts
 - cli/commands/dashboard.ts (optional TUI dashboard)
 Commands:
-agentvault dashboard <canister-id>                    # Launch TUI dashboard
-agentvault trace <canister-id> --filter <method>    # View traces
-agentvault profile <canister-id> --period <time>     # Profile performance
+soulrecall dashboard <canister-id>                    # Launch TUI dashboard
+soulrecall trace <canister-id> --filter <method>    # View traces
+soulrecall profile <canister-id> --period <time>     # Profile performance
 Dashboard Features:
 - Real-time metrics: Cycles, memory, request rate, error rate
 - Execution traces: Call tree visualization with timing
@@ -172,14 +172,14 @@ Files to Create:
 - src/debugging/logs.ts
 - cli/commands/logs.ts
 Commands:
-agentvault logs <canister-id> --tail                        # Tail logs
-agentvault logs <canister-id> --filter <pattern>              # Filter logs
-agentvault logs <canister-id> --since <time>                 # Since timestamp
-agentvault logs <canister-id> --export <file>                # Export logs
-agentvault logs <canister-id> --level <error|warning|info>  # Filter by level
+soulrecall logs <canister-id> --tail                        # Tail logs
+soulrecall logs <canister-id> --filter <pattern>              # Filter logs
+soulrecall logs <canister-id> --since <time>                 # Since timestamp
+soulrecall logs <canister-id> --export <file>                # Export logs
+soulrecall logs <canister-id> --level <error|warning|info>  # Filter by level
 Features:
 - Collect logs from multiple sources (console, stdout, canister logs)
-- Store in ~/.agentvault/logs/<canister-id>/
+- Store in ~/.soulrecall/logs/<canister-id>/
 - Full-text search across logs
 - Time-based filtering
 - Export to JSON/CSV for analysis
@@ -189,9 +189,9 @@ Files to Create:
 - cli/commands/trace.ts  
 - cli/commands/profile.ts
 Commands:
-agentvault instrument <wasm-file> --output <out.wasm>     # Instrument WASM
-agentvault trace <canister-id> --depth <n>                # Get execution traces
-agentvault profile <canister-id> --duration <seconds>        # Profile canister
+soulrecall instrument <wasm-file> --output <out.wasm>     # Instrument WASM
+soulrecall trace <canister-id> --depth <n>                # Get execution traces
+soulrecall profile <canister-id> --duration <seconds>        # Profile canister
 Instrument Command Features:
 - Add debug sections to stable memory
 - Emit method entry/exit points
@@ -227,7 +227,7 @@ cli/commands/
   profile.ts          # Profile canister
   dashboard.ts        # Debug dashboard
   logs.ts             # Log viewing
-~/.agentvault/
+~/.soulrecall/
   networks/           # Network configs
   snapshots/          # Canister snapshots
   history/            # Deployment history
@@ -347,16 +347,16 @@ E2E Tests:
 📝 Questions Before Implementation
 1. Dashboard Preference: Do you want a TUI (terminal-based) dashboard or a web-based dashboard?
 2. Testing Framework: Should we extend the existing vitest setup for local canister testing, or integrate with a different framework?
-3. Storage Location: Should all Phase 3 data (networks, snapshots, logs) go in ~/.agentvault/, or allow custom paths via environment variable?
+3. Storage Location: Should all Phase 3 data (networks, snapshots, logs) go in ~/.soulrecall/, or allow custom paths via environment variable?
 4. Backward Compatibility: Should Phase 3 features be opt-in (require config) or work with existing Phase 1-2 workflows automatically?
 5. Priority Order: Should we implement all of Week 6 first before moving to Week 7, or interleave tasks to get end-to-end functionality working sooner?
 ---
 🚀 Success Criteria
 Phase 3 is complete when:
-- ✅ Developers can spawn local networks with agentvault network create/start
+- ✅ Developers can spawn local networks with soulrecall network create/start
 - ✅ Canisters can be deployed and tested locally with fast iteration
-- ✅ Promotions work: agentvault promote <agent> --from dev --to prod
+- ✅ Promotions work: soulrecall promote <agent> --from dev --to prod
 - ✅ Rollbacks can restore previous canister versions
-- ✅ Execution traces can be viewed with agentvault trace
-- ✅ Logs are aggregated and searchable with agentvault logs
+- ✅ Execution traces can be viewed with soulrecall trace
+- ✅ Logs are aggregated and searchable with soulrecall logs
 - ✅ Optional debug dashboard provides real-time visualization

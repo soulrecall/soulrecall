@@ -22,7 +22,7 @@ const knownLimitations = [
 
 function Changelog(): React.ReactElement {
   return (
-    <Layout title="Changelog" description="AgentVault release history and protocol updates.">
+    <Layout title="Changelog" description="SoulRecall release history and protocol updates.">
       <main className={styles.main}>
         <div className="container">
           <section className={styles.headerCard}>
@@ -31,7 +31,7 @@ function Changelog(): React.ReactElement {
               Changelog
             </Heading>
             <p className={styles.pageLead}>
-              Release stream for the AgentVault runtime. Current stable milestone: <strong>v1.0.0</strong> (February 2026).
+              Release stream for the SoulRecall runtime. Current stable milestone: <strong>v1.0.0</strong> (February 2026).
             </p>
           </section>
 
@@ -55,7 +55,7 @@ function Changelog(): React.ReactElement {
             </Heading>
             <div className={styles.codeVessel}>
               <pre>
-                <code>npm install -g agentvault@1.0.0</code>
+                <code>npm install -g soulrecall@1.0.0</code>
               </pre>
             </div>
 
@@ -80,10 +80,10 @@ function Changelog(): React.ReactElement {
           </section>
 
           <section className={styles.actions}>
-            <Link className="button button--secondary" to="https://github.com/johnnyclem/agentvault">
+            <Link className="button button--secondary" to="https://github.com/soulrecall/soulrecall">
               View Source
             </Link>
-            <Link className="button button--outline" to="https://www.npmjs.com/package/agentvault">
+            <Link className="button button--outline" to="https://www.npmjs.com/package/soulrecall">
               View Package
             </Link>
           </section>

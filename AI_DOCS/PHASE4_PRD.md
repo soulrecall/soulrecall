@@ -235,7 +235,7 @@ POST   /api/backups/import          Import agent backup (new backup module)
 
 **Key Design Decisions:**
 - All API routes are thin wrappers around existing `src/` functions -- no business logic duplication
-- API routes use Node.js runtime (not Edge) since they need filesystem access (`~/.agentvault/`)
+- API routes use Node.js runtime (not Edge) since they need filesystem access (`~/.soulrecall/`)
 - JSON responses follow `{ success: boolean, data?: T, error?: string }` envelope
 - No authentication in v1 (local-only). Auth noted as future work.
 
@@ -442,26 +442,26 @@ pruneLocalArchiveIndex(): Promise<void>
 
 **CLI Commands (`cli/commands/archive.ts`):**
 ```
-agentvault archive <agent-name>                         # Archive agent to Arweave
-agentvault archive <agent-name> --include-state          # Include agent state
-agentvault archive restore <tx-id> --output <dir>        # Restore from archive
-agentvault archive list [agent-name]                     # List archives
-agentvault archive verify <tx-id>                         # Verify archive integrity
-agentvault archive cost <agent-name>                      # Estimate archival cost
+soulrecall archive <agent-name>                         # Archive agent to Arweave
+soulrecall archive <agent-name> --include-state          # Include agent state
+soulrecall archive restore <tx-id> --output <dir>        # Restore from archive
+soulrecall archive list [agent-name]                     # List archives
+soulrecall archive verify <tx-id>                         # Verify archive integrity
+soulrecall archive cost <agent-name>                      # Estimate archival cost
 ```
 
 **Storage:**
-- Archive index stored in `~/.agentvault/archives/index.yaml`
-- Individual archive metadata in `~/.agentvault/archives/<agent-name>/`
+- Archive index stored in `~/.soulrecall/archives/index.yaml`
+- Individual archive metadata in `~/.soulrecall/archives/<agent-name>/`
 
 **Archival Flow:**
 ```
-1. Read agent config from ~/.agentvault/agents/<name>.json
+1. Read agent config from ~/.soulrecall/agents/<name>.json
 2. Read WASM from configured path
 3. Optionally fetch agent state from canister
 4. Bundle components into archive manifest
 5. Upload each component to Arweave with tags:
-   - App-Name: AgentVault
+   - App-Name: SoulRecall
    - Agent-Name: <name>
    - Content-Type: application/wasm | application/json
    - Version: <deployment-version>
@@ -575,12 +575,12 @@ clearInferenceHistory(agentName: string): void
 
 **CLI Commands (`cli/commands/inference.ts`):**
 ```
-agentvault inference query <agent-name> --prompt "..."   # Run inference query
-agentvault inference query <agent-name> --stream          # Stream response
-agentvault inference history <agent-name>                  # View inference history
-agentvault inference config                                # Show/set inference config
-agentvault inference cost --prompt "..." --subnet 1       # Estimate cost
-agentvault inference health                                # Check Bittensor connectivity
+soulrecall inference query <agent-name> --prompt "..."   # Run inference query
+soulrecall inference query <agent-name> --stream          # Stream response
+soulrecall inference history <agent-name>                  # View inference history
+soulrecall inference config                                # Show/set inference config
+soulrecall inference cost --prompt "..." --subnet 1       # Estimate cost
+soulrecall inference health                                # Check Bittensor connectivity
 ```
 
 **Integration with Agent Canister:**
@@ -590,8 +590,8 @@ agentvault inference health                                # Check Bittensor con
 - The dApp shows inference history in the agent detail page
 
 **Storage:**
-- Inference config in `~/.agentvault/inference.yaml`
-- Inference history in `~/.agentvault/inference/<agent-name>/`
+- Inference config in `~/.soulrecall/inference.yaml`
+- Inference history in `~/.soulrecall/inference/<agent-name>/`
 
 #### Task 2.3: Aggregated Metrics System
 
@@ -687,7 +687,7 @@ detectAnomalies(canisterId: string, metric: MetricName, windowMinutes: number): 
 ```
 
 **Storage:**
-- Metrics stored in `~/.agentvault/metrics/<canister-id>/` as append-only JSONL files
+- Metrics stored in `~/.soulrecall/metrics/<canister-id>/` as append-only JSONL files
 - One file per day: `2026-02-09.jsonl`
 - Auto-pruned based on retention config
 
@@ -773,7 +773,7 @@ executeDryRun(): { order: string[]; parallelGroups: string[][] }
 - Default concurrency: 10 operations
 - Exponential backoff retry: 1s, 2s, 4s
 - Used by the dApp for bulk status checks, multi-canister deploys, fleet-wide queries
-- CLI integration: `agentvault batch <operations-file.yaml>` (future, document now)
+- CLI integration: `soulrecall batch <operations-file.yaml>` (future, document now)
 
 **Integration Points:**
 - Dashboard uses batched queries to fetch status for all canisters in one call
@@ -878,25 +878,25 @@ deleteApproval(requestId: string): void
 
 **CLI Commands (`cli/commands/approve.ts`):**
 ```
-agentvault approve list                                    # List pending approvals
-agentvault approve show <request-id>                       # Show approval details
-agentvault approve sign <request-id>                       # Approve a request
-agentvault approve reject <request-id> --reason "..."      # Reject a request
-agentvault approve config                                  # Show/edit multisig config
-agentvault approve config --threshold 2 --add-signer <principal>
+soulrecall approve list                                    # List pending approvals
+soulrecall approve show <request-id>                       # Show approval details
+soulrecall approve sign <request-id>                       # Approve a request
+soulrecall approve reject <request-id> --reason "..."      # Reject a request
+soulrecall approve config                                  # Show/edit multisig config
+soulrecall approve config --threshold 2 --add-signer <principal>
 ```
 
 **Storage:**
-- Multisig config in `~/.agentvault/multisig.yaml`
-- Approval requests in `~/.agentvault/approvals/`
+- Multisig config in `~/.soulrecall/multisig.yaml`
+- Approval requests in `~/.soulrecall/approvals/`
 
 **Integration Flow:**
 ```
-1. User runs: agentvault deploy <wasm> --env production
+1. User runs: soulrecall deploy <wasm> --env production
 2. CLI checks if 'deploy_production' is a protected operation
 3. If protected: creates ApprovalRequest, prints request ID, exits
-4. Other signers run: agentvault approve sign <request-id>
-5. When threshold is met, any signer can run: agentvault approve execute <request-id>
+4. Other signers run: soulrecall approve sign <request-id>
+5. When threshold is met, any signer can run: soulrecall approve execute <request-id>
 6. The actual deploy executes
 ```
 
@@ -1014,12 +1014,12 @@ previewBackup(inputPath: string): BackupManifest
 
 **CLI Commands (`cli/commands/backup.ts`):**
 ```
-agentvault backup export <agent-name> --output backup.tar.gz     # Export agent backup
-agentvault backup export <agent-name> --include-state            # Include canister state
-agentvault backup export <agent-name> --include-wallets          # Include wallets (prompts for password)
-agentvault backup import <file>                                   # Import from backup
-agentvault backup import <file> --target-name <name>             # Import with new name
-agentvault backup preview <file>                                  # Preview backup contents
+soulrecall backup export <agent-name> --output backup.tar.gz     # Export agent backup
+soulrecall backup export <agent-name> --include-state            # Include canister state
+soulrecall backup export <agent-name> --include-wallets          # Include wallets (prompts for password)
+soulrecall backup import <file>                                   # Import from backup
+soulrecall backup import <file> --target-name <name>             # Import with new name
+soulrecall backup preview <file>                                  # Preview backup contents
 ```
 
 **Backup Format:**
@@ -1191,10 +1191,10 @@ cli/commands/                    # New commands
 
 ### New CLI Commands (4 new top-level)
 ```
-agentvault archive    <agent-name>                     # Arweave archival
-agentvault inference  query <agent-name> --prompt "..."  # Bittensor inference
-agentvault approve    list | sign | reject | config     # Multi-sig approvals
-agentvault backup     export | import | preview         # Agent backup
+soulrecall archive    <agent-name>                     # Arweave archival
+soulrecall inference  query <agent-name> --prompt "..."  # Bittensor inference
+soulrecall approve    list | sign | reject | config     # Multi-sig approvals
+soulrecall backup     export | import | preview         # Agent backup
 ```
 
 ---
@@ -1283,7 +1283,7 @@ Note: No Bittensor SDK dependency needed -- the integration uses the Bittensor R
 
 4. **Backup format is tar.gz, not a custom binary format.** This ensures backups are inspectable and portable. Wallet data within the backup is encrypted separately with AES-256-GCM.
 
-5. **Multi-sig is local/file-based in v1, not on-chain.** Approvals are stored in `~/.agentvault/approvals/`. On-chain multi-sig (canister-level) is future work. This is still useful for team workflows where multiple developers share a machine or sync approval files.
+5. **Multi-sig is local/file-based in v1, not on-chain.** Approvals are stored in `~/.soulrecall/approvals/`. On-chain multi-sig (canister-level) is future work. This is still useful for team workflows where multiple developers share a machine or sync approval files.
 
 6. **Metrics are stored as flat JSONL files, not a time-series database.** This keeps dependencies minimal. If performance becomes an issue with large datasets, a future phase can add SQLite or a proper TSDB.
 
@@ -1300,13 +1300,13 @@ Phase 4 is complete when:
 - [ ] Task queue viewer shows pending/completed tasks from canister
 - [ ] Log browser displays filtered, color-coded logs with export capability
 - [ ] Agent config UI allows viewing and editing agent configurations
-- [ ] `agentvault archive <agent>` uploads agent data to Arweave and returns a txId
-- [ ] `agentvault archive restore <txId>` reconstructs agent from Arweave data
-- [ ] `agentvault inference query <agent> --prompt "..."` returns a response from Bittensor
+- [ ] `soulrecall archive <agent>` uploads agent data to Arweave and returns a txId
+- [ ] `soulrecall archive restore <txId>` reconstructs agent from Arweave data
+- [ ] `soulrecall inference query <agent> --prompt "..."` returns a response from Bittensor
 - [ ] Batched canister operations execute 10+ queries in parallel with correct dependency ordering
-- [ ] `agentvault approve` workflow gates production deploys behind multi-sig
-- [ ] `agentvault backup export <agent>` creates a portable tar.gz backup
-- [ ] `agentvault backup import <file>` restores an agent from backup
+- [ ] `soulrecall approve` workflow gates production deploys behind multi-sig
+- [ ] `soulrecall backup export <agent>` creates a portable tar.gz backup
+- [ ] `soulrecall backup import <file>` restores an agent from backup
 - [ ] Metrics dashboard shows time-series charts for cycles, memory, request rate
 - [ ] All new modules have unit tests passing
 - [ ] No new TypeScript errors introduced in Phase 4 modules

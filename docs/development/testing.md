@@ -1,10 +1,10 @@
 # Testing
 
-Guide to running and writing tests for AgentVault.
+Guide to running and writing tests for SoulRecall.
 
 ## Test Framework
 
-AgentVault uses [Vitest](https://vitest.dev/) for testing.
+SoulRecall uses [Vitest](https://vitest.dev/) for testing.
 
 ## Running Tests
 
@@ -60,7 +60,7 @@ tests/
 
 ## Test Statistics
 
-AgentVault v1.0 includes **508 tests** across **31 test files**.
+SoulRecall v1.0 includes **508 tests** across **31 test files**.
 
 | Category | Tests | Files |
 |----------|-------|-------|

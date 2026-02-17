@@ -193,7 +193,7 @@ describe('provider-detector', () => {
 
   describe('getCloudSubdirectory', () => {
     it('should return the default subdirectory name', () => {
-      expect(getCloudSubdirectory()).toBe('AgentVault-Backups');
+      expect(getCloudSubdirectory()).toBe('SoulRecall-Backups');
     });
   });
 
@@ -201,7 +201,7 @@ describe('provider-detector', () => {
     it('should join provider path with default subdirectory', () => {
       const result = resolveCloudBackupDir('/home/testuser/Dropbox');
       expect(result).toBe(
-        path.join('/home/testuser/Dropbox', 'AgentVault-Backups'),
+        path.join('/home/testuser/Dropbox', 'SoulRecall-Backups'),
       );
     });
 

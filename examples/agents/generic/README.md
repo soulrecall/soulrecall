@@ -1,6 +1,6 @@
 # Generic Example Agent
 
-This is an example Generic agent configuration for AgentVault.
+This is an example Generic agent configuration for SoulRecall.
 
 ## Directory Structure
 
@@ -18,19 +18,19 @@ generic/
 
 ```bash
 cd examples/agents/generic
-agentvault init --verbose
+soulrecall init --verbose
 ```
 
 ### Package Agent
 
 ```bash
-agentvault package
+soulrecall package
 ```
 
 ### Deploy to ICP
 
 ```bash
-agentvault deploy
+soulrecall deploy
 ```
 
 ## Configuration Files
@@ -43,8 +43,8 @@ agentvault deploy
 - Allowed file patterns (glob)
 - Maximum file size limit
 
-### .agentvault.json (alternative format)
-You can also use a `.agentvault.json` file:
+### .soulrecall.json (alternative format)
+You can also use a `.soulrecall.json` file:
 
 ```json
 {
@@ -64,8 +64,8 @@ Generic agents can use any of following configuration files:
 - `agent.json` (recommended)
 - `agent.yaml`
 - `agent.yml`
-- `agentvault.json`
-- `.agentvault.json`
+- `soulrecall.json`
+- `.soulrecall.json`
 
 The parser will search for these files in order and use the first one found.
 

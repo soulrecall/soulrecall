@@ -1,10 +1,10 @@
-# agentvault.cloud marketing site plan (v1.0)
+# soulrecall.cloud marketing site plan (v1.0)
 
-This document defines a launch-ready content and information architecture plan for `https://agentvault.cloud`.
+This document defines a launch-ready content and information architecture plan for `https://soulrecall.cloud`.
 
 ## Goals
 
-1. Explain AgentVault in under 30 seconds.
+1. Explain SoulRecall in under 30 seconds.
 2. Convert visitors into active users with a direct install flow.
 3. Publish trustworthy docs for teams evaluating long-term adoption.
 4. Provide immediate paths for backup/recovery and operational confidence.
@@ -31,8 +31,8 @@ This document defines a launch-ready content and information architecture plan f
 ### Hero
 
 - **Headline**: "Run sovereign AI agents that stay online and recoverable."
-- **Subheadline**: "AgentVault packages local agents, deploys to ICP canisters, and preserves reconstructible state for resilient automation."
-- **Primary CTA**: "Install AgentVault"
+- **Subheadline**: "SoulRecall packages local agents, deploys to ICP canisters, and preserves reconstructible state for resilient automation."
+- **Primary CTA**: "Install SoulRecall"
 - **Secondary CTA**: "Read v1.0 tutorial"
 
 ### Trust + proof bar
@@ -69,7 +69,7 @@ Include explicit copy/paste snippets and expected output examples.
 
 ## SEO and metadata recommendations
 
-- Title pattern: "AgentVault — [Page Name]"
+- Title pattern: "SoulRecall — [Page Name]"
 - Description: include "on-chain AI agents", "deployment", "backup", "restore"
 - OpenGraph/Twitter cards:
   - Product screenshot or architecture diagram
@@ -90,7 +90,7 @@ Track at minimum:
 
 ## Initial launch checklist
 
-- [ ] Domain and TLS configured for `agentvault.cloud` and `www.agentvault.cloud`
+- [ ] Domain and TLS configured for `soulrecall.cloud` and `www.soulrecall.cloud`
 - [ ] Redirect policy decided (`www` -> apex or apex -> `www`)
 - [ ] Core pages published (`/`, `/install`, `/tutorial`, `/docs`, `/skills/clawdbot-claude`)
 - [ ] Broken-link and mobile responsiveness checks complete

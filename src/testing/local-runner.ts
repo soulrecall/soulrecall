@@ -15,15 +15,15 @@ import type {
   LoadTestResult,
 } from './types.js';
 
-const AGENTVAULT_DIR = path.join(os.homedir(), '.agentvault');
-const TEST_RESULTS_DIR = path.join(AGENTVAULT_DIR, 'test-results');
+const SOULRECALL_DIR = path.join(os.homedir(), '.soulrecall');
+const TEST_RESULTS_DIR = path.join(SOULRECALL_DIR, 'test-results');
 
 /**
  * Ensure test results directory exists
  */
 function ensureTestResultsDir(): void {
-  if (!fs.existsSync(AGENTVAULT_DIR)) {
-    fs.mkdirSync(AGENTVAULT_DIR, { recursive: true });
+  if (!fs.existsSync(SOULRECALL_DIR)) {
+    fs.mkdirSync(SOULRECALL_DIR, { recursive: true });
   }
   if (!fs.existsSync(TEST_RESULTS_DIR)) {
     fs.mkdirSync(TEST_RESULTS_DIR, { recursive: true });

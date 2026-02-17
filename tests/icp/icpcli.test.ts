@@ -24,12 +24,12 @@ describe('icp build', () => {
 
     const result = await icpcli.build({
       environment: 'local',
-      canisters: ['agent_vault'],
+      canisters: ['soul_recall'],
     });
 
     expect(mockExeca).toHaveBeenCalledWith(
       'icp',
-      ['build', '-e', 'local', 'agent_vault'],
+      ['build', '-e', 'local', 'soul_recall'],
       expect.objectContaining({ reject: false }),
     );
     expect(result.success).toBe(true);
@@ -122,7 +122,7 @@ describe('icp canister operations', () => {
   });
 
   it('should list canisters', async () => {
-    mockExeca.mockResolvedValue({ exitCode: 0, stdout: 'agent_vault', stderr: '' });
+    mockExeca.mockResolvedValue({ exitCode: 0, stdout: 'soul_recall', stderr: '' });
 
     const result = await icpcli.canisterList();
     expect(mockExeca).toHaveBeenCalledWith(

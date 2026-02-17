@@ -17,11 +17,11 @@ backupCmd
   .action(async () => {
     console.log(chalk.yellow('Please specify a subcommand: export, import, list, delete, or preview'));
     console.log(chalk.gray(`\nExamples:
-  ${chalk.cyan('agentvault backup export <agent-name> --output backup.json')}${chalk.gray('    Export agent config to file')}
-  ${chalk.cyan('agentvault backup import <file>')}${chalk.gray('           Import agent from backup file')}
-  ${chalk.cyan('agentvault backup list')}${chalk.gray('                 List all backups')}
-  ${chalk.cyan('agentvault backup delete <backup-path>')}${chalk.gray('      Delete a backup')}
-  ${chalk.cyan('agentvault backup preview <backup-path>')}${chalk.gray('       Preview backup contents')}`));
+  ${chalk.cyan('soulrecall backup export <agent-name> --output backup.json')}${chalk.gray('    Export agent config to file')}
+  ${chalk.cyan('soulrecall backup import <file>')}${chalk.gray('           Import agent from backup file')}
+  ${chalk.cyan('soulrecall backup list')}${chalk.gray('                 List all backups')}
+  ${chalk.cyan('soulrecall backup delete <backup-path>')}${chalk.gray('      Delete a backup')}
+  ${chalk.cyan('soulrecall backup preview <backup-path>')}${chalk.gray('       Preview backup contents')}`));
   });
 
 backupCmd

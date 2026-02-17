@@ -1,5 +1,5 @@
 /**
- * Security module for AgentVault
+ * Security module for SoulRecall
  *
  * This module provides encryption, decryption, and key management
  * using VetKeys for threshold key derivation.

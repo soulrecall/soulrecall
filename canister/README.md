@@ -1,6 +1,6 @@
-# AgentVault Canister
+# SoulRecall Canister
 
-This directory contains the Motoko canister code for the AgentVault platform.
+This directory contains the Motoko canister code for the SoulRecall platform.
 
 ## Canister Features
 
@@ -56,14 +56,14 @@ The `agent.mo` canister provides:
 
 ## Deployment
 
-Build and deploy the canister using the AgentVault CLI:
+Build and deploy the canister using the SoulRecall CLI:
 
 ```bash
 # Build agent to WASM
-agentvault package ./my-agent
+soulrecall package ./my-agent
 
 # Deploy to canister
-agentvault deploy dist/my-agent.wasm
+soulrecall deploy dist/my-agent.wasm
 ```
 
 ## Data Structures

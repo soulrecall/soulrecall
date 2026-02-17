@@ -1,5 +1,5 @@
 /**
- * Init command - Initialize a new AgentVault project
+ * Init command - Initialize a new SoulRecall project
  */
 
 import * as path from 'node:path';
@@ -28,7 +28,7 @@ export async function promptForInitOptions(options: InitOptions): Promise<InitAn
   if (options.yes) {
     return {
       name: options.name ?? 'my-agent',
-      description: 'An AgentVault agent',
+      description: 'An SoulRecall agent',
       confirm: true,
     };
   }
@@ -53,7 +53,7 @@ export async function promptForInitOptions(options: InitOptions): Promise<InitAn
       type: 'input',
       name: 'description',
       message: 'Provide a description for your agent:',
-      default: 'An AgentVault agent',
+      default: 'An SoulRecall agent',
     },
     {
       type: 'confirm',
@@ -67,9 +67,9 @@ export async function promptForInitOptions(options: InitOptions): Promise<InitAn
 }
 
 export async function executeInit(answers: InitAnswers, _options: InitOptions, sourcePath: string): Promise<void> {
-  const spinner = ora('Initializing AgentVault project...').start();
+  const spinner = ora('Initializing SoulRecall project...').start();
 
-  const projectDir = path.resolve(sourcePath, '.agentvault');
+  const projectDir = path.resolve(sourcePath, '.soulrecall');
 
   const agentDir = path.join(projectDir, 'agent');
   const canisterDir = path.join(projectDir, 'canister');
@@ -90,12 +90,12 @@ export async function executeInit(answers: InitAnswers, _options: InitOptions, s
     type: 'generic',
     version: '1.0.0',
     createdAt: Date.now(),
-    description: answers.description || 'An AgentVault agent',
+    description: answers.description || 'An SoulRecall agent',
   };
   fs.writeFileSync(configPath, JSON.stringify(configContent, null, 2), 'utf-8');
 
   const gitignorePath = path.join(projectDir, '.gitignore');
-  const gitignoreContent = `# AgentVault dependencies
+  const gitignoreContent = `# SoulRecall dependencies
 node_modules/
 dist/
 *.log
@@ -103,20 +103,20 @@ dist/
 *.local
 .DS_Store
 
-# AgentVault generated files
+# SoulRecall generated files
 *.wasm
 *.backup
 *.state.json
 
-# AgentVault project structure
-.agentvault/
+# SoulRecall project structure
+.soulrecall/
 src/
 canister/
 config/
 `;
   fs.writeFileSync(gitignorePath, gitignoreContent, 'utf-8');
 
-  spinner.succeed('AgentVault project initialized successfully!');
+  spinner.succeed('SoulRecall project initialized successfully!');
 
   console.log();
   console.log(chalk.green('✓'), 'Project initialized at:', chalk.bold(projectDir));
@@ -133,24 +133,24 @@ config/
   console.log('  ├── Description:', chalk.bold(configContent.description));
   console.log();
   console.log(chalk.cyan('Next steps:'));
-  console.log('  1. Run', chalk.bold('agentvault status'), 'to check your project');
+  console.log('  1. Run', chalk.bold('soulrecall status'), 'to check your project');
   console.log('  2. Configure your agent in', chalk.bold('agent.config.json'), '(add agent type, description, etc.)');
-  console.log('  3. Compile agent with', chalk.bold('agentvault package'), 'to prepare for deployment');
-  console.log('  4. Deploy with', chalk.bold('agentvault deploy'), 'to upload to ICP');
+  console.log('  3. Compile agent with', chalk.bold('soulrecall package'), 'to prepare for deployment');
+  console.log('  4. Deploy with', chalk.bold('soulrecall deploy'), 'to upload to ICP');
 }
 
 export function initCommand(): Command {
   const command = new Command('init');
 
   command
-    .description('Initialize a new AgentVault project')
+    .description('Initialize a new SoulRecall project')
     .argument('[source]', 'path to agent source directory', '.')
     .option('-n, --name <name>', 'name of the agent')
     .option('-y, --yes', 'skip prompts and use defaults')
     .option('-v, --verbose', 'display detailed configuration information')
     .option('--vv', 'extra verbose mode for debugging')
     .action(async (source: string, options: InitOptions) => {
-      console.log(chalk.bold('\n🔐 AgentVault Project Initialization\n'));
+      console.log(chalk.bold('\n🔐 SoulRecall Project Initialization\n'));
 
       const answers = await promptForInitOptions(options);
 

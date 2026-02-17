@@ -100,7 +100,7 @@ All commands include:
 
 ### wallet history
 ```bash
-agentvault wallet history <agent-id>
+soulrecall wallet history <agent-id>
 ```
 
 **Flow:**
@@ -111,7 +111,7 @@ agentvault wallet history <agent-id>
 
 ### wallet sign
 ```bash
-agentvault wallet sign <agent-id>
+soulrecall wallet sign <agent-id>
 ```
 
 **Flow:**
@@ -127,7 +127,7 @@ agentvault wallet sign <agent-id>
 
 ### wallet export
 ```bash
-agentvault wallet export <agent-id>
+soulrecall wallet export <agent-id>
 ```
 
 **Flow:**
@@ -135,12 +135,12 @@ agentvault wallet export <agent-id>
 2. Select format (JSON or encrypted)
 3. If encrypted: Enter password
 4. Confirm export
-5. Save to ./backups/agentvault-backup-<agent-id>-<timestamp>.json
+5. Save to ./backups/soulrecall-backup-<agent-id>-<timestamp>.json
 6. Display security warning
 
 ### wallet import
 ```bash
-agentvault wallet import <agent-id> [--file <path>]
+soulrecall wallet import <agent-id> [--file <path>]
 ```
 
 **Flow:**
@@ -193,26 +193,26 @@ To test all commands end-to-end:
 
 ```bash
 # 1. Create a test agent and wallet
-agentvault init test-agent
-agentvault wallet connect test-agent
+soulrecall init test-agent
+soulrecall wallet connect test-agent
 
 # 2. Generate some transactions (send to testnet)
-agentvault wallet send test-agent
+soulrecall wallet send test-agent
 
 # 3. View transaction history
-agentvault wallet history test-agent
+soulrecall wallet history test-agent
 
 # 4. Sign a transaction without broadcasting
-agentvault wallet sign test-agent
+soulrecall wallet sign test-agent
 
 # 5. Export all wallets
-agentvault wallet export test-agent
+soulrecall wallet export test-agent
 
 # 6. Delete wallets
-agentvault wallet disconnect test-agent
+soulrecall wallet disconnect test-agent
 
 # 7. Import from backup
-agentvault wallet import test-agent --file ./backups/agentvault-backup-test-agent-*.json
+soulrecall wallet import test-agent --file ./backups/soulrecall-backup-test-agent-*.json
 ```
 
 ## Code Quality

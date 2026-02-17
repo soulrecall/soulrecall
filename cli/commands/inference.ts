@@ -19,11 +19,11 @@ inferenceCmd
     console.log(chalk.yellow('[Experimental] This feature is under active development and may change.'));
     console.log(chalk.yellow('Please specify a subcommand: query, subnets, modules, cache, or stats'));
     console.log(chalk.gray(`\nExamples:
-  ${chalk.cyan('agentvault inference query <netuid> <inputs>')}${chalk.gray('    Query inference')}
-  ${chalk.cyan('agentvault inference subnets')}${chalk.gray('               List Bittensor subnets')}
-  ${chalk.cyan('agentvault inference modules <netuid>')}${chalk.gray('         List subnet modules')}
-  ${chalk.cyan('agentvault inference cache clear')}${chalk.gray('           Clear inference cache')}
-  ${chalk.cyan('agentvault inference cache stats')}${chalk.gray('           Show cache statistics')}`));
+  ${chalk.cyan('soulrecall inference query <netuid> <inputs>')}${chalk.gray('    Query inference')}
+  ${chalk.cyan('soulrecall inference subnets')}${chalk.gray('               List Bittensor subnets')}
+  ${chalk.cyan('soulrecall inference modules <netuid>')}${chalk.gray('         List subnet modules')}
+  ${chalk.cyan('soulrecall inference cache clear')}${chalk.gray('           Clear inference cache')}
+  ${chalk.cyan('soulrecall inference cache stats')}${chalk.gray('           Show cache statistics')}`));
   });
 
 inferenceCmd

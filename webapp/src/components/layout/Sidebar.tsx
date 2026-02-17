@@ -34,7 +34,7 @@ export function Sidebar() {
         <div className="retro-active flex h-8 w-8 items-center justify-center rounded-lg">
           <LayoutDashboard className="h-5 w-5 text-primary-foreground" />
         </div>
-        <span className="text-lg font-bold tracking-wide">AgentVault</span>
+        <span className="text-lg font-bold tracking-wide">SoulRecall</span>
       </div>
 
       <nav className="flex-1 space-y-1 p-4">

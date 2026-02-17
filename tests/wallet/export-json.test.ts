@@ -9,7 +9,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as os from 'node:os';
 
-const TEST_DIR = path.join(os.tmpdir(), 'agentvault-export-test');
+const TEST_DIR = path.join(os.tmpdir(), 'soulrecall-export-test');
 
 vi.mock('inquirer', () => ({
   default: {

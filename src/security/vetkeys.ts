@@ -317,7 +317,7 @@ export class VetKeysImplementation {
     // Derive salt from seed (first 16 bytes) for unique per-wallet salting
     const salt = crypto.createHash('sha256')
       .update(seed.slice(0, 16))
-      .update('agentvault-v1')
+      .update('soulrecall-v1')
       .digest();
 
     // Derive key using PBKDF2 with unique salt

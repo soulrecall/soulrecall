@@ -6,7 +6,7 @@ describe('CLI', () => {
     it('should create a Commander program', () => {
       const program = createProgram();
       expect(program).toBeDefined();
-      expect(program.name()).toBe('agentvault');
+      expect(program.name()).toBe('soulrecall');
     });
 
     it('should have the correct description', () => {

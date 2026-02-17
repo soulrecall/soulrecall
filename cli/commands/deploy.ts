@@ -239,7 +239,7 @@ export function deployCommand(): Command {
     .option('--cycles <amount>', 'cycles allocation (e.g. 100T)')
     .option('--mode <mode>', 'deploy mode: auto, install, reinstall, upgrade')
     .action(async (wasm: string, options: DeployCommandOptions) => {
-      console.log(chalk.bold('\n🚀 AgentVault Deploy\n'));
+      console.log(chalk.bold('\n🚀 SoulRecall Deploy\n'));
 
       try {
         await executeDeploy(wasm, options);

@@ -2,7 +2,7 @@
  * Backup System
  *
  * Portable JSON format backup with embedded manifest and checksums
- * Stores backups in ~/.agentvault/backups/
+ * Stores backups in ~/.soulrecall/backups/
  * CLE-101: Enhanced to include real canister state
  */
 
@@ -12,12 +12,12 @@ import os from 'node:os';
 import crypto from 'node:crypto';
 import type { AgentConfig } from '../packaging/types.js';
 
-const AGENTVAULT_DIR = path.join(os.homedir(), '.agentvault');
-const BACKUPS_DIR = path.join(AGENTVAULT_DIR, 'backups');
+const SOULRECALL_DIR = path.join(os.homedir(), '.soulrecall');
+const BACKUPS_DIR = path.join(SOULRECALL_DIR, 'backups');
 
 function ensureBackupsDir(): void {
-  if (!fs.existsSync(AGENTVAULT_DIR)) {
-    fs.mkdirSync(AGENTVAULT_DIR, { recursive: true });
+  if (!fs.existsSync(SOULRECALL_DIR)) {
+    fs.mkdirSync(SOULRECALL_DIR, { recursive: true });
   }
   if (!fs.existsSync(BACKUPS_DIR)) {
     fs.mkdirSync(BACKUPS_DIR, { recursive: true });

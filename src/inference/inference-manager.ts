@@ -10,8 +10,8 @@ import path from 'node:path';
 import os from 'node:os';
 import crypto from 'node:crypto';
 
-const AGENTVAULT_DIR = path.join(os.homedir(), '.agentvault');
-const INFERENCE_CACHE_DIR = path.join(AGENTVAULT_DIR, 'inference-cache');
+const SOULRECALL_DIR = path.join(os.homedir(), '.soulrecall');
+const INFERENCE_CACHE_DIR = path.join(SOULRECALL_DIR, 'inference-cache');
 
 export interface InferenceConfig {
   netuid: number;
@@ -43,8 +43,8 @@ export interface CachedInference {
 }
 
 function ensureCacheDir(): void {
-  if (!fs.existsSync(AGENTVAULT_DIR)) {
-    fs.mkdirSync(AGENTVAULT_DIR, { recursive: true });
+  if (!fs.existsSync(SOULRECALL_DIR)) {
+    fs.mkdirSync(SOULRECALL_DIR, { recursive: true });
   }
   if (!fs.existsSync(INFERENCE_CACHE_DIR)) {
     fs.mkdirSync(INFERENCE_CACHE_DIR, { recursive: true });

@@ -2,7 +2,7 @@
  * Generic Configuration Parser
  *
  * Parses generic agent configuration from JSON or YAML files.
- * Reads agent.json, agent.yaml, agent.yml, or .agentvault.json file
+ * Reads agent.json, agent.yaml, agent.yml, or .soulrecall.json file
  * and constructs configuration object.
  */
 
@@ -22,7 +22,7 @@ function findGenericConfig(sourcePath: string): ConfigLocation | null {
   const absolutePath = path.resolve(sourcePath);
 
   // Check for config files (priority order)
-  const configFiles = ['agent.json', 'agent.yaml', 'agent.yml', 'agentvault.json', '.agentvault.json'];
+  const configFiles = ['agent.json', 'agent.yaml', 'agent.yml', 'soulrecall.json', '.soulrecall.json'];
   for (const file of configFiles) {
     const filePath = path.join(absolutePath, file);
     if (fs.existsSync(filePath)) {
@@ -128,7 +128,7 @@ function validateGenericConfig(config: GenericConfig): ConfigValidationResult {
 /**
  * Parse Generic agent configuration
  *
- * This function reads agent.json, agent.yaml, agent.yml, or .agentvault.json file
+ * This function reads agent.json, agent.yaml, agent.yml, or .soulrecall.json file
  * and returns a fully validated configuration object.
  *
  * @param sourcePath - Path to agent source directory
@@ -148,7 +148,7 @@ export async function parseGenericConfig(
   if (configLocation === null) {
     throw new Error(
       'No Generic agent configuration found. ' +
-        'Expected agent.json, agent.yaml, agent.yml, or .agentvault.json file in the agent source path.'
+        'Expected agent.json, agent.yaml, agent.yml, or .soulrecall.json file in the agent source path.'
     );
   }
 
@@ -252,8 +252,8 @@ export function findGenericConfigs(rootPath: string): string[] {
           entry.name === 'agent.json' ||
           entry.name === 'agent.yaml' ||
           entry.name === 'agent.yml' ||
-          entry.name === 'agentvault.json' ||
-          entry.name === '.agentvault.json'
+          entry.name === 'soulrecall.json' ||
+          entry.name === '.soulrecall.json'
         ) {
           configs.push(fullPath);
         }

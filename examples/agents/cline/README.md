@@ -1,6 +1,6 @@
 # Cline Example Agent
 
-This is an example Cline agent configuration for AgentVault.
+This is an example Cline agent configuration for SoulRecall.
 
 ## Directory Structure
 
@@ -17,19 +17,19 @@ cline/
 
 ```bash
 cd examples/agents/cline
-agentvault init --verbose
+soulrecall init --verbose
 ```
 
 ### Package Agent
 
 ```bash
-agentvault package
+soulrecall package
 ```
 
 ### Deploy to ICP
 
 ```bash
-agentvault deploy
+soulrecall deploy
 ```
 
 ## Configuration Files

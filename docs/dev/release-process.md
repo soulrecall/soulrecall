@@ -1,6 +1,6 @@
 # Release Process
 
-This document describes the process for releasing AgentVault to npm and GitHub.
+This document describes the process for releasing SoulRecall to npm and GitHub.
 
 ## Prerequisites
 
@@ -14,7 +14,7 @@ Before creating a release, ensure:
 
 ## Version Management
 
-AgentVault uses semantic versioning: `MAJOR.MINOR.PATCH`
+SoulRecall uses semantic versioning: `MAJOR.MINOR.PATCH`
 
 Example: `1.0.0` → `1.1.0` → `2.0.0`
 
@@ -138,7 +138,7 @@ git push origin v1.0.1
 ```bash
 # Create GitHub release
 gh release create v1.0.1 \
-  --title "AgentVault v1.0.1" \
+  --title "SoulRecall v1.0.1" \
   --notes "Release notes here..." \
   --target main
 ```
@@ -183,14 +183,14 @@ When you push a tag like `v1.0.0`:
 
 ```bash
 # Verify npm package
-npm view agentvault
+npm view soulrecall
 
 # Test installation
-npm install -g agentvault@latest
-agentvault --version
+npm install -g soulrecall@latest
+soulrecall --version
 
 # Verify downloads
-npm dist-tag ls agentvault
+npm dist-tag ls soulrecall
 ```
 
 ### Announcements
@@ -236,7 +236,7 @@ git merge hotfix/critical-bug
 
 If critical issues discovered post-release:
 
-1. **Stop deployment** - Immediately issue `agentvault stop`
+1. **Stop deployment** - Immediately issue `soulrecall stop`
 2. **Notify users** - Public announcement
 3. **Investigate** - Root cause analysis
 4. **Release fix** - New version with fix
@@ -278,7 +278,7 @@ git commit -m "Add shrinkwrap for dependency lock"
 ## Release Notes Template
 
 ```markdown
-# AgentVault v1.0.0
+# SoulRecall v1.0.0
 
 ## Features
 - 🚀 Production-ready AI agent platform
@@ -319,25 +319,25 @@ If npm publish fails:
 
 ```bash
 # Unpublish version (emergency only)
-npm unpublish agentvault@1.0.0
+npm unpublish soulrecall@1.0.0
 
 # Force publish next version
 npm publish --force
 
 # Request npm support
-npm owner add agentvault npm-team
-npm owner ls agentvault
+npm owner add soulrecall npm-team
+npm owner ls soulrecall
 ```
 
 ## Communication
 
 Channels for release announcements:
 
-- **GitHub Releases**: https://github.com/your-org/agentvault/releases
-- **X/Twitter**: @agentvaultdev
-- **Discord**: https://discord.gg/agentvault
-- **ICP Forum**: https://forum.dfinity.org/t/agentvault
-- **Documentation**: https://docs.agentvault.dev
+- **GitHub Releases**: https://github.com/your-org/soulrecall/releases
+- **X/Twitter**: @soulrecalldev
+- **Discord**: https://discord.gg/soulrecall
+- **ICP Forum**: https://forum.dfinity.org/t/soulrecall
+- **Documentation**: https://soulrecall.cloud/docs
 
 ## Next Steps
 

@@ -10,7 +10,7 @@ import * as path from 'node:path';
 import * as os from 'node:os';
 import crypto from 'node:crypto';
 
-const TEST_DIR = path.join(os.tmpdir(), 'agentvault-import-encrypted-test');
+const TEST_DIR = path.join(os.tmpdir(), 'soulrecall-import-encrypted-test');
 
 vi.mock('inquirer', () => ({
   default: {

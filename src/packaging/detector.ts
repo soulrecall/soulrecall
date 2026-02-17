@@ -27,7 +27,7 @@ const AGENT_PATTERNS: Record<AgentType, { files: string[]; dirs: string[] }> = {
     dirs: ['.cline'],
   },
   generic: {
-    files: ['agent.json', 'agent.yaml', 'agent.yml', 'agentvault.json'],
+    files: ['agent.json', 'agent.yaml', 'agent.yml', 'soulrecall.json'],
     dirs: [],
   },
 };

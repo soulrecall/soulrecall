@@ -12,7 +12,7 @@ import {
 
 /**
  * Fully self-contained integration tests using temporary directories.
- * No reads or writes to the real ~/.agentvault/ directory.
+ * No reads or writes to the real ~/.soulrecall/ directory.
  */
 describe('cloud-sync', () => {
   let tmpDir: string;
@@ -20,7 +20,7 @@ describe('cloud-sync', () => {
   let fakeVaultDir: string;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'agentvault-cloud-test-'));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'soulrecall-cloud-test-'));
     cloudDir = path.join(tmpDir, 'cloud-provider');
     fakeVaultDir = path.join(tmpDir, 'fake-vault');
 
@@ -203,7 +203,7 @@ describe('cloud-sync', () => {
     });
 
     it('should discover archives with valid manifests', () => {
-      const archDir = path.join(cloudDir, 'AgentVault-Backups', 'test-2025-01-01');
+      const archDir = path.join(cloudDir, 'SoulRecall-Backups', 'test-2025-01-01');
       fs.mkdirSync(archDir, { recursive: true });
       fs.writeFileSync(
         path.join(archDir, 'manifest.json'),
@@ -212,7 +212,7 @@ describe('cloud-sync', () => {
           createdAt: '2025-01-01T00:00:00.000Z',
           platform: 'linux',
           hostname: 'test',
-          agentVaultVersion: '1.0.0',
+          soulRecallVersion: '1.0.0',
           components: ['configs'],
           files: [],
           checksum: 'abc123',
@@ -227,7 +227,7 @@ describe('cloud-sync', () => {
     });
 
     it('should sort archives newest first', () => {
-      const backupsDir = path.join(cloudDir, 'AgentVault-Backups');
+      const backupsDir = path.join(cloudDir, 'SoulRecall-Backups');
 
       for (const [name, date] of [
         ['old', '2024-01-01T00:00:00.000Z'],
@@ -243,7 +243,7 @@ describe('cloud-sync', () => {
             createdAt: date,
             platform: 'linux',
             hostname: 'test',
-            agentVaultVersion: '1.0.0',
+            soulRecallVersion: '1.0.0',
             components: [],
             files: [],
             checksum: 'x',
@@ -263,7 +263,7 @@ describe('cloud-sync', () => {
     });
 
     it('should skip directories without manifest', () => {
-      const backupsDir = path.join(cloudDir, 'AgentVault-Backups');
+      const backupsDir = path.join(cloudDir, 'SoulRecall-Backups');
       const noManifest = path.join(backupsDir, 'no-manifest');
       fs.mkdirSync(noManifest, { recursive: true });
       fs.writeFileSync(path.join(noManifest, 'somefile.txt'), 'hi');
@@ -318,7 +318,7 @@ describe('cloud-sync', () => {
         createdAt: new Date().toISOString(),
         platform: 'linux',
         hostname: 'test',
-        agentVaultVersion: '1.0.0',
+        soulRecallVersion: '1.0.0',
         components: ['configs'],
         files: [
           {
@@ -369,7 +369,7 @@ describe('cloud-sync', () => {
         createdAt: new Date().toISOString(),
         platform: 'linux',
         hostname: 'test',
-        agentVaultVersion: '1.0.0',
+        soulRecallVersion: '1.0.0',
         components: ['configs'],
         files: [
           {
@@ -397,7 +397,7 @@ describe('cloud-sync', () => {
         createdAt: new Date().toISOString(),
         platform: 'linux',
         hostname: 'test',
-        agentVaultVersion: '1.0.0',
+        soulRecallVersion: '1.0.0',
         components: ['configs'],
         files: [
           {
@@ -440,7 +440,7 @@ describe('cloud-sync', () => {
         createdAt: new Date().toISOString(),
         platform: 'linux',
         hostname: 'test',
-        agentVaultVersion: '1.0.0',
+        soulRecallVersion: '1.0.0',
         components: ['configs'],
         files: [
           {
@@ -454,7 +454,7 @@ describe('cloud-sync', () => {
 
       fs.writeFileSync(path.join(archDir, 'manifest.json'), JSON.stringify(manifest));
 
-      // Restore to a temp vault dir (NOT ~/.agentvault)
+      // Restore to a temp vault dir (NOT ~/.soulrecall)
       const restoreVaultDir = path.join(tmpDir, 'restored-vault');
       fs.mkdirSync(restoreVaultDir, { recursive: true });
 
@@ -522,7 +522,7 @@ describe('cloud-sync', () => {
         createdAt: new Date().toISOString(),
         platform: 'linux',
         hostname: 'test',
-        agentVaultVersion: '1.0.0',
+        soulRecallVersion: '1.0.0',
         components: ['configs'],
         files: [
           {
@@ -559,7 +559,7 @@ describe('cloud-sync', () => {
         createdAt: new Date().toISOString(),
         platform: 'linux',
         hostname: 'test',
-        agentVaultVersion: '1.0.0',
+        soulRecallVersion: '1.0.0',
         components: ['configs'],
         files: [
           {

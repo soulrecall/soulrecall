@@ -1,6 +1,6 @@
 # CLI Options
 
-Global options and environment variables for AgentVault CLI.
+Global options and environment variables for SoulRecall CLI.
 
 ## Global Options
 
@@ -56,11 +56,11 @@ Global options and environment variables for AgentVault CLI.
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `AGENTVAULT_DEBUG` | Enable debug mode | `false` |
-| `AGENTVAULT_LOG_LEVEL` | Log level | `info` |
-| `AGENTVAULT_CACHE_DIR` | Cache directory | `~/.agentvault` |
-| `AGENTVAULT_CONFIG_DIR` | Config directory | `~/.agentvault/config` |
-| `AGENTVAULT_DATA_DIR` | Data directory | `~/.agentvault/data` |
+| `SOULRECALL_DEBUG` | Enable debug mode | `false` |
+| `SOULRECALL_LOG_LEVEL` | Log level | `info` |
+| `SOULRECALL_CACHE_DIR` | Cache directory | `~/.soulrecall` |
+| `SOULRECALL_CONFIG_DIR` | Config directory | `~/.soulrecall/config` |
+| `SOULRECALL_DATA_DIR` | Data directory | `~/.soulrecall/data` |
 
 ## Configuration Files
 
@@ -102,7 +102,7 @@ ETHEREUM_RPC_URL=https://mainnet.infura.io/v3/KEY
 ## Directory Structure
 
 ```
-~/.agentvault/
+~/.soulrecall/
 ├── config/           # Configuration files
 ├── data/             # Local data storage
 ├── wallets/          # Wallet storage
@@ -134,13 +134,13 @@ Most commands support multiple output formats:
 
 ```bash
 # Table format (default)
-agentvault list
+soulrecall list
 
 # JSON format
-agentvault list --json
+soulrecall list --json
 
 # ID only
-agentvault list --format ids
+soulrecall list --format ids
 ```
 
 ## Logging
@@ -149,13 +149,13 @@ Control log verbosity:
 
 ```bash
 # Debug level
-agentvault --debug deploy
+soulrecall --debug deploy
 
 # Environment variable
-AGENTVAULT_LOG_LEVEL=debug agentvault deploy
+SOULRECALL_LOG_LEVEL=debug soulrecall deploy
 
 # Quiet mode
-agentvault --quiet deploy
+soulrecall --quiet deploy
 ```
 
 ## Configuration Precedence
@@ -176,11 +176,11 @@ Configuration values are resolved in this order (highest priority first):
 ```bash
 # Set network
 export ICP_NETWORK=ic
-agentvault deploy
+soulrecall deploy
 
 # Set RPC URL
 export ETHEREUM_RPC_URL=https://eth.example.com
-agentvault wallet balance --chain ethereum
+soulrecall wallet balance --chain ethereum
 ```
 
 ### Using .env File
@@ -193,12 +193,12 @@ ETHEREUM_RPC_URL=https://mainnet.infura.io/v3/KEY
 EOF
 
 # Run command (automatically loads .env)
-agentvault deploy
+soulrecall deploy
 ```
 
 ### Using Config File
 
 ```bash
 # Specify config file
-agentvault deploy --config ./staging.yaml
+soulrecall deploy --config ./staging.yaml
 ```

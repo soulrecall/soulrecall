@@ -4,7 +4,7 @@ Monitor canister health and performance.
 
 ## Overview
 
-AgentVault provides comprehensive monitoring for deployed canisters.
+SoulRecall provides comprehensive monitoring for deployed canisters.
 
 ## Commands
 
@@ -12,43 +12,43 @@ AgentVault provides comprehensive monitoring for deployed canisters.
 
 ```bash
 # Basic health check
-agentvault health
+soulrecall health
 
 # Specific canister
-agentvault health --canister-id <id>
+soulrecall health --canister-id <id>
 
 # Detailed report
-agentvault health --canister-id <id> --detailed
+soulrecall health --canister-id <id> --detailed
 ```
 
 ### Status
 
 ```bash
 # Project status
-agentvault status
+soulrecall status
 
 # Specific canister
-agentvault status --canister-id <id>
+soulrecall status --canister-id <id>
 ```
 
 ### Statistics
 
 ```bash
 # Canister statistics
-agentvault stats --canister-id <id>
+soulrecall stats --canister-id <id>
 
 # Time period
-agentvault stats -c <id> --period 24h
+soulrecall stats -c <id> --period 24h
 ```
 
 ### Continuous Monitoring
 
 ```bash
 # Start monitoring
-agentvault monitor --canister-id <id>
+soulrecall monitor --canister-id <id>
 
 # With alerts
-agentvault monitor -c <id> --alert --webhook <url>
+soulrecall monitor -c <id> --alert --webhook <url>
 ```
 
 ## Health Indicators
@@ -66,7 +66,7 @@ agentvault monitor -c <id> --alert --webhook <url>
 ### Available Metrics
 
 ```bash
-agentvault stats --canister-id <id> --format json
+soulrecall stats --canister-id <id> --format json
 ```
 
 ```json
@@ -98,7 +98,7 @@ agentvault stats --canister-id <id> --format json
 
 ```bash
 # Configure webhook
-agentvault monitor --alert --webhook https://hooks.example.com/alert
+soulrecall monitor --alert --webhook https://hooks.example.com/alert
 ```
 
 ### Alert Payload
@@ -129,16 +129,16 @@ agentvault monitor --alert --webhook https://hooks.example.com/alert
 
 ```bash
 # Recent logs
-agentvault logs --canister-id <id>
+soulrecall logs --canister-id <id>
 
 # Follow logs
-agentvault logs -c <id> -f
+soulrecall logs -c <id> -f
 
 # Filter by level
-agentvault logs -c <id> --level error
+soulrecall logs -c <id> --level error
 
 # Time filter
-agentvault logs -c <id> --since 1h
+soulrecall logs -c <id> --since 1h
 ```
 
 ### Log Levels

@@ -46,7 +46,7 @@ traceCmd
       console.log(chalk.gray('  (Note: Requires instrumented WASM and trace collection)'));
       console.log();
       console.log(chalk.yellow('To collect traces:'));
-      console.log(chalk.gray('  1. Run agentvault instrument <wasm-file>'));
+      console.log(chalk.gray('  1. Run soulrecall instrument <wasm-file>'));
       console.log(chalk.gray('  2. Deploy instrumented WASM'));
       console.log(chalk.gray('  3. Canister will emit traces to stable memory'));
       console.log();

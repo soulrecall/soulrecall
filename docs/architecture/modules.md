@@ -1,6 +1,6 @@
 # Module Reference
 
-Detailed documentation for AgentVault modules.
+Detailed documentation for SoulRecall modules.
 
 ## src/deployment/
 
@@ -11,7 +11,7 @@ ICP deployment and canister management.
 Primary ICP client for canister operations.
 
 ```typescript
-import { ICPClient } from 'agentvault';
+import { ICPClient } from 'soulrecall';
 
 const client = new ICPClient({
   network: 'local',
@@ -36,7 +36,7 @@ await client.installCode(wasm, canisterId);
 Deployment orchestration.
 
 ```typescript
-import { deployAgent } from 'agentvault';
+import { deployAgent } from 'soulrecall';
 
 const result = await deployAgent({
   projectPath: './my-agent',
@@ -50,7 +50,7 @@ const result = await deployAgent({
 Environment promotion.
 
 ```typescript
-import { promoteCanister } from 'agentvault';
+import { promoteCanister } from 'soulrecall';
 
 await promoteCanister({
   from: 'staging',
@@ -70,7 +70,7 @@ WASM compilation and packaging.
 TypeScript to WASM compilation.
 
 ```typescript
-import { compileToWasm } from 'agentvault';
+import { compileToWasm } from 'soulrecall';
 
 const wasm = await compileToWasm({
   entryPoint: './src/index.ts',
@@ -83,7 +83,7 @@ const wasm = await compileToWasm({
 Package creation.
 
 ```typescript
-import { createPackage } from 'agentvault';
+import { createPackage } from 'soulrecall';
 
 const pkg = await createPackage({
   projectPath: './my-agent',
@@ -102,7 +102,7 @@ Canister bindings and state management.
 Actor creation and management.
 
 ```typescript
-import { createActor, createAnonymousAgent } from 'agentvault';
+import { createActor, createAnonymousAgent } from 'soulrecall';
 
 const agent = createAnonymousAgent('http://localhost:4943');
 const actor = createActor(canisterId, agent);
@@ -113,7 +113,7 @@ const actor = createActor(canisterId, agent);
 State query and fetch.
 
 ```typescript
-import { fetchCanisterState, queryState } from 'agentvault';
+import { fetchCanisterState, queryState } from 'soulrecall';
 
 const state = await fetchCanisterState(canisterId, actor);
 const query = await queryState(canisterId, 'getValue');
@@ -124,7 +124,7 @@ const query = await queryState(canisterId, 'getValue');
 AES-256-GCM and ChaCha20-Poly1305 encryption.
 
 ```typescript
-import { encrypt, decrypt, deriveKey } from 'agentvault';
+import { encrypt, decrypt, deriveKey } from 'soulrecall';
 
 const key = deriveKey(password, salt);
 const encrypted = encrypt(plaintext, key);
@@ -142,7 +142,7 @@ Multi-chain wallet management.
 Wallet manager entry point.
 
 ```typescript
-import { WalletManager } from 'agentvault';
+import { WalletManager } from 'soulrecall';
 
 const manager = new WalletManager();
 const wallet = await manager.createWallet('ethereum');
@@ -165,7 +165,7 @@ Chain-specific providers:
 Persistent wallet storage.
 
 ```typescript
-import { saveWallet, loadWallet, listWallets } from 'agentvault';
+import { saveWallet, loadWallet, listWallets } from 'soulrecall';
 
 await saveWallet(wallet);
 const loaded = await loadWallet(walletId);
@@ -183,7 +183,7 @@ Security primitives and VetKeys.
 Threshold key derivation.
 
 ```typescript
-import { VetKeysClient, deriveThresholdKey } from 'agentvault';
+import { VetKeysClient, deriveThresholdKey } from 'soulrecall';
 
 const client = new VetKeysClient(actor);
 const key = await deriveThresholdKey(seedPhrase, 3, 2);
@@ -194,7 +194,7 @@ const key = await deriveThresholdKey(seedPhrase, 3, 2);
 Multi-signature approvals.
 
 ```typescript
-import { MultisigManager } from 'agentvault';
+import { MultisigManager } from 'soulrecall';
 
 const multisig = new MultisigManager();
 await multisig.createRequest('deploy', params);
@@ -212,7 +212,7 @@ Health checks and metrics.
 Health check implementation.
 
 ```typescript
-import { runHealthCheck } from 'agentvault';
+import { runHealthCheck } from 'soulrecall';
 
 const result = await runHealthCheck(canisterId, {
   checks: ['status', 'cycles', 'memory']
@@ -224,7 +224,7 @@ const result = await runHealthCheck(canisterId, {
 Metrics collection.
 
 ```typescript
-import { collectMetrics, getMetricsFilePath } from 'agentvault';
+import { collectMetrics, getMetricsFilePath } from 'soulrecall';
 
 const metrics = await collectMetrics(canisterId);
 // Returns: requests, errors, latency, memory, cycles
@@ -241,7 +241,7 @@ Backup and restore.
 Backup creation.
 
 ```typescript
-import { createBackup, restoreBackup } from 'agentvault';
+import { createBackup, restoreBackup } from 'soulrecall';
 
 const backup = await createBackup(agentName, {
   canisterId: 'abcde-aaaab',
@@ -262,7 +262,7 @@ Arweave archival storage.
 Arweave integration.
 
 ```typescript
-import { ArweaveClient } from 'agentvault';
+import { ArweaveClient } from 'soulrecall';
 
 const client = new ArweaveClient();
 await client.upload(backup);
@@ -280,7 +280,7 @@ AI inference integration.
 Bittensor network client.
 
 ```typescript
-import { BittensorClient } from 'agentvault';
+import { BittensorClient } from 'soulrecall';
 
 const client = new BittensorClient();
 const response = await client.query({ prompt: 'Hello' });

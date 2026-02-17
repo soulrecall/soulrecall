@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * AgentVault CLI
+ * SoulRecall CLI
  *
- * Command-line interface for the AgentVault platform.
+ * Command-line interface for the SoulRecall platform.
  */
 
 import { Command } from 'commander';
@@ -47,7 +47,7 @@ export function createProgram(): Command {
   const program = new Command();
 
   program
-    .name('agentvault')
+    .name('soulrecall')
     .description('Persistent On-Chain AI Agent Platform - Sovereign, Reconstructible, Autonomous')
     .version(VERSION, '-v, --version', 'output the current version');
 

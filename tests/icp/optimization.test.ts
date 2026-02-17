@@ -36,7 +36,7 @@ let outputPath: string;
 
 beforeEach(() => {
   vi.clearAllMocks();
-  tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'agentvault-test-'));
+  tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'soulrecall-test-'));
   inputPath = path.join(tempDir, 'input.wasm');
   outputPath = path.join(tempDir, 'output.wasm');
 

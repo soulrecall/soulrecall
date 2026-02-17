@@ -1,7 +1,7 @@
 /**
  * Cloud Storage Module
  *
- * Archive and restore AgentVault data to consumer cloud storage
+ * Archive and restore SoulRecall data to consumer cloud storage
  * providers (Google Drive, iCloud, Dropbox, OneDrive, etc.)
  * using their local sync directories. No crypto required.
  */

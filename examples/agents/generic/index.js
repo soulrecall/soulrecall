@@ -2,7 +2,7 @@
  * Example Generic Agent Entry Point
  *
  * This is a simple example of a generic agent that can be
- * deployed to AgentVault and executed on ICP.
+ * deployed to SoulRecall and executed on ICP.
  */
 
 async function processMessage(message, context) {

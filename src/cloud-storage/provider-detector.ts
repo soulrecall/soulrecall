@@ -155,10 +155,10 @@ export function detectAvailableProviders(): DetectedProvider[] {
 }
 
 /**
- * Get the default AgentVault subdirectory name inside a cloud provider.
+ * Get the default SoulRecall subdirectory name inside a cloud provider.
  */
 export function getCloudSubdirectory(): string {
-  return 'AgentVault-Backups';
+  return 'SoulRecall-Backups';
 }
 
 /**

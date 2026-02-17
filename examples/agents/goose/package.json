@@ -1,15 +1,15 @@
-name: "@agentvault/examples/goose"
+name: "@soulrecall/examples/goose"
 version: "1.0.0"
-description: "Example Goose agent configuration for AgentVault"
+description: "Example Goose agent configuration for SoulRecall"
 type: "module"
 scripts:
-  package: "agentvault package"
-  deploy: "agentvault deploy"
+  package: "soulrecall package"
+  deploy: "soulrecall deploy"
 keywords:
-  - "agentvault"
+  - "soulrecall"
   - "goose"
   - "example"
   - "ai-agent"
-author: "AgentVault"
+author: "SoulRecall"
 license: "MIT"
 dependencies: {}

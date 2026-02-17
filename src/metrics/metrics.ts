@@ -2,7 +2,7 @@
  * Metrics Module
  *
  * Stores and retrieves canister metrics (cycles, memory, messages, etc.)
- * in JSONL format: ~/.agentvault/metrics/<canister-id>/YYYY-MM-DD.jsonl
+ * in JSONL format: ~/.soulrecall/metrics/<canister-id>/YYYY-MM-DD.jsonl
  */
 
 import fs from 'node:fs';
@@ -38,8 +38,8 @@ export interface CollectorConfig {
   retentionDays?: number;
 }
 
-const AGENTVAULT_DIR = path.join(os.homedir(), '.agentvault');
-const METRICS_DIR = path.join(AGENTVAULT_DIR, 'metrics');
+const SOULRECALL_DIR = path.join(os.homedir(), '.soulrecall');
+const METRICS_DIR = path.join(SOULRECALL_DIR, 'metrics');
 
 function getMetricsDir(canisterId: string): string {
   const dir = path.join(METRICS_DIR, canisterId);

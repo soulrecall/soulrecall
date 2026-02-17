@@ -1,19 +1,19 @@
-# AgentVault ICP Tools Integration
+# SoulRecall ICP Tools Integration
 ## Product Requirements Document (PRD)
 
 **Version:** 1.0
 **Date:** February 5, 2026
 **Status:** Draft
-**Related PRD:** Main AgentVault PRD (v1.0)
+**Related PRD:** Main SoulRecall PRD (v1.0)
 
 ---
 
 ## 1. Executive Summary
 
-This PRD outlines the integration of official ICP tooling (`ic-wasm` and `icp-cli`) into the AgentVault CLI to provide a more robust, maintainable, and feature-complete solution for ICP canister management.
+This PRD outlines the integration of official ICP tooling (`ic-wasm` and `icp-cli`) into the SoulRecall CLI to provide a more robust, maintainable, and feature-complete solution for ICP canister management.
 
 **Problem Statement:**
-The current AgentVault implementation relies on legacy dfx workflows and manual command execution, which lacks:
+The current SoulRecall implementation relies on legacy dfx workflows and manual command execution, which lacks:
 - Native WASM optimization and validation
 - Streamlined deployment workflows
 - Official toolchain support and updates
@@ -47,7 +47,7 @@ Integrate `ic-wasm` (0.9.11) for WASM transformations and `icp-cli` (0.1.0) for 
 - **Instrumentation**: Experimental execution tracing for debugging
 - **Information**: Extract detailed canister metadata and statistics
 
-**Relevance to AgentVault:**
+**Relevance to SoulRecall:**
 - Optimize agent WASM modules before canister deployment
 - Set appropriate resource limits for different agent types
 - Validate canister interfaces before uploading
@@ -66,7 +66,7 @@ Integrate `ic-wasm` (0.9.11) for WASM transformations and `icp-cli` (0.1.0) for 
 - **Token Operations**: Perform ICP and ICRC token transactions
 - **Environment Management**: Multi-environment project configurations
 
-**Relevance to AgentVault:**
+**Relevance to SoulRecall:**
 - Streamlined canister deployment workflows
 - Multi-environment support (dev, staging, prod)
 - Built-in identity and cycle management
@@ -102,10 +102,10 @@ Integrate `ic-wasm` (0.9.11) for WASM transformations and `icp-cli` (0.1.0) for 
 **CLI Commands:**
 ```bash
 # Enhanced packaging with optimization
-agentvault package <agent-dir> --optimize --shrink --validate
+soulrecall package <agent-dir> --optimize --shrink --validate
 
 # Packaging with custom resource limits
-agentvault package <agent-dir> \
+soulrecall package <agent-dir> \
   --memory-limit 4GiB \
   --compute-quota 10000000000 \
   --optimize-level 3
@@ -140,13 +140,13 @@ agentvault package <agent-dir> \
 **CLI Commands:**
 ```bash
 # Deploy to local network
-agentvault deploy <agent-name> --env local
+soulrecall deploy <agent-name> --env local
 
 # Deploy to mainnet with cycles
-agentvault deploy <agent-name> --env mainnet --cycles 100T
+soulrecall deploy <agent-name> --env mainnet --cycles 100T
 
 # Deploy with custom configuration
-agentvault deploy <agent-name> \
+soulrecall deploy <agent-name> \
   --env production \
   --identity main-wallet \
   --canister-id abc123-def456
@@ -181,16 +181,16 @@ agentvault deploy <agent-name> \
 **CLI Commands:**
 ```bash
 # Show canister details
-agentvault info <agent-name>
+soulrecall info <agent-name>
 
 # Monitor canister status
-agentvault monitor <agent-name> --watch
+soulrecall monitor <agent-name> --watch
 
 # Show resource usage
-agentvault stats <agent-name> --period 24h
+soulrecall stats <agent-name> --period 24h
 
 # Check canister health
-agentvault health <agent-name> --detailed
+soulrecall health <agent-name> --detailed
 ```
 
 **Success Metrics:**
@@ -221,20 +221,20 @@ agentvault health <agent-name> --detailed
 **CLI Commands:**
 ```bash
 # Identity management
-agentvault identity list
-agentvault identity create <name>
-agentvault identity use <name>
-agentvault identity export <name> --file backup.pem
+soulrecall identity list
+soulrecall identity create <name>
+soulrecall identity use <name>
+soulrecall identity export <name> --file backup.pem
 
 # Cycle management
-agentvault cycles balance <agent-name>
-agentvault cycles mint <amount> --to <canister-id>
-agentvault cycles transfer <amount> --from <source> --to <dest>
-agentvault cycles predict <agent-name> --days 30
+soulrecall cycles balance <agent-name>
+soulrecall cycles mint <amount> --to <canister-id>
+soulrecall cycles transfer <amount> --from <source> --to <dest>
+soulrecall cycles predict <agent-name> --days 30
 
 # Token operations
-agentvault token balance --canister <canister-id>
-agentvault token transfer <amount> --to <recipient>
+soulrecall token balance --canister <canister-id>
+soulrecall token transfer <amount> --to <recipient>
 ```
 
 **Success Metrics:**
@@ -265,15 +265,15 @@ agentvault token transfer <amount> --to <recipient>
 **CLI Commands:**
 ```bash
 # Launch local network
-agentvault network create --name testnet1 --nodes 4
-agentvault network start testnet1
-agentvault network status testnet1
+soulrecall network create --name testnet1 --nodes 4
+soulrecall network start testnet1
+soulrecall network status testnet1
 
 # Deploy locally
-agentvault deploy <agent-name> --network testnet1
+soulrecall deploy <agent-name> --network testnet1
 
 # Run tests locally
-agentvault test <agent-name> --network local --load-test
+soulrecall test <agent-name> --network local --load-test
 ```
 
 #### 3.2.2 Multi-Environment Deployment (Phase 3)
@@ -296,14 +296,14 @@ agentvault test <agent-name> --network local --load-test
 **CLI Commands:**
 ```bash
 # Promote canister
-agentvault promote <agent-name> --from dev --to staging
-agentvault promote <agent-name> --from staging --to prod
+soulrecall promote <agent-name> --from dev --to staging
+soulrecall promote <agent-name> --from staging --to prod
 
 # Deploy to specific environment
-agentvault deploy <agent-name> --env production
+soulrecall deploy <agent-name> --env production
 
 # Rollback environment
-agentvault rollback <agent-name> --env production --version 3
+soulrecall rollback <agent-name> --env production --version 3
 ```
 
 #### 3.2.3 Instrumentation & Debugging (Phase 3)
@@ -326,16 +326,16 @@ agentvault rollback <agent-name> --env production --version 3
 **CLI Commands:**
 ```bash
 # Instrument canister
-agentvault instrument <agent-name> --output trace.wat
+soulrecall instrument <agent-name> --output trace.wat
 
 # View traces
-agentvault trace <agent-name> --method updateMemory
+soulrecall trace <agent-name> --method updateMemory
 
 # Performance analysis
-agentvault profile <agent-name> --duration 60s
+soulrecall profile <agent-name> --duration 60s
 
 # Log management
-agentvault logs <agent-name> --filter error --tail 100
+soulrecall logs <agent-name> --filter error --tail 100
 ```
 
 ---
@@ -346,7 +346,7 @@ agentvault logs <agent-name> --filter error --tail 100
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                    AgentVault CLI (Node.js/TypeScript)           │
+│                    SoulRecall CLI (Node.js/TypeScript)           │
 │                                                                │
 │  ┌───────────────────────────────────────────────────────────────┐ │
 │  │                    Command Layer                            │ │
@@ -392,8 +392,8 @@ agentvault logs <agent-name> --filter error --tail 100
 ### 4.3 Configuration Structure
 
 **New config files:**
-- `~/.agentvault/icp.yaml` - ICP environment configuration
-- `~/.agentvault/toolchain.yaml` - Toolchain settings
+- `~/.soulrecall/icp.yaml` - ICP environment configuration
+- `~/.soulrecall/toolchain.yaml` - Toolchain settings
 
 **icp.yaml example:**
 ```yaml
@@ -633,7 +633,7 @@ optimization:
 
 ## 12. Related PRDs
 
-- Main AgentVault PRD (v1.0)
+- Main SoulRecall PRD (v1.0)
 - Phase-specific implementation docs
 - Security requirements document
 
@@ -703,4 +703,4 @@ MIT License - Open source, freely usable and modifiable.
 
 ---
 
-*This PRD is ready for implementation and will be developed alongside the main AgentVault PRD*
+*This PRD is ready for implementation and will be developed alongside the main SoulRecall PRD*

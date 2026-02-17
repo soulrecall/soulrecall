@@ -6,7 +6,7 @@
 
 ## Executive Summary
 
-Phase 5 brought AgentVault to production-ready state with:
+Phase 5 brought SoulRecall to production-ready state with:
 - ✅ CI/CD pipeline with automated testing
 - ✅ Comprehensive documentation for users and developers  
 - ✅ Production package configuration
@@ -115,7 +115,7 @@ The following items are tracked separately and do not block this release:
 
 1. [ ] **Testing** - Write more tests for Phase 4 modules (archival, inference, multisig)
 2. [ ] **Webapp Testing** - Add component and integration tests
-3. [ ] **Documentation Host** - Move docs to docs.agentvault.dev
+3. [ ] **Documentation Host** - Move docs to https://soulrecall.cloud/docs
 4. [ ] **Security Audit** - Conduct external or self-audit before v2.0
 5. [ ] **Performance** - Optimize startup time and memory usage
 6. [ ] **Community** - Set up Discord, respond to issues
@@ -180,7 +180,7 @@ The following items are tracked separately and do not block this release:
 
 ## Conclusion
 
-**AgentVault v1.0.0 is production-ready** for public release:
+**SoulRecall v1.0.0 is production-ready** for public release:
 
 ✅ Complete CLI toolchain
 ✅ Full-featured web dashboard

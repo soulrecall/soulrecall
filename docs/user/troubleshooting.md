@@ -1,6 +1,6 @@
 # Troubleshooting
 
-This guide covers common issues and solutions when using AgentVault.
+This guide covers common issues and solutions when using SoulRecall.
 
 ## Table of Contents
 
@@ -58,13 +58,13 @@ dfx --version
 
 ```bash
 # Run with sudo (use caution)
-sudo npm install -g agentvault
+sudo npm install -g soulrecall
 
 # Fix file permissions
 chmod +x ./dist/cli/index.js
 
 # Use proper ownership
-sudo chown -R $USER:$USER ~/.agentvault
+sudo chown -R $USER:$USER ~/.soulrecall
 ```
 
 ## Configuration Issues
@@ -77,7 +77,7 @@ sudo chown -R $USER:$USER ~/.agentvault
 
 ```bash
 # Initialize new project
-agentvault init <project-name>
+soulrecall init <project-name>
 
 # Check current directory
 ls -la
@@ -97,10 +97,10 @@ EOF
 
 ```bash
 # Validate configuration
-agentvault validate
+soulrecall validate
 
 # Show example config
-agentvault init --example
+soulrecall init --example
 
 # Use schema documentation
 docs/user/deployment.md
@@ -114,13 +114,13 @@ docs/user/deployment.md
 
 ```bash
 # Create new wallet
-agentvault wallet create
+soulrecall wallet create
 
 # Import existing wallet
-agentvault wallet import --mnemonic
+soulrecall wallet import --mnemonic
 
 # Check wallet storage
-ls -la ~/.agentvault/wallets
+ls -la ~/.soulrecall/wallets
 ```
 
 ## Deployment Issues
@@ -133,16 +133,16 @@ ls -la ~/.agentvault/wallets
 
 ```bash
 # Check balance
-agentvault wallet balance
+soulrecall wallet balance
 
 # Request from faucet
-agentvault wallet faucet
+soulrecall wallet faucet
 
 # Purchase cycles
-agentvault wallet purchase --amount 1000000000000
+soulrecall wallet purchase --amount 1000000000000
 
 # Deploy with less cycles
-agentvault deploy --cycles 500000000000
+soulrecall deploy --cycles 500000000000
 ```
 
 ### Canister creation failed
@@ -153,16 +153,16 @@ agentvault deploy --cycles 500000000000
 
 ```bash
 # Check network status
-agentvault network status
+soulrecall network status
 
 # Verify identity
 dfx identity whoami
 
 # Try alternative network
-agentvault deploy --network local
+soulrecall deploy --network local
 
 # Check for rate limits
-agentvault status
+soulrecall status
 ```
 
 ### Code installation failed
@@ -176,7 +176,7 @@ agentvault status
 ls -lh dist/*.wasm
 
 # Recompile
-agentvault package
+soulrecall package
 
 # Manual compilation
 npx tsc && npx esbuild
@@ -193,13 +193,13 @@ xxd dist/agent.wasm
 
 ```bash
 # Increase timeout
-agentvault deploy --timeout 600
+soulrecall deploy --timeout 600
 
 # Use background deployment
-agentvault deploy --background
+soulrecall deploy --background
 
 # Check canister status
-agentvault status <canister-id>
+soulrecall status <canister-id>
 ```
 
 ## Runtime Issues
@@ -212,16 +212,16 @@ agentvault status <canister-id>
 
 ```bash
 # Check canister status
-agentvault status <canister-id>
+soulrecall status <canister-id>
 
 # Restart canister
-agentvault restart <canister-id>
+soulrecall restart <canister-id>
 
 # Check health endpoint
-agentvault health <canister-id>
+soulrecall health <canister-id>
 
 # View logs for errors
-agentvault logs <canister-id>
+soulrecall logs <canister-id>
 ```
 
 ### Out of memory
@@ -232,16 +232,16 @@ agentvault logs <canister-id>
 
 ```bash
 # Increase memory allocation
-agentvault upgrade <canister-id> --memory 512
+soulrecall upgrade <canister-id> --memory 512
 
 # Optimize agent code
-agentvault optimize --target <project-path>
+soulrecall optimize --target <project-path>
 
 # Restart canister
-agentvault restart <canister-id>
+soulrecall restart <canister-id>
 
 # Clear stable memory (if applicable)
-agentvault exec <canister-id> "clear"
+soulrecall exec <canister-id> "clear"
 ```
 
 ### Transaction failed
@@ -252,16 +252,16 @@ agentvault exec <canister-id> "clear"
 
 ```bash
 # Check transaction status
-agentvault wallet tx <tx-id>
+soulrecall wallet tx <tx-id>
 
 # View failure reason
-agentvault wallet tx <tx-id> --details
+soulrecall wallet tx <tx-id> --details
 
 # Retry transaction
-agentvault wallet retry <tx-id>
+soulrecall wallet retry <tx-id>
 
 # Check fees
-agentvault wallet fees --network icp
+soulrecall wallet fees --network icp
 ```
 
 ## Performance Issues
@@ -274,36 +274,36 @@ agentvault wallet fees --network icp
 
 ```bash
 # Clear cache
-agentvault cache clear
+soulrecall cache clear
 
 # Check disk space
-df -h ~/.agentvault
+df -h ~/.soulrecall
 
 # Optimize database
-agentvault db optimize
+soulrecall db optimize
 
 # Reduce log verbosity
-agentvault config set --log-level warn
+soulrecall config set --log-level warn
 ```
 
 ### High memory usage
 
-**Problem:** AgentVault consuming too much memory
+**Problem:** SoulRecall consuming too much memory
 
 **Solutions:**
 
 ```bash
 # Check memory usage
-ps aux | grep agentvault
+ps aux | grep soulrecall
 
 # Limit concurrent operations
-agentvault config set --max-concurrent 5
+soulrecall config set --max-concurrent 5
 
 # Clear history
-agentvault history clear
+soulrecall history clear
 
 # Restart services
-pkill -HUP agentvault
+pkill -HUP soulrecall
 ```
 
 ### Database lock errors
@@ -314,16 +314,16 @@ pkill -HUP agentvault
 
 ```bash
 # Check for running processes
-ps aux | grep agentvault
+ps aux | grep soulrecall
 
 # Kill stale processes
-pkill -9 agentvault
+pkill -9 soulrecall
 
 # Remove lock file
-rm -f ~/.agentvault/*.lock
+rm -f ~/.soulrecall/*.lock
 
 # Restart
-agentvault restart
+soulrecall restart
 ```
 
 ## Network Issues
@@ -336,7 +336,7 @@ agentvault restart
 
 ```bash
 # Check if service is running
-agentvault status
+soulrecall status
 
 # Check port availability
 netstat -an | grep 4943
@@ -346,7 +346,7 @@ ufw status  # Linux
 sudo ufw allow 4943/tcp
 
 # Try alternative host
-agentvault network status --host https://ic0.app
+soulrecall network status --host https://ic0.app
 ```
 
 ### DNS resolution failed
@@ -363,7 +363,7 @@ nslookup ic0.app
 echo "8.8.8.8" | sudo tee /etc/resolv.conf
 
 # Use direct IP
-agentvault config set --icp-host http://205.171.201.22
+soulrecall config set --icp-host http://205.171.201.22
 ```
 
 ### Timeout errors
@@ -374,13 +374,13 @@ agentvault config set --icp-host http://205.171.201.22
 
 ```bash
 # Increase timeout globally
-agentvault config set --timeout 300
+soulrecall config set --timeout 300
 
 # Increase per-command timeout
-agentvault deploy --timeout 600
+soulrecall deploy --timeout 600
 
 # Use longer retries
-agentvault config set --retries 5
+soulrecall config set --retries 5
 ```
 
 ## Debug Mode
@@ -389,16 +389,16 @@ Enable detailed logging for troubleshooting:
 
 ```bash
 # Enable debug mode
-agentvault --debug <command>
+soulrecall --debug <command>
 
 # Set debug level
-agentvault config set --log-level debug
+soulrecall config set --log-level debug
 
 # Enable verbose output
-agentvault --verbose <command>
+soulrecall --verbose <command>
 
 # Save logs to file
-agentvault logs <canister-id> > debug.log 2>&1
+soulrecall logs <canister-id> > debug.log 2>&1
 ```
 
 ## Getting Help
@@ -407,13 +407,13 @@ agentvault logs <canister-id> > debug.log 2>&1
 
 ```bash
 # General help
-agentvault --help
+soulrecall --help
 
 # Command-specific help
-agentvault deploy --help
+soulrecall deploy --help
 
 # List available commands
-agentvault --list-commands
+soulrecall --list-commands
 ```
 
 ### Issue Reporting
@@ -422,10 +422,10 @@ Report bugs and issues:
 
 ```bash
 # Collect diagnostic information
-agentvault doctor
+soulrecall doctor
 
 # Create bug report
-agentvault bug-report --output bug-report.txt
+soulrecall bug-report --output bug-report.txt
 
 # Submit to GitHub
 gh issue create --title "Issue Title" --body @bug-report.txt
@@ -435,10 +435,10 @@ gh issue create --title "Issue Title" --body @bug-report.txt
 
 Get help from the community:
 
-- **GitHub Issues:** https://github.com/your-org/agentvault/issues
-- **Discord:** https://discord.gg/agentvault
+- **GitHub Issues:** https://github.com/your-org/soulrecall/issues
+- **Discord:** https://discord.gg/soulrecall
 - **Forum:** https://forum.dfinity.org/
-- **Documentation:** https://docs.agentvault.dev
+- **Documentation:** https://soulrecall.cloud/docs
 
 ## Recovery Procedures
 
@@ -446,20 +446,20 @@ Get help from the community:
 
 ```bash
 # List available rollbacks
-agentvault rollback list <canister-id>
+soulrecall rollback list <canister-id>
 
 # Rollback to previous version
-agentvault rollback <canister-id> --version <version-number>
+soulrecall rollback <canister-id> --version <version-number>
 ```
 
 ### Emergency canister stop
 
 ```bash
 # Force stop canister
-agentvault stop <canister-id> --force
+soulrecall stop <canister-id> --force
 
 # Delete canister (caution: irreversible)
-agentvault delete <canister-id> --confirm
+soulrecall delete <canister-id> --confirm
 ```
 
 ## Advanced Troubleshooting
@@ -468,40 +468,40 @@ agentvault delete <canister-id> --confirm
 
 ```bash
 # Set environment variable
-export AGENTVAULT_DEBUG=true
+export SOULRECALL_DEBUG=true
 
 # Enable all log categories
-agentvault config set --log-categories all
+soulrecall config set --log-categories all
 
 # Set max log level
-agentvault config set --log-level trace
+soulrecall config set --log-level trace
 ```
 
 ### Inspect canister state
 
 ```bash
 # Query canister status
-agentvault status <canister-id>
+soulrecall status <canister-id>
 
 # Query canister info
-agentvault info <canister-id>
+soulrecall info <canister-id>
 
 # Dump canister heap
-agentvault exec <canister-id> "debug.heapDump()"
+soulrecall exec <canister-id> "debug.heapDump()"
 ```
 
 ### Network diagnostics
 
 ```bash
 # Test network connectivity
-agentvault network test
+soulrecall network test
 
 # Measure latency
-agentvault network ping --count 10
+soulrecall network ping --count 10
 
 # Test with different hosts
-agentvault network test --host ic0.app
-agentvault network test --host gateway.ic0.app
+soulrecall network test --host ic0.app
+soulrecall network test --host gateway.ic0.app
 ```
 
 ## Preventive Measures
@@ -510,34 +510,34 @@ agentvault network test --host gateway.ic0.app
 
 ```bash
 # Schedule automatic backups
-agentvault backup schedule --all --frequency daily
+soulrecall backup schedule --all --frequency daily
 
 # Backup before major changes
-agentvault backup create --all --pre-change
+soulrecall backup create --all --pre-change
 ```
 
 ### Health monitoring
 
 ```bash
 # Enable continuous monitoring
-agentvault monitor start --interval 60
+soulrecall monitor start --interval 60
 
 # Set up alerts
-agentvault alert configure --email admin@example.com
-agentvault alert configure --webhook https://hooks.example.com
+soulrecall alert configure --email admin@example.com
+soulrecall alert configure --webhook https://hooks.example.com
 ```
 
 ### Resource limits
 
 ```bash
 # Set memory limits
-agentvault config set --max-memory 4GB
+soulrecall config set --max-memory 4GB
 
 # Set CPU limits
-agentvault config set --max-cpu 80%
+soulrecall config set --max-cpu 80%
 
 # Set disk limits
-agentvault config set --max-disk 10GB
+soulrecall config set --max-disk 10GB
 ```
 
 ## Next Steps

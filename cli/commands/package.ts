@@ -139,7 +139,7 @@ export function displayResult(result: PackageResult): void {
 
   console.log(chalk.cyan('Next steps:'));
   console.log('  1. Review the generated files');
-  console.log('  2. Run', chalk.bold('agentvault deploy'), 'to upload to ICP');
+  console.log('  2. Run', chalk.bold('soulrecall deploy'), 'to upload to ICP');
 }
 
 /**
@@ -210,7 +210,7 @@ export function packageCommand(): Command {
     .option('--memory-limit <limit>', 'set canister memory limit (e.g. 4GiB)')
     .option('--compute-quota <quota>', 'set canister compute quota')
     .action(async (source: string, options: PackageCommandOptions) => {
-      console.log(chalk.bold('\n📦 AgentVault Package\n'));
+      console.log(chalk.bold('\n📦 SoulRecall Package\n'));
 
       try {
         await executePackage(source, options);

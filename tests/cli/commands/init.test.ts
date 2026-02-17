@@ -63,7 +63,7 @@ describe('init command', () => {
       const result = await promptForInitOptions({ yes: true });
       expect(result).toEqual({
         name: 'my-agent',
-        description: 'An AgentVault agent',
+        description: 'An SoulRecall agent',
         confirm: true,
       });
     });
@@ -72,7 +72,7 @@ describe('init command', () => {
       const result = await promptForInitOptions({ yes: true, name: 'custom-agent' });
       expect(result).toEqual({
         name: 'custom-agent',
-        description: 'An AgentVault agent',
+        description: 'An SoulRecall agent',
         confirm: true,
       });
     });

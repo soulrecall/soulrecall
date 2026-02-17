@@ -1,4 +1,4 @@
-# AgentVault
+# SoulRecall
 ## Product Requirements Document (PRD)
 
 **Version:** 1.0
@@ -9,7 +9,7 @@
 
 ## 1. Executive Summary
 
-AgentVault is an open-source CLI and canister system that enables true autonomy for local AI agents. It solves the fundamental problem of agent state persistence and execution reliability by migrating from fragile local file storage to immutable, sovereign Internet Computer (ICP) canisters.
+SoulRecall is an open-source CLI and canister system that enables true autonomy for local AI agents. It solves the fundamental problem of agent state persistence and execution reliability by migrating from fragile local file storage to immutable, sovereign Internet Computer (ICP) canisters.
 
 Core value proposition: **Any user can fully rebuild and resume their agent on a clean OS install using only chain data and a seed phrase—eliminating browser/tab dependency, centralized KMS threats, and fragile off-chain storage.**
 
@@ -51,7 +51,7 @@ Create an open-source tool that:
   - Cloud vendor lock-in
   - Can't audit or verify agent state on-chain
   - Regulatory concerns about AI autonomy
-- **Goals:** Deploy AgentVault canisters, manage agents via CLI, audit execution logs
+- **Goals:** Deploy SoulRecall canisters, manage agents via CLI, audit execution logs
 
 ### 2.3 Hobbyist/Tinkerer
 - **Profile:** Experimenting with multiple AI agents, wants easy migration
@@ -69,7 +69,7 @@ Create an open-source tool that:
 ### 3.1 Core Features (MVP)
 
 #### 3.1.1 Agent Packaging
-- **CLI Command:** `agentvault package <agent-dir>` packages agent directory into WASM
+- **CLI Command:** `soulrecall package <agent-dir>` packages agent directory into WASM
 - **Auto-Detection:** Detects agent type (Clawdbot, Goose, Cline, generic)
 - **Config Ingestion:** Reads agent configs (settings, memory, tasks)
 - **WASM Compilation:** Compiles to `.wasm` and `.wat` files
@@ -77,7 +77,7 @@ Create an open-source tool that:
 
 #### 3.1.2 Canister Deployment
 - **Canister Creation:** Create new ICP canister for agent state
-- **Deploy Command:** `agentvault deploy <agent-name>` uploads compiled agent
+- **Deploy Command:** `soulrecall deploy <agent-name>` uploads compiled agent
 - **State Upload:** Uploads agent state JSON to canister storage
 - **Secret Management:** VetKeys API for threshold key derivation
 
@@ -87,9 +87,9 @@ Create an open-source tool that:
 - **Action Dispatching:** Submit tasks to canister, poll for completion
 
 #### 3.1.4 Reconstruction CLI
-- **Fetch State:** `agentvault fetch <agent-name>` downloads state from canister
-- **Decrypt State:** `agentvault decrypt` prompts for seed phrase, decrypts all agent data
-- **Local Rebuild:** `agentvault rebuild` compiles WasmEdge locally, restarts agent
+- **Fetch State:** `soulrecall fetch <agent-name>` downloads state from canister
+- **Decrypt State:** `soulrecall decrypt` prompts for seed phrase, decrypts all agent data
+- **Local Rebuild:** `soulrecall rebuild` compiles WasmEdge locally, restarts agent
 
 #### 3.1.5 Security
 - **VetKeys Integration:** Encrypt secrets using threshold key derivation
@@ -99,7 +99,7 @@ Create an open-source tool that:
 ### 3.2 Integration - Phase 2
 
 #### 3.2.1 Multi-Agent Support
-- **Agent Directory:** `~/.agentvault/agents/` stores multiple agent configs
+- **Agent Directory:** `~/.soulrecall/agents/` stores multiple agent configs
 - **Canister Mapping:** Each agent can be deployed to separate canister
 - **Shared State:** Optional shared canisters for agent communication
 
@@ -166,7 +166,7 @@ Create an open-source tool that:
 │         │                    │         │             │            │
 │         ▼                    │         ▼             │            │
 │  ┌──────────────────┐   ┌────────────┐   ┌──────────────────┐ │
-│  │ AgentVault CLI    │   │ Cross-Chain  │   │ dApp (Next.js)   │ │
+│  │ SoulRecall CLI    │   │ Cross-Chain  │   │ dApp (Next.js)   │ │
 │  │ (User controls)   │   │ (Bitensor)    │   │ (Monitoring UI)  │ │
 │  └──────────────────┘   └────────────┘   └──────────────────┘ │
 └─────────────────────────────────────────────────────────────────────┘
@@ -259,7 +259,7 @@ interface Task {
 - [ ] Write integration tests for CLI commands
 - [ ] Implement basic VetKeys integration (encryption only)
 
-**Deliverable:** Working CLI with `agentvault package` and `agentvault deploy` commands
+**Deliverable:** Working CLI with `soulrecall package` and `soulrecall deploy` commands
 
 ---
 
@@ -294,7 +294,7 @@ interface Task {
 **Expansion Focus:** Multiple agent support and cross-chain actions
 
 - [ ] Implement multi-agent canister management
-- [ ] Add agent directory management (`~/.agentvault/agents/`)
+- [ ] Add agent directory management (`~/.soulrecall/agents/`)
 - [ ] Implement cross-chain oracles (dfx Bitensor integration)
 - [ ] Add wallet connection (ckETH, Polkadot, Solana)
 - [ ] Build dApp monitoring UI (Next.js scaffold)
@@ -353,7 +353,7 @@ interface Task {
 ### 7.1 Adoption
 - **npm downloads:** 1,000+ within 3 months
 - **GitHub stars:** 500+ within 6 months
-- **Active canisters:** 50+ deployed AgentVault canisters
+- **Active canisters:** 50+ deployed SoulRecall canisters
 - **Migrated agents:** 10+ agent types supported
 
 ### 7.2 Quality
@@ -444,15 +444,15 @@ interface Task {
 ### A. File Structure
 
 ```
-agentvault/
+soulrecall/
 ├── src/
 │   ├── index.ts              # CLI entry point
 │   ├── commands/
-│   │   ├── package.ts      # agentvault package
-│   │   ├── deploy.ts       # agentvault deploy
-│   │   ├── fetch.ts        # agentvault fetch
-│   │   ├── decrypt.ts      # agentvault decrypt
-│   │   └── rebuild.ts      # agentvault rebuild
+│   │   ├── package.ts      # soulrecall package
+│   │   ├── deploy.ts       # soulrecall deploy
+│   │   ├── fetch.ts        # soulrecall fetch
+│   │   ├── decrypt.ts      # soulrecall decrypt
+│   │   └── rebuild.ts      # soulrecall rebuild
 │   ├── packaging/
 │   │   ├── compiler.ts     # WASM compilation
 │   │   └── serializer.ts  # State JSON export
@@ -485,27 +485,27 @@ agentvault/
 
 ```bash
 # Packaging (compile agent to WASM)
-agentvault package ./path/to/agent
+soulrecall package ./path/to/agent
 
 # Deployment (upload to ICP canister)
-agentvault deploy <agent-name> [--canister <canister-id>]
+soulrecall deploy <agent-name> [--canister <canister-id>]
 
 # Execution (run agent on-chain)
-agentvault exec <agent-name> <task>
+soulrecall exec <agent-name> <task>
 
 # State Management
-agentvault list                          # List all agents
-agentvault show <agent-name>            # Show agent state
-agentvault fetch <agent-name>            # Download state from canister
-agentvault decrypt <agent-name>           # Decrypt state (prompts for seed)
-agentvault rebuild <agent-name>           # Rebuild locally from canister state
-agentvault backup <agent-name>           # Export agent backup
+soulrecall list                          # List all agents
+soulrecall show <agent-name>            # Show agent state
+soulrecall fetch <agent-name>            # Download state from canister
+soulrecall decrypt <agent-name>           # Decrypt state (prompts for seed)
+soulrecall rebuild <agent-name>           # Rebuild locally from canister state
+soulrecall backup <agent-name>           # Export agent backup
 
 # Cross-Chain
-agentvault chain-bridge <agent> <chain> <action>    # Cross-chain action
+soulrecall chain-bridge <agent> <chain> <action>    # Cross-chain action
 
 # dApp (Phase 2+)
-agentvault dapp start [--port 3000]        # Start monitoring UI
+soulrecall dapp start [--port 3000]        # Start monitoring UI
 ```
 
 ---

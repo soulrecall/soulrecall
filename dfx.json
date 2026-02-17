@@ -1,6 +1,6 @@
 {
   "canisters": {
-    "agent_vault": {
+    "soul_recall": {
       "main": "canister/agent.mo"
     }
   }

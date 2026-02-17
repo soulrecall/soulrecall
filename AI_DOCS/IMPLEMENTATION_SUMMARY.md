@@ -86,7 +86,7 @@
 
 ```
 ┌─────────────────────────────────────────────────┐
-│         AgentVault CLI (TypeScript)         │
+│         SoulRecall CLI (TypeScript)         │
 │  - Package → Deploy → Execute → Rebuild   │
 └──────────────┬──────────────────────────────┘
                │

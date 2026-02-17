@@ -48,7 +48,7 @@ export function generateWasmEdgeWrapper(
   config: AgentConfig
 ): string {
   const wrapper = `
-// AgentVault WasmEdge Module
+// SoulRecall WasmEdge Module
 // Agent: ${config.name}
 // Type: ${config.type}
 // Generated: ${new Date().toISOString()}

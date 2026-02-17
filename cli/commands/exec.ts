@@ -138,7 +138,7 @@ export function execCommand(): Command {
     .option('-a, --async', 'return immediately without waiting for completion')
     .option('-p, --polling', 'poll for task completion (default: true)')
     .action(async (canisterId: string, task: string, options: ExecCommandOptions) => {
-      console.log(chalk.bold('\n⚡ AgentVault Exec\n'));
+      console.log(chalk.bold('\n⚡ SoulRecall Exec\n'));
 
       try {
         const result = await executeExec(canisterId, task, options);
@@ -149,7 +149,7 @@ export function execCommand(): Command {
           console.log(`  Task ID:  ${result.taskId}`);
           console.log(`  Status:   ${result.status}`);
           console.log();
-          console.log('Use', chalk.bold('agentvault show'), 'to check task status.');
+          console.log('Use', chalk.bold('soulrecall show'), 'to check task status.');
         }
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Unknown error';

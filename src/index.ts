@@ -1,17 +1,17 @@
 /**
- * AgentVault - Persistent On-Chain AI Agent Platform
+ * SoulRecall - Persistent On-Chain AI Agent Platform
  *
  * Sovereign, Reconstructible, Autonomous
  */
 
 export const VERSION = '1.0.0';
 
-export interface AgentVaultConfig {
+export interface SoulRecallConfig {
   name: string;
   version: string;
 }
 
-export function createConfig(name: string): AgentVaultConfig {
+export function createConfig(name: string): SoulRecallConfig {
   return {
     name,
     version: VERSION,
@@ -20,6 +20,6 @@ export function createConfig(name: string): AgentVaultConfig {
 
 // CLI entry point
 if (import.meta.url === `file://${process.argv[1]}`) {
-  console.log(`AgentVault v${VERSION}`);
+  console.log(`SoulRecall v${VERSION}`);
   console.log('Persistent On-Chain AI Agent Platform');
 }

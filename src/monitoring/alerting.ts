@@ -16,7 +16,7 @@ import type {
 /**
  * Default alert storage path
  */
-const ALERTS_DIR = path.join(process.env.HOME || process.cwd(), '.agentvault', 'alerts');
+const ALERTS_DIR = path.join(process.env.HOME || process.cwd(), '.soulrecall', 'alerts');
 
 /**
  * Alert storage file path

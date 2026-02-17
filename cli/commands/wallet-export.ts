@@ -50,7 +50,7 @@ function ensureBackupDir(): string {
 function generateBackupFilename(agentId: string, format: ExportFormat): string {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   const ext = format === 'encrypted' ? 'backup' : 'json';
-  return `agentvault-backup-${agentId}-${timestamp}.${ext}`;
+  return `soulrecall-backup-${agentId}-${timestamp}.${ext}`;
 }
 
 /**

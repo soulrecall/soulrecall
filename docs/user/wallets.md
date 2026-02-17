@@ -1,10 +1,10 @@
 # Wallet Guide
 
-This guide covers wallet management, transactions, and cycles in AgentVault.
+This guide covers wallet management, transactions, and cycles in SoulRecall.
 
 ## Overview
 
-AgentVault supports multi-chain wallets:
+SoulRecall supports multi-chain wallets:
 - **ICP (Internet Computer)** - Primary wallet for canister operations
 - **Polkadot** - For cross-chain transactions
 - **Solana** - For DeFi and DApp interactions
@@ -17,7 +17,7 @@ Encrypted wallet stored locally on disk:
 
 ```bash
 # Create local wallet
-agentvault wallet create
+soulrecall wallet create
 
 # Features:
 # - Encrypted storage (AES-256)
@@ -31,7 +31,7 @@ Connect hardware wallet (Ledger, etc.):
 
 ```bash
 # Connect hardware wallet
-agentvault wallet connect --hardware
+soulrecall wallet connect --hardware
 
 # Features:
 # - Private key never leaves device
@@ -45,7 +45,7 @@ agentvault wallet connect --hardware
 
 ```bash
 # Create new ICP wallet
-agentvault wallet create --network icp
+soulrecall wallet create --network icp
 
 # Output: Wallet ID and principal
 ```
@@ -56,10 +56,10 @@ Import existing wallet from mnemonic or private key:
 
 ```bash
 # Import from mnemonic
-agentvault wallet import --mnemonic
+soulrecall wallet import --mnemonic
 
 # Import from private key
-agentvault wallet import --private-key
+soulrecall wallet import --private-key
 ```
 
 ## Wallet Commands
@@ -69,7 +69,7 @@ agentvault wallet import --private-key
 View all connected wallets:
 
 ```bash
-agentvault wallet list
+soulrecall wallet list
 ```
 
 ### Wallet Balance
@@ -78,10 +78,10 @@ Check wallet balance:
 
 ```bash
 # Check all wallets
-agentvault wallet balance
+soulrecall wallet balance
 
 # Check specific wallet
-agentvault wallet balance <wallet-id>
+soulrecall wallet balance <wallet-id>
 ```
 
 ### Sign Transaction
@@ -90,7 +90,7 @@ Sign a transaction with wallet:
 
 ```bash
 # Sign transaction
-agentvault wallet sign <wallet-id> --transaction <tx-payload>
+soulrecall wallet sign <wallet-id> --transaction <tx-payload>
 
 # Options:
 # --hardware     - Use hardware wallet
@@ -103,14 +103,14 @@ View transaction history:
 
 ```bash
 # View all transactions
-agentvault wallet history
+soulrecall wallet history
 
 # View wallet-specific
-agentvault wallet history <wallet-id>
+soulrecall wallet history <wallet-id>
 
 # Filter by type
-agentvault wallet history --type send
-agentvault wallet history --type receive
+soulrecall wallet history --type send
+soulrecall wallet history --type receive
 ```
 
 ### Export Wallet
@@ -119,10 +119,10 @@ Export wallet keys for backup:
 
 ```bash
 # Export to JSON
-agentvault wallet export <wallet-id> --format json
+soulrecall wallet export <wallet-id> --format json
 
 # Export to mnemonic (use with caution)
-agentvault wallet export <wallet-id> --format mnemonic --show
+soulrecall wallet export <wallet-id> --format mnemonic --show
 ```
 
 ## Cycles Management
@@ -133,7 +133,7 @@ Add cycles to wallet:
 
 ```bash
 # Top-up canister
-agentvault wallet top-up <canister-id> --amount 1000000000000
+soulrecall wallet top-up <canister-id> --amount 1000000000000
 
 # Options:
 # --network icp      - Target network
@@ -146,7 +146,7 @@ Transfer cycles between wallets:
 
 ```bash
 # Transfer cycles
-agentvault wallet transfer --from <wallet-id> --to <wallet-id> --amount 1000000000000
+soulrecall wallet transfer --from <wallet-id> --to <wallet-id> --amount 1000000000000
 ```
 
 ### Multi-send
@@ -155,7 +155,7 @@ Send cycles to multiple recipients:
 
 ```bash
 # Batch transfer
-agentvault wallet multi-send --input transfers.json
+soulrecall wallet multi-send --input transfers.json
 
 # Input format:
 # {
@@ -172,13 +172,13 @@ View and process pending transaction queue:
 
 ```bash
 # View queue
-agentvault wallet queue
+soulrecall wallet queue
 
 # Process queue
-agentvault wallet queue --process
+soulrecall wallet queue --process
 
 # Clear failed transactions
-agentvault wallet queue --clear-failed
+soulrecall wallet queue --clear-failed
 ```
 
 ## Cross-Chain Operations
@@ -187,26 +187,26 @@ agentvault wallet queue --clear-failed
 
 ```bash
 # Create Polkadot wallet
-agentvault wallet create --chain polkadot
+soulrecall wallet create --chain polkadot
 
 # Check balance
-agentvault wallet balance <wallet-id> --chain polkadot
+soulrecall wallet balance <wallet-id> --chain polkadot
 
 # Transfer tokens
-agentvault wallet transfer --chain polkadot --to <address> --amount 1000
+soulrecall wallet transfer --chain polkadot --to <address> --amount 1000
 ```
 
 ### Solana
 
 ```bash
 # Create Solana wallet
-agentvault wallet create --chain solana
+soulrecall wallet create --chain solana
 
 # Check balance
-agentvault wallet balance <wallet-id> --chain solana
+soulrecall wallet balance <wallet-id> --chain solana
 
 # Transfer SOL
-agentvault wallet transfer --chain solana --to <address> --amount 1.5
+soulrecall wallet transfer --chain solana --to <address> --amount 1.5
 ```
 
 ## Security Best Practices
@@ -232,7 +232,7 @@ agentvault wallet transfer --chain solana --to <address> --amount 1.5
 **Lost mnemonic?**
 ```bash
 # Can only recover with mnemonic
-agentvault wallet restore --mnemonic "word1 word2 word3 ..."
+soulrecall wallet restore --mnemonic "word1 word2 word3 ..."
 
 # No way to recover without mnemonic
 ```
@@ -249,49 +249,49 @@ agentvault wallet restore --mnemonic "word1 word2 word3 ..."
 
 ```bash
 # List all wallets
-agentvault wallet list
+soulrecall wallet list
 
 # Verify wallet ID
-agentvault wallet info <wallet-id>
+soulrecall wallet info <wallet-id>
 ```
 
 ### Insufficient Balance
 
 ```bash
 # Check balance
-agentvault wallet balance
+soulrecall wallet balance
 
 # Request from faucet (testnet only)
-agentvault wallet faucet
+soulrecall wallet faucet
 
 # Purchase cycles
-agentvault wallet purchase --amount 1000000000000
+soulrecall wallet purchase --amount 1000000000000
 ```
 
 ### Transaction Failed
 
 ```bash
 # Check transaction queue
-agentvault wallet queue
+soulrecall wallet queue
 
 # Retry failed transaction
 agentwallet wallet retry <tx-id>
 
 # View error details
-agentvault wallet history <tx-id> --details
+soulrecall wallet history <tx-id> --details
 ```
 
 ### Hardware Wallet Issues
 
 ```bash
 # Reconnect hardware wallet
-agentvault wallet reconnect --hardware
+soulrecall wallet reconnect --hardware
 
 # Check firmware
-agentvault wallet check --hardware
+soulrecall wallet check --hardware
 
 # Reset connection
-agentvault wallet disconnect --hardware
+soulrecall wallet disconnect --hardware
 ```
 
 ## Advanced Features
@@ -302,10 +302,10 @@ Configure multi-sig for enhanced security:
 
 ```bash
 # Create multi-sig wallet
-agentvault wallet create --multisig --signers 3 --threshold 2
+soulrecall wallet create --multisig --signers 3 --threshold 2
 
 # Sign transaction
-agentvault wallet sign <wallet-id> --multisig --signers-required 2
+soulrecall wallet sign <wallet-id> --multisig --signers-required 2
 ```
 
 ### Derivation Paths
@@ -314,10 +314,10 @@ Standard derivation paths for BIP-39/44:
 
 ```bash
 # View derivation path
-agentvault wallet info <wallet-id> --show-derivation
+soulrecall wallet info <wallet-id> --show-derivation
 
 # Change derivation path
-agentvault wallet set-derivation <wallet-id> --path "m/44'/223'/0'/0"
+soulrecall wallet set-derivation <wallet-id> --path "m/44'/223'/0'/0"
 ```
 
 ### Custom Networks
@@ -326,10 +326,10 @@ Add custom blockchain networks:
 
 ```bash
 # Add network
-agentvault network add --name custom --rpc https://custom-rpc.com
+soulrecall network add --name custom --rpc https://custom-rpc.com
 
 # Use network
-agentvault deploy --network custom
+soulrecall deploy --network custom
 ```
 
 ## Integration
@@ -338,10 +338,10 @@ agentvault deploy --network custom
 
 ```bash
 # Top-up canister from wallet
-agentvault wallet top-up <canister-id> --wallet <wallet-id>
+soulrecall wallet top-up <canister-id> --wallet <wallet-id>
 
 # Auto-refill configuration
-agentvault wallet configure <wallet-id> --auto-refill --threshold 100T
+soulrecall wallet configure <wallet-id> --auto-refill --threshold 100T
 ```
 
 ### DApp Integration
@@ -350,10 +350,10 @@ Connect wallet to Web3 DApps:
 
 ```bash
 # Inject wallet into browser
-agentvault wallet inject --browser chrome
+soulrecall wallet inject --browser chrome
 
 # Use with DApp
-agentvault wallet dapp-sign <url>
+soulrecall wallet dapp-sign <url>
 ```
 
 ## Next Steps

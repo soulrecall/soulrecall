@@ -1,10 +1,10 @@
-# AgentVault v1.0.0 Release
+# SoulRecall v1.0.0 Release
 
-We're excited to announce AgentVault v1.0.0 - Production-ready AI agent platform for the Internet Computer!
+We're excited to announce SoulRecall v1.0.0 - Production-ready AI agent platform for the Internet Computer!
 
 ## Overview
 
-AgentVault is a complete solution for creating, deploying, and managing AI agents on ICP. This release includes a full web dashboard, multi-chain wallet support, batched operations, archival storage, and comprehensive documentation.
+SoulRecall is a complete solution for creating, deploying, and managing AI agents on ICP. This release includes a full web dashboard, multi-chain wallet support, batched operations, archival storage, and comprehensive documentation.
 
 ## Key Features
 
@@ -62,23 +62,23 @@ Complete documentation is available at:
 ## Installation
 
 ```bash
-npm install -g agentvault@latest
+npm install -g soulrecall@latest
 ```
 
 ## Quick Start
 
 ```bash
 # Create new agent
-agentvault init my-agent
+soulrecall init my-agent
 
 # Navigate to project
 cd my-agent
 
 # Deploy locally
-agentvault deploy --network local
+soulrecall deploy --network local
 
 # Open dashboard
-agentvault dashboard
+soulrecall dashboard
 ```
 
 ## Breaking Changes
@@ -107,8 +107,8 @@ Thank you to all contributors who made this release possible:
 
 ## Support
 
-- **Documentation**: https://agentvault.cloud/docs
-- **Issues**: https://github.com/johnnyclem/agentvault/issues
+- **Documentation**: https://soulrecall.cloud/docs
+- **Issues**: https://github.com/soulrecall/soulrecall/issues
 
 ## What's Next?
 
@@ -120,9 +120,9 @@ v1.0.1 planning:
 
 ---
 
-**Download AgentVault v1.0.0 from npm:**
+**Download SoulRecall v1.0.0 from npm:**
 ```bash
-npm install -g agentvault@1.0.0
+npm install -g soulrecall@1.0.0
 ```
 
-**Star on GitHub:** https://github.com/johnnyclem/agentvault
+**Star on GitHub:** https://github.com/soulrecall/soulrecall

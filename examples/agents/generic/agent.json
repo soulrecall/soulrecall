@@ -1,8 +1,8 @@
 {
-  "$schema": "https://agentvault.dev/schemas/generic-config-v1.json",
+  "$schema": "https://soulrecall.cloud/schemas/generic-config-v1.json",
   "name": "example-generic",
   "type": "generic",
-  "description": "Example Generic agent for AgentVault",
+  "description": "Example Generic agent for SoulRecall",
   "version": "1.0.0",
   "entryPoint": "index.js",
   "workingDirectory": ".",

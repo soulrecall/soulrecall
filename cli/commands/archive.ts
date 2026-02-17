@@ -19,11 +19,11 @@ archiveCmd
     console.log(chalk.yellow('[Experimental] This feature is under active development and may change.'));
     console.log(chalk.yellow('Please specify a subcommand: prepare, list, delete, verify, or stats'));
     console.log(chalk.gray(`\nExamples:
-  ${chalk.cyan('agentvault archive prepare <agent-name> <version>')}${chalk.gray('    Prepare agent data for archival')}
-  ${chalk.cyan('agentvault archive list')}${chalk.gray('                 List all archives')}
-  ${chalk.cyan('agentvault archive stats <agent-name>')}${chalk.gray('     Get archive statistics')}
-  ${chalk.cyan('agentvault archive delete <archive-id>')}${chalk.gray('      Delete an archive')}
-  ${chalk.cyan('agentvault archive verify <archive-id>')}${chalk.gray('       Verify archive integrity')}`));
+  ${chalk.cyan('soulrecall archive prepare <agent-name> <version>')}${chalk.gray('    Prepare agent data for archival')}
+  ${chalk.cyan('soulrecall archive list')}${chalk.gray('                 List all archives')}
+  ${chalk.cyan('soulrecall archive stats <agent-name>')}${chalk.gray('     Get archive statistics')}
+  ${chalk.cyan('soulrecall archive delete <archive-id>')}${chalk.gray('      Delete an archive')}
+  ${chalk.cyan('soulrecall archive verify <archive-id>')}${chalk.gray('       Verify archive integrity')}`));
   });
 
 archiveCmd

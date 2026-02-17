@@ -7,7 +7,7 @@ Rollback canister to previous deployment.
 Rollback restores a canister to a previous version when issues are detected.
 
 ```bash
-agentvault rollback --canister-id <id> --version <n>
+soulrecall rollback --canister-id <id> --version <n>
 ```
 
 ## Commands
@@ -15,7 +15,7 @@ agentvault rollback --canister-id <id> --version <n>
 ### List Available Versions
 
 ```bash
-agentvault rollback --canister-id <id> --list
+soulrecall rollback --canister-id <id> --list
 ```
 
 Output:
@@ -31,14 +31,14 @@ Version  Deployed At           Status
 
 ```bash
 # Rollback to version 2
-agentvault rollback --canister-id <id> --version 2
+soulrecall rollback --canister-id <id> --version 2
 ```
 
 ### Force Rollback
 
 ```bash
 # Skip confirmation
-agentvault rollback --canister-id <id> --version 2 --force
+soulrecall rollback --canister-id <id> --version 2 --force
 ```
 
 ## Options
@@ -65,39 +65,39 @@ agentvault rollback --canister-id <id> --version 2 --force
 
 ```bash
 # 1. Check current status
-agentvault status <canister-id>
+soulrecall status <canister-id>
 
 # 2. List versions
-agentvault rollback -c <canister-id> --list
+soulrecall rollback -c <canister-id> --list
 
 # 3. Rollback
-agentvault rollback -c <canister-id> --version <n>
+soulrecall rollback -c <canister-id> --version <n>
 ```
 
 ### Corrupted State
 
 ```bash
 # 1. Stop canister
-agentvault stop <canister-id>
+soulrecall stop <canister-id>
 
 # 2. Restore from backup
-agentvault backup restore <backup-id>
+soulrecall backup restore <backup-id>
 
 # 3. Start canister
-agentvault start <canister-id>
+soulrecall start <canister-id>
 ```
 
 ### Performance Issues
 
 ```bash
 # 1. Profile current version
-agentvault profile -c <canister-id>
+soulrecall profile -c <canister-id>
 
 # 2. Compare with previous
-agentvault rollback -c <canister-id> --list
+soulrecall rollback -c <canister-id> --list
 
 # 3. Rollback if needed
-agentvault rollback -c <canister-id> --version <n>
+soulrecall rollback -c <canister-id> --version <n>
 ```
 
 ## Best Practices
@@ -136,33 +136,33 @@ agentvault rollback -c <canister-id> --version <n>
 
 ```bash
 # Check backup storage
-ls -la ~/.agentvault/backups/
+ls -la ~/.soulrecall/backups/
 
 # Restore from backup instead
-agentvault backup restore <backup-id>
+soulrecall backup restore <backup-id>
 ```
 
 ### State Incompatibility
 
 ```bash
 # Fetch current state before rollback
-agentvault fetch --canister-id <id>
+soulrecall fetch --canister-id <id>
 
 # Rollback with state migration
-agentvault rollback -c <id> --version <n> --migrate-state
+soulrecall rollback -c <id> --version <n> --migrate-state
 ```
 
 ### Rollback Fails
 
 ```bash
 # Check canister status
-agentvault info <canister-id>
+soulrecall info <canister-id>
 
 # Verify cycles
-agentvault cycles balance <canister-id>
+soulrecall cycles balance <canister-id>
 
 # Check logs
-agentvault logs <canister-id> --level error
+soulrecall logs <canister-id> --level error
 ```
 
 ## Related Commands

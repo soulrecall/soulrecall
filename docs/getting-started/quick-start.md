@@ -1,17 +1,17 @@
 # Quick Start // Initial Sync Sequence
 
-Deploy your first AgentVault entity in under 10 minutes.
+Deploy your first SoulRecall entity in under 10 minutes.
 
 :::note Prerequisites
 - Node.js 18+
 - `dfx` installed and reachable in PATH
-- AgentVault CLI installed (`npm install -g agentvault`)
+- SoulRecall CLI installed (`npm install -g soulrecall`)
 :::
 
 ## 1. Initialize Project Vessel
 
 ```bash
-agentvault init my-first-agent
+soulrecall init my-first-agent
 cd my-first-agent
 ```
 
@@ -27,7 +27,7 @@ dfx ping
 ## 3. Package Entity Artifacts
 
 ```bash
-agentvault package ./
+soulrecall package ./
 ```
 
 This compiles the agent and prepares deterministic deployment output.
@@ -35,7 +35,7 @@ This compiles the agent and prepares deterministic deployment output.
 ## 4. Deploy to Local Network
 
 ```bash
-agentvault deploy --network local
+soulrecall deploy --network local
 ```
 
 Capture the emitted canister ID from command output.
@@ -43,22 +43,22 @@ Capture the emitted canister ID from command output.
 ## 5. Verify Operational State
 
 ```bash
-agentvault status
-agentvault info
-agentvault health
+soulrecall status
+soulrecall info
+soulrecall health
 ```
 
 ## 6. Execute a Task
 
 ```bash
-agentvault exec --canister-id <YOUR_CANISTER_ID> "hello world"
+soulrecall exec --canister-id <YOUR_CANISTER_ID> "hello world"
 ```
 
 ## 7. Read and Preserve State
 
 ```bash
-agentvault show --canister-id <YOUR_CANISTER_ID>
-agentvault backup --canister-id <YOUR_CANISTER_ID>
+soulrecall show --canister-id <YOUR_CANISTER_ID>
+soulrecall backup --canister-id <YOUR_CANISTER_ID>
 ```
 
 :::tip Divine Efficiency
@@ -78,23 +78,23 @@ Automate `status`, `health`, and `backup` checks in your local CI before promoti
 
 ```bash
 # List all local agents
-agentvault list
+soulrecall list
 
 # View runtime logs
-agentvault logs <canister-id>
+soulrecall logs <canister-id>
 
 # Fetch state for local reconstruction
-agentvault fetch --canister-id <canister-id>
+soulrecall fetch --canister-id <canister-id>
 
 # Inspect cycle balance
-agentvault cycles balance <canister-id>
+soulrecall cycles balance <canister-id>
 ```
 
 ## Help
 
 ```bash
-agentvault --help
-agentvault <command> --help
+soulrecall --help
+soulrecall <command> --help
 ```
 
 See [Troubleshooting](/docs/user/troubleshooting) when commands fail or outputs diverge.

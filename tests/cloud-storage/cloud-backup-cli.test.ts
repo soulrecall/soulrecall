@@ -88,7 +88,7 @@ describe('cloud-backup CLI command', () => {
         (o) => o.long === '--subdirectory',
       );
       expect(opt).toBeDefined();
-      expect(opt!.defaultValue).toBe('AgentVault-Backups');
+      expect(opt!.defaultValue).toBe('SoulRecall-Backups');
     });
 
     it('should have archive --no-configs option', () => {

@@ -20,7 +20,7 @@
 - 30%+ smaller than JSON, tamper detection
 
 **File**: `src/wallet/wallet-storage.ts`
-- Encrypted wallet persistence in `~/.agentvault/wallets/`
+- Encrypted wallet persistence in `~/.soulrecall/wallets/`
 - Per-agent wallet isolation (separate directories per agent)
 - Save, load, delete wallet operations
 - Wallet backup and restore functionality
@@ -91,7 +91,7 @@
 #### 4. CLI Integration ✅
 
 **File**: `cli/commands/wallet.ts` (FULL IMPLEMENTATION)
-- Main `agentvault wallet` command
+- Main `soulrecall wallet` command
 - Subcommands: connect, disconnect, balance, send, list
 - Interactive prompts with inquirer
 - Progress spinners with ora
@@ -263,9 +263,9 @@ All subcommands implemented:
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│              AgentVault CLI (TypeScript)     │
+│              SoulRecall CLI (TypeScript)     │
 │  ┌──────────────────────────────────────────┐  │
-│  │ agentvault wallet <subcommand>       │  │
+│  │ soulrecall wallet <subcommand>       │  │
 │  │  - connect / disconnect / balance   │  │
 │  │  - send / list                      │  │
 │  └────────────────┬─────────────────────┘  │
@@ -284,7 +284,7 @@ All subcommands implemented:
 │  │  └───────────┬─────────────────────┘│  │
 │  │  ┌───────────────▼──────────────────┐│  │
 │  │  │ wallet-storage.ts                 ││  │
-│  │  │ - ~/.agentvault/wallets/        ││  │
+│  │  │ - ~/.soulrecall/wallets/        ││  │
 │  │  │ - Per-agent dirs                 ││  │
 │  │  │ - Encrypted storage             ││  │
 │  │  └───────────┬─────────────────────┘│  │
@@ -305,7 +305,7 @@ All subcommands implemented:
                    │                                │
                    ▼                                ▼
         ┌─────────────────────┐        ┌──────────────────┐
-        │  ~/.agentvault/   │        │ Blockchain RPCs │
+        │  ~/.soulrecall/   │        │ Blockchain RPCs │
         │  wallets/          │        │  • Ethereum     │
         │  <agent-id>/     │        │  • Polkadot     │
         │  *.wallet         │        │  • Solana       │
@@ -387,7 +387,7 @@ All subcommands implemented:
 
 ### Create Wallet
 ```bash
-agentvault wallet connect my-agent
+soulrecall wallet connect my-agent
 # Select: Generate new wallet
 # Select: ckETH
 # Enter seed phrase (optional) or let system generate
@@ -395,14 +395,14 @@ agentvault wallet connect my-agent
 
 ### Check Balance
 ```bash
-agentvault wallet balance my-agent
+soulrecall wallet balance my-agent
 # Select: wallet-001
 # Output: Balance: 1.5 ETH
 ```
 
 ### Send Transaction
 ```bash
-agentvault wallet send my-agent
+soulrecall wallet send my-agent
 # Select: wallet-001
 # Enter: 0xrecipient...
 # Enter: 0.5
@@ -411,7 +411,7 @@ agentvault wallet send my-agent
 
 ### List Wallets
 ```bash
-agentvault wallet list my-agent
+soulrecall wallet list my-agent
 # Output:
 # Wallet ID    Chain      Address                          Balance
 # -----------  -----      -------                          -------
@@ -453,10 +453,10 @@ agentvault wallet list my-agent
 ### Phase 4: CLI Expansion (2-3 days)
 
 3. **Additional Commands**:
-   - `agentvault wallet sign <agent-id> <chain>` - Sign transaction
-   - `agentvault wallet history <agent-id> <chain>` - Get transaction history
-   - `agentvault wallet export <agent-id>` - Export all wallets
-   - `agentvault wallet import <agent-id> <file>` - Import wallets
+   - `soulrecall wallet sign <agent-id> <chain>` - Sign transaction
+   - `soulrecall wallet history <agent-id> <chain>` - Get transaction history
+   - `soulrecall wallet export <agent-id>` - Export all wallets
+   - `soulrecall wallet import <agent-id> <file>` - Import wallets
 
 ### Phase 5: Canister Integration (1 week)
 
@@ -609,14 +609,14 @@ agentvault wallet list my-agent
 
 ```bash
 # Main wallet command
-agentvault wallet <subcommand> [options]
+soulrecall wallet <subcommand> [options]
 
 # Subcommands
-agentvault wallet connect <agent-id> [options]
-agentvault wallet disconnect <agent-id>
-agentvault wallet balance <agent-id>
-agentvault wallet send <agent-id> <chain> <to-address> <amount> [options]
-agentvault wallet list <agent-id>
+soulrecall wallet connect <agent-id> [options]
+soulrecall wallet disconnect <agent-id>
+soulrecall wallet balance <agent-id>
+soulrecall wallet send <agent-id> <chain> <to-address> <amount> [options]
+soulrecall wallet list <agent-id>
 
 # Connect options
 --seed <phrase>           # Create from seed phrase
@@ -643,7 +643,7 @@ import {
   CkEthProvider,
   PolkadotProvider,
   SolanaProvider,
-} from 'agentvault/wallet';
+} from 'soulrecall/wallet';
 
 // Create wallet
 const wallet = createWallet({

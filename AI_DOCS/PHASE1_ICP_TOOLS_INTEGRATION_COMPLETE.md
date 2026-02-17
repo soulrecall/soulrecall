@@ -5,7 +5,7 @@
 
 ## Overview
 
-Successfully integrated `ic-wasm` (v0.9.11) and `icp-cli` (v0.1.0) into AgentVault CLI with auto-detection fallback to dfx. This enables 40-60% WASM size reduction through optimization and provides streamlined deployment workflows.
+Successfully integrated `ic-wasm` (v0.9.11) and `icp-cli` (v0.1.0) into SoulRecall CLI with auto-detection fallback to dfx. This enables 40-60% WASM size reduction through optimization and provides streamlined deployment workflows.
 
 ## What Was Built
 
@@ -55,12 +55,12 @@ Modified `src/packaging/` module:
 
 **New CLI options for `package` command:**
 ```bash
-agentvault package <agent-dir> --optimize <0-3>     # ic-wasm optimize level
-agentvault package <agent-dir> --ic-wasm-optimize              # enable ic-wasm optimization
-agentvault package <agent-dir> --ic-wasm-shrink                  # enable ic-wasm shrink
-agentvault package <agent-dir> --validate <did-file>           # validate against Candid interface
-agentvault package <agent-dir> --memory-limit <limit>            # set memory limit
-agentvault package <agent-dir> --compute-quota <quota>         # set compute quota
+soulrecall package <agent-dir> --optimize <0-3>     # ic-wasm optimize level
+soulrecall package <agent-dir> --ic-wasm-optimize              # enable ic-wasm optimization
+soulrecall package <agent-dir> --ic-wasm-shrink                  # enable ic-wasm shrink
+soulrecall package <agent-dir> --validate <did-file>           # validate against Candid interface
+soulrecall package <agent-dir> --memory-limit <limit>            # set memory limit
+soulrecall package <agent-dir> --compute-quota <quota>         # set compute quota
 ```
 
 #### 2. Deployment with icp-cli and dfx Fallback
@@ -73,10 +73,10 @@ Modified `src/deployment/` module:
 
 **New CLI options for `deploy` command:**
 ```bash
-agentvault deploy <wasm-file> --env <environment>    # use named environment
-agentvault deploy <wasm-file> --identity <name>            # identity for icp-cli
-agentvault deploy <wasm-file> --cycles <amount>            # cycles allocation
-agentvault deploy <wasm-file> --mode <mode>                # auto, install, reinstall, upgrade
+soulrecall deploy <wasm-file> --env <environment>    # use named environment
+soulrecall deploy <wasm-file> --identity <name>            # identity for icp-cli
+soulrecall deploy <wasm-file> --cycles <amount>            # cycles allocation
+soulrecall deploy <wasm-file> --mode <mode>                # auto, install, reinstall, upgrade
 ```
 
 ### Configuration

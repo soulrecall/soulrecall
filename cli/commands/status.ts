@@ -1,5 +1,5 @@
 /**
- * Status command - Display current AgentVault project status
+ * Status command - Display current SoulRecall project status
  */
 
 import { Command } from 'commander';
@@ -27,7 +27,7 @@ export async function getProjectStatus(): Promise<ProjectStatus> {
   }
 
   const cwd = process.cwd();
-  const projectDir = path.join(cwd, '.agentvault');
+  const projectDir = path.join(cwd, '.soulrecall');
   const configPath = path.join(projectDir, 'config', 'agent.config.json');
   const canisterIdsPath = path.join(cwd, 'canister_ids.json');
 
@@ -48,8 +48,8 @@ export async function getProjectStatus(): Promise<ProjectStatus> {
     try {
       const canisterData = JSON.parse(fs.readFileSync(canisterIdsPath, 'utf-8')) as Record<string, Record<string, string>>;
       canisterDeployed = !!(
-        canisterData.agent_vault?.local ||
-        canisterData.agent_vault?.ic
+        canisterData.soul_recall?.local ||
+        canisterData.soul_recall?.ic
       );
     } catch {
       canisterDeployed = false;
@@ -65,15 +65,15 @@ export async function getProjectStatus(): Promise<ProjectStatus> {
 }
 
 export async function displayStatus(status: ProjectStatus): Promise<void> {
-  console.log(chalk.bold('\n📊 AgentVault Project Status\n'));
+  console.log(chalk.bold('\n📊 SoulRecall Project Status\n'));
 
   console.log(chalk.cyan('Version:'), status.version);
   console.log();
 
   if (!status.initialized) {
-    console.log(chalk.yellow('⚠'), 'No AgentVault project found in current directory.');
+    console.log(chalk.yellow('⚠'), 'No SoulRecall project found in current directory.');
     console.log();
-    console.log('Run', chalk.bold('agentvault init'), 'to create a new project.');
+    console.log('Run', chalk.bold('soulrecall init'), 'to create a new project.');
     return;
   }
 
@@ -89,7 +89,7 @@ export function statusCommand(): Command {
   const command = new Command('status');
 
   command
-    .description('Display current AgentVault project status')
+    .description('Display current SoulRecall project status')
     .option('-j, --json', 'output status as JSON')
     .action(async (options: { json?: boolean }) => {
       const spinner = ora('Checking project status...').start();

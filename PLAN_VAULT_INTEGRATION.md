@@ -1,4 +1,4 @@
-# AgentVault Vault Integration Plan
+# SoulRecall Vault Integration Plan
 **Date:** February 11, 2026
 **Priority:** High
 **Est. Effort:** 3-5 days
@@ -7,7 +7,7 @@
 
 ## Executive Summary
 
-Integrate HashiCorp-style vault functionality into AgentVault for secure credential management. This replaces insecure credential sharing (pasting keys, storing passwords in .env files) with a proper vault that supports:
+Integrate HashiCorp-style vault functionality into SoulRecall for secure credential management. This replaces insecure credential sharing (pasting keys, storing passwords in .env files) with a proper vault that supports:
 
 - **Scoped access** — Least-privilege principle
 - **Audit trails** — Track who accessed what and when
@@ -21,7 +21,7 @@ Integrate HashiCorp-style vault functionality into AgentVault for secure credent
 
 ### ✅ What's Already Built
 - **CLI framework** (`cli/commands/`) — Ready for extension
-- **Local state management** — `.agentvault/`, `agent.config.json`, `canister_ids.json`
+- **Local state management** — `.soulrecall/`, `agent.config.json`, `canister_ids.json`
 - **Agent config parsing** — Robust YAML/JSON config loading
 - **TypeScript interfaces** — Core types defined in `src/lib/types.ts`
 
@@ -39,7 +39,7 @@ Integrate HashiCorp-style vault functionality into AgentVault for secure credent
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    AgentVault CLI                             │
+│                    SoulRecall CLI                             │
 │                                                              │
 │  ┌──────────────────────────────────────────────────────┐  │
 │  │  Commands Layer                                │  │
@@ -68,7 +68,7 @@ Integrate HashiCorp-style vault functionality into AgentVault for secure credent
 │  └───────────────────────────────────────────────────┘  │  │
 │                                                              │
 │                         ┌────────────────────┐               │          │  │
-│                         │  Agent Vault Repo │               │          │  │
+│                         │  Soul Recall Repo │               │          │  │
 │                         │                 │               │          │  │
 │                         │                 │               │          │  │
 └─────────────────────────┴───────────────────────────────────────┘          │  └────────┴────────────┘
@@ -172,14 +172,14 @@ Integrate HashiCorp-style vault functionality into AgentVault for secure credent
 **Migration Options:**
 
 1. **Option A: Automatic Migration** (Recommended)
-   - Detect existing `.agentvault/` config
+   - Detect existing `.soulrecall/` config
    - Prompt: "Would you like to connect to HashiCorp Vault?"
    - Create vault connection with `vault: connect`
    - Migrate secrets to vault automatically
 
 2. **Option B: Manual Setup** (For Control)
-   - Add `VAULT_URI` and `VAULT_TOKEN` to `.agentvault/config.yaml`
-   - User manually runs `agentvault vault: connect`
+   - Add `VAULT_URI` and `VAULT_TOKEN` to `.soulrecall/config.yaml`
+   - User manually runs `soulrecall vault: connect`
    - Explicit control over when vault is used
 
 ---
@@ -188,12 +188,12 @@ Integrate HashiCorp-style vault functionality into AgentVault for secure credent
 
 If vault is unavailable, fall back to encrypted local storage:
 
-**File:** `~/.agentvault/secrets.json`
+**File:** `~/.soulrecall/secrets.json`
 
 **Schema:**
 ```json
 {
-  "$schema": "https://agentvault.com/schema/v1",
+  "$schema": "https://soulrecall.com/schema/v1",
   "secrets": {
     "claude_api_key": {
       "value": "sk-...",
@@ -271,9 +271,9 @@ describe('Vault Client', () => {
 ### Integration Tests
 ```bash
 # Test vault integration with CLI
-agentvault deploy --vault-secret /claude_api_key
-agentvault deploy --vault-secret /wallet_private_key
-agentvault exec --agent-id abc123 --vault-secret /api_key
+soulrecall deploy --vault-secret /claude_api_key
+soulrecall deploy --vault-secret /wallet_private_key
+soulrecall exec --agent-id abc123 --vault-secret /api_key
 ```
 
 ---

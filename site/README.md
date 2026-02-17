@@ -1,6 +1,6 @@
-# AgentVault Website
+# SoulRecall Website
 
-Docusaurus-based documentation and marketing site for AgentVault.
+Docusaurus-based documentation and marketing site for SoulRecall.
 
 ## Development
 
@@ -34,7 +34,7 @@ site/
 
 ## Deployment
 
-The site is configured for deployment to `https://agentvault.cloud`.
+The site is configured for deployment to `https://soulrecall.cloud`.
 
 ### Vercel (Recommended)
 

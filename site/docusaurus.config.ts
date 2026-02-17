@@ -3,15 +3,15 @@ import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
-  title: 'Agent Vault',
+  title: 'Soul Recall',
   tagline: "Protecting your agent's neural sovereignty through cryptographic decentralization.",
   favicon: 'img/logo.svg',
 
-  url: 'https://agentvault.cloud',
+  url: 'https://soulrecall.cloud',
   baseUrl: '/',
 
   organizationName: 'johnnyclem',
-  projectName: 'agentvault',
+  projectName: 'soulrecall',
 
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
@@ -29,7 +29,7 @@ const config: Config = {
           path: '../docs',
           routeBasePath: 'docs',
           sidebarPath: './sidebars.ts',
-          editUrl: 'https://github.com/johnnyclem/agentvault/tree/main/site/',
+          editUrl: 'https://github.com/soulrecall/soulrecall/tree/main/site/',
         },
         blog: false,
         theme: {
@@ -44,7 +44,7 @@ const config: Config = {
     metadata: [
       {name: 'keywords', content: 'ICP, Internet Computer, AI agents, blockchain, canister, deployment, Web3'},
       {name: 'twitter:card', content: 'summary_large_image'},
-      {name: 'twitter:title', content: 'Agent Vault // Neural Sovereignty for Sovereign Agent Operations'},
+      {name: 'twitter:title', content: 'Soul Recall // Neural Sovereignty for Sovereign Agent Operations'},
       {name: 'twitter:description', content: 'Deploy autonomous AI entities to ICP canisters with sovereign execution, encrypted state, and resilient operations.'},
     ],
     colorMode: {
@@ -53,9 +53,9 @@ const config: Config = {
       respectPrefersColorScheme: false,
     },
     navbar: {
-      title: 'AGENT_VAULT_V1',
+      title: 'SOUL_RECALL_V1',
       logo: {
-        alt: 'AgentVault Logo',
+        alt: 'SoulRecall Logo',
         src: 'img/logo.svg',
       },
       items: [
@@ -75,13 +75,13 @@ const config: Config = {
           position: 'left',
         },
         {
-          href: 'https://github.com/johnnyclem/agentvault',
+          href: 'https://github.com/soulrecall/soulrecall',
           label: 'GitHub',
           className: 'navbar-github-mobile',
           position: 'left',
         },
         {
-          href: 'https://github.com/johnnyclem/agentvault',
+          href: 'https://github.com/soulrecall/soulrecall',
           label: 'GitHub',
           className: 'navbar-github-desktop',
           position: 'right',
@@ -113,7 +113,7 @@ const config: Config = {
           items: [
             {
               label: 'GitHub Issues',
-              href: 'https://github.com/johnnyclem/agentvault/issues',
+              href: 'https://github.com/soulrecall/soulrecall/issues',
             },
             {
               label: 'ICP Forum',
@@ -126,16 +126,16 @@ const config: Config = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/johnnyclem/agentvault',
+              href: 'https://github.com/soulrecall/soulrecall',
             },
             {
               label: 'npm',
-              href: 'https://www.npmjs.com/package/agentvault',
+              href: 'https://www.npmjs.com/package/soulrecall',
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} AgentVault // Documentation Engine`,
+      copyright: `Copyright © ${new Date().getFullYear()} SoulRecall // Documentation Engine`,
     },
     prism: {
       theme: prismThemes.github,

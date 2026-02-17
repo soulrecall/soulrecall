@@ -9,15 +9,15 @@ import path from 'node:path';
 import os from 'node:os';
 import type { LogEntry, LogLevel } from './types.js';
 
-const AGENTVAULT_DIR = path.join(os.homedir(), '.agentvault');
-const LOGS_DIR = path.join(AGENTVAULT_DIR, 'logs');
+const SOULRECALL_DIR = path.join(os.homedir(), '.soulrecall');
+const LOGS_DIR = path.join(SOULRECALL_DIR, 'logs');
 
 /**
  * Ensure logs directory exists
  */
 function ensureLogsDir(): void {
-  if (!fs.existsSync(AGENTVAULT_DIR)) {
-    fs.mkdirSync(AGENTVAULT_DIR, { recursive: true });
+  if (!fs.existsSync(SOULRECALL_DIR)) {
+    fs.mkdirSync(SOULRECALL_DIR, { recursive: true });
   }
   if (!fs.existsSync(LOGS_DIR)) {
     fs.mkdirSync(LOGS_DIR, { recursive: true });

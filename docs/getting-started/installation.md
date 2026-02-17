@@ -1,10 +1,10 @@
 # Installation
 
-This guide covers installing AgentVault on your system.
+This guide covers installing SoulRecall on your system.
 
 ## Prerequisites
 
-Before installing AgentVault, ensure you have:
+Before installing SoulRecall, ensure you have:
 
 | Requirement | Version | Purpose |
 |-------------|---------|---------|
@@ -41,17 +41,17 @@ nvm use 18
 
 ### Option 1: npm Global Install (Recommended)
 
-Install AgentVault globally from npm:
+Install SoulRecall globally from npm:
 
 ```bash
-npm install -g agentvault
+npm install -g soulrecall
 ```
 
 Verify installation:
 
 ```bash
-agentvault --version
-agentvault --help
+soulrecall --version
+soulrecall --help
 ```
 
 ### Option 2: From Source
@@ -60,8 +60,8 @@ For development or latest features:
 
 ```bash
 # Clone the repository
-git clone https://github.com/johnnyclem/agentvault.git
-cd agentvault
+git clone https://github.com/soulrecall/soulrecall.git
+cd soulrecall
 
 # Install dependencies
 npm install
@@ -74,7 +74,7 @@ node dist/cli/index.js --help
 
 # Or link globally
 npm link
-agentvault --help
+soulrecall --help
 ```
 
 ### Option 3: npx (No Install)
@@ -82,8 +82,8 @@ agentvault --help
 Run without installing:
 
 ```bash
-npx agentvault --help
-npx agentvault init my-agent
+npx soulrecall --help
+npx soulrecall init my-agent
 ```
 
 ## Post-Installation Setup
@@ -125,24 +125,24 @@ export POLKADOT_RPC_URL=wss://rpc.polkadot.io
 
 ```bash
 # Check CLI
-agentvault --version
+soulrecall --version
 
 # Initialize test project
-agentvault init test-project
+soulrecall init test-project
 cd test-project
 
 # Verify project structure
-ls -la .agentvault/
+ls -la .soulrecall/
 ```
 
 ## Development Setup
 
-For contributing to AgentVault:
+For contributing to SoulRecall:
 
 ```bash
 # Clone and install
-git clone https://github.com/johnnyclem/agentvault.git
-cd agentvault
+git clone https://github.com/soulrecall/soulrecall.git
+cd soulrecall
 npm install
 
 # Run in development mode
@@ -163,13 +163,13 @@ npm run lint
 ### From npm
 
 ```bash
-npm update -g agentvault
+npm update -g soulrecall
 ```
 
 ### From Source
 
 ```bash
-cd agentvault
+cd soulrecall
 git pull origin main
 npm install
 npm run build
@@ -179,10 +179,10 @@ npm run build
 
 ```bash
 # Remove global install
-npm uninstall -g agentvault
+npm uninstall -g soulrecall
 
 # Or unlink if installed from source
-npm unlink -g agentvault
+npm unlink -g soulrecall
 ```
 
 ## Troubleshooting
@@ -204,7 +204,7 @@ sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"
 sudo chown -R $(whoami) ~/.npm
 
 # Or use sudo (not recommended)
-sudo npm install -g agentvault
+sudo npm install -g soulrecall
 ```
 
 ### Build fails from source

@@ -151,7 +151,7 @@ export function generateWasm(config: AgentConfig, javascriptBundle: string): Buf
   // 1. Custom section with metadata
   const version = config.version ?? '1.0.0';
   const metadataContent = Buffer.concat([
-    Buffer.from('agentvault', 'utf-8'),
+    Buffer.from('soulrecall', 'utf-8'),
     Buffer.from([0]),
     agentNameBytes,
     Buffer.from([0]),
@@ -320,7 +320,7 @@ export function generateWasm(config: AgentConfig, javascriptBundle: string): Buf
  */
 export function generateStubWat(config: AgentConfig): string {
   return `;;
-;; AgentVault WASM Module (Stub)
+;; SoulRecall WASM Module (Stub)
 ;; Agent: ${config.name}
 ;; Type: ${config.type}
 ;; Generated: ${new Date().toISOString()}
@@ -331,7 +331,7 @@ export function generateStubWat(config: AgentConfig): string {
 
 (module
   ;; Custom section for agent metadata
-  (@custom "agentvault" "${config.name}")
+  (@custom "soulrecall" "${config.name}")
 
   ;; Memory for agent state (1 page = 64KB)
   (memory (export "memory") 1)
@@ -370,7 +370,7 @@ export function generateStubWat(config: AgentConfig): string {
  */
 export function generateStateJson(config: AgentConfig): string {
   const state = {
-    $schema: 'https://agentvault.dev/schemas/agent-state-v1.json',
+    $schema: 'https://soulrecall.cloud/schemas/agent-state-v1.json',
     agent: {
       name: config.name,
       type: config.type,
@@ -400,7 +400,7 @@ export function generateWat(config: AgentConfig, javascriptBundle: string): stri
   const jsSize = Buffer.from(javascriptBundle, 'utf-8').length;
   
   return `;;
-;; AgentVault WASM Module
+;; SoulRecall WASM Module
 ;; Agent: ${config.name}
 ;; Type: ${config.type}
 ;; Version: ${config.version ?? '1.0.0'}

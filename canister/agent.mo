@@ -1,5 +1,5 @@
 /**
- * AgentVault Canister (Motoko) - Production Version
+ * SoulRecall Canister (Motoko) - Production Version
  *
  * This canister serves as the on-chain execution environment for AI agents.
  * It provides state management, task execution, memory storage, and WASM module loading.

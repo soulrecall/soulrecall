@@ -1,4 +1,4 @@
-# AgentVault dependencies
+# SoulRecall dependencies
 node_modules/
 dist/
 *.log
@@ -6,13 +6,13 @@ dist/
 *.local
 .DS_Store
 
-# AgentVault generated files
+# SoulRecall generated files
 *.wasm
 *.backup
 *.state.json
 
-# AgentVault project structure
-.agentvault/
+# SoulRecall project structure
+.soulrecall/
 src/
 canister/
 config/

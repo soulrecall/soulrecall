@@ -1,19 +1,19 @@
 {
-  "name": "@agentvault/examples/clawdbot",
+  "name": "@soulrecall/examples/clawdbot",
   "version": "1.0.0",
-  "description": "Example Clawdbot agent configuration for AgentVault",
+  "description": "Example Clawdbot agent configuration for SoulRecall",
   "type": "module",
   "scripts": {
-    "package": "agentvault package",
-    "deploy": "agentvault deploy"
+    "package": "soulrecall package",
+    "deploy": "soulrecall deploy"
   },
   "keywords": [
-    "agentvault",
+    "soulrecall",
     "clawdbot",
     "example",
     "ai-agent"
   ],
-  "author": "AgentVault",
+  "author": "SoulRecall",
   "license": "MIT",
   "dependencies": {}
 }

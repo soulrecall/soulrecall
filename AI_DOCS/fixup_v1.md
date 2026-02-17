@@ -56,10 +56,10 @@ Task 2.6: Fix Math.random() in security contexts (M15)
 ---
 Day 3: Fix CLI Stubs for Core Flow (M8-M11)
 Task 3.1: Implement init command (M8)
-- Create project directory structure: .agentvault/, agent config file, example entry point
+- Create project directory structure: .soulrecall/, agent config file, example entry point
 - File: cli/commands/init.ts
 Task 3.2: Implement status command (M9)
-- Check for .agentvault/ directory, read agent configs, check for deployed canisters
+- Check for .soulrecall/ directory, read agent configs, check for deployed canisters
 - File: cli/commands/status.ts
 Task 3.3: Fix fetch command (M10)
 - Use callAgentMethod('agent_get_state') instead of hardcoded state
@@ -98,12 +98,12 @@ Task 5.5: Add tests for monitoring/health.ts (threshold math, formatCycles)
 Day 6: End-to-End Integration Test
 Task 6.1: Create integration test that runs the full pipeline:
 1. dfx start --background
-2. agentvault init test-agent
-3. agentvault package examples/agents/generic
-4. agentvault deploy --network local
-5. agentvault exec --canister-id <real-id>
-6. agentvault show --canister-id <real-id>
-7. agentvault fetch --canister-id <real-id>
+2. soulrecall init test-agent
+3. soulrecall package examples/agents/generic
+4. soulrecall deploy --network local
+5. soulrecall exec --canister-id <real-id>
+6. soulrecall show --canister-id <real-id>
+7. soulrecall fetch --canister-id <real-id>
 8. dfx stop
 Task 6.2: Verify npm run test still passes (354+ tests)
 Task 6.3: Verify npm run typecheck passes
